@@ -1,4 +1,4 @@
-import { EXIT_BLOCKED, type ReportResult, type StageRegistry, type StopInfo } from '@pp/core';
+import { EXIT_BLOCKED, type DnsResolver, type ReportResult, type StageRegistry, type StopInfo } from '@pp/core';
 import { assignArea } from './area';
 import { loadRun, runCompanyIds } from './data';
 import { stageContext, type PilotEnv } from './env';
@@ -21,6 +21,8 @@ export interface RunOptions {
   refresh?: boolean;
   /** Base directory for run outputs (default: config.report.outDir). */
   outDir?: string;
+  /** Public resolver for the listed-website second lookup (tests inject a fake). */
+  resolver?: DnsResolver;
 }
 
 export interface RunOutcome {
@@ -108,7 +110,7 @@ export async function runPilot(env: PilotEnv, areaId: string, opts: RunOptions =
       }
     }
 
-    await enrichCompanies(ctx, stages, id, { refresh: opts.refresh });
+    await enrichCompanies(ctx, stages, id, { refresh: opts.refresh, resolver: opts.resolver });
 
     for (const companyId of await runCompanyIds(env.db, id)) {
       await stages.qualify.run(ctx, { companyId });

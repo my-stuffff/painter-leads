@@ -4,6 +4,7 @@ import {
   resolveOwnerConflicts,
   zip5,
   type CompanyRef,
+  type DnsResolver,
   type EvidenceRow,
   type StageContext,
   type StageRegistry,
@@ -18,12 +19,15 @@ import {
 } from './data';
 import { CLASSIFY_EXTRACTOR } from './report/rows';
 import { q } from './sql';
+import { checkListedWebsites } from './website-check';
 
 export interface EnrichOptions {
   /** Re-run site-enrich and registries-match even for companies that already have a status. */
   refresh?: boolean;
   /** Run only these steps (reprocess). Default: all. */
   steps?: ReadonlySet<'site-enrich' | 'registries-match' | 'classify'>;
+  /** Public resolver for the second lookup of a listed website that the crawl could not resolve (tests inject a fake). */
+  resolver?: DnsResolver;
 }
 
 export interface EnrichSummary {
@@ -100,6 +104,11 @@ export async function enrichCompanies(
       ]);
       summary.siteEnriched += 1;
     }
+    await checkListedWebsites(
+      ctx,
+      companies.map((c) => c.id),
+      { resolver: o.resolver },
+    );
     await stages['site-finalize'].run(ctx, { runId });
   }
 

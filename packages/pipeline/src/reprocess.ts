@@ -1,4 +1,4 @@
-import { type Fetcher, type FetchSession, type ReportResult, type SourceType, type StageRegistry } from '@pp/core';
+import { type DnsResolver, type Fetcher, type FetchSession, type ReportResult, type SourceType, type StageRegistry } from '@pp/core';
 import { runCompanyIds } from './data';
 import { stageContext, type PilotEnv } from './env';
 import { enrichCompanies, type EnrichOptions } from './enrich';
@@ -44,6 +44,8 @@ export interface ReprocessOptions {
   fake?: boolean;
   stages?: StageRegistry;
   outDir?: string;
+  /** Public resolver for the listed-website second lookup (default: 1.1.1.1 / 8.8.8.8). */
+  resolver?: DnsResolver;
 }
 
 export interface ReprocessResult {
@@ -77,7 +79,7 @@ export async function reprocessRun(env: PilotEnv, runId: number, o: ReprocessOpt
     superseded += res.length;
   }
 
-  const enrichOpts: EnrichOptions = { refresh: true, steps };
+  const enrichOpts: EnrichOptions = { refresh: true, steps, resolver: o.resolver };
   await enrichCompanies(ctx, stages, runId, enrichOpts);
   await qualifyRun(env.db, env.config, runId);
 
