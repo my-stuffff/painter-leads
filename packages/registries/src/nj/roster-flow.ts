@@ -32,6 +32,19 @@ export interface NjRosterDownload {
   rows: number;
 }
 
+/**
+ * True when the results grid lists at least one licensee. A town without registrations still gets a results page
+ * with the "Download List" button and an empty grid, and pressing the button there makes the site answer HTTP 500
+ * (live, Woodbridge Township). A page without the grid at all is not judged here.
+ */
+export function listsLicensees(html: string): boolean {
+  const $ = cheerio.load(html);
+  const grid = $('#datagrid_results');
+  if (grid.length === 0) return true;
+  // A licensee row has one cell per column; the pager row is a single wide cell and the header row has only <th>.
+  return grid.find('tr').filter((_, tr) => $(tr).children('td').length >= 2).length > 0;
+}
+
 function expect200(res: FetchResult, step: string): string {
   const html = res.text();
   if (res.status !== 200 || isAspNetError(html)) {
@@ -98,6 +111,7 @@ export async function downloadNjRoster(
     }
     throw new AspNetFlowError('no "Download List" button on the results page', 'roster search');
   }
+  if (!listsLicensees(results.html)) return { path: null, bytes: 0, town, rows: 0 };
 
   // 3. "Download List" -> confirmation page; it must say $0.00
   const confirm = await step(session, results, {}, { button: { name: 'btnBulkDownLoad', value: 'Download List' } }, 'roster download list');
