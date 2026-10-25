@@ -3,3 +3,5 @@
 *.xlsx binary
 *.png binary
 *.zip binary
+# Test fixtures are byte-exact copies of real responses (some are CRLF) — never convert them
+**/test/fixtures/** -text
