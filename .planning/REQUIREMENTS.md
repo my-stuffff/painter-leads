@@ -114,13 +114,42 @@ a wrong or guessed value is not.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (filled by roadmap) | | |
+| DISC-01 | Phase 2 | Pending |
+| DISC-02 | Phase 1 | Pending |
+| DISC-03 | Phase 1 | Pending |
+| DISC-04 | Phase 1 | Pending |
+| DISC-05 | Phase 2 | Pending |
+| QUAL-01 | Phase 1 | Pending |
+| QUAL-02 | Phase 1 | Pending |
+| QUAL-03 | Phase 1 | Pending |
+| QUAL-04 | Phase 1 | Pending |
+| ENR-01 | Phase 1 | Pending |
+| ENR-02 | Phase 1 | Pending |
+| ENR-03 | Phase 1 | Pending |
+| ENR-04 | Phase 1 | Pending |
+| ENR-05 | Phase 1 | Pending |
+| ENR-06 | Phase 1 | Pending |
+| ENR-07 | Phase 1 | Pending |
+| REC-01 | Phase 1 | Pending |
+| REC-02 | Phase 2 | Pending |
+| REP-01 | Phase 1 | Pending |
+| REP-02 | Phase 1 | Pending |
+| REP-03 | Phase 1 | Pending |
+| ACC-01 | Phase 1 | Pending |
+| ACC-02 | Phase 1 | Pending |
+| ACC-03 | Phase 1 | Pending |
+| APP-01 | Phase 3 | Pending |
+| APP-02 | Phase 3 | Pending |
+| APP-03 | Phase 3 | Pending |
+| APP-04 | Phase 3 | Pending |
+| OPS-01 | Phase 1 | Pending |
+| OPS-02 | Phase 3 | Pending |
 
 **Coverage:**
 - v1 requirements: 30 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 30 ⚠️
+- Mapped to phases: 30
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-10-25*
-*Last updated: 2026-10-25 after initialization*
+*Last updated: 2026-10-25 after roadmap creation (traceability filled)*
