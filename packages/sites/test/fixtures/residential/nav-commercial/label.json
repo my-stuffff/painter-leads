@@ -1,0 +1,5 @@
+{
+  "synthetic": true,
+  "expect": "residential_and_commercial",
+  "note": "Residential phrases plus a Commercial menu item and a Commercial service page."
+}

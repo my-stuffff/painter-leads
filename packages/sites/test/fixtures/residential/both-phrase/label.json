@@ -1,0 +1,5 @@
+{
+  "synthetic": true,
+  "expect": "residential_and_commercial",
+  "note": "The phrase \"residential & commercial\" in body text."
+}
