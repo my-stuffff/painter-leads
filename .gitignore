@@ -1,0 +1,8 @@
+node_modules
+.pp-data
+runs
+*.log
+.env
+.env.*
+REPORT.md
+coverage

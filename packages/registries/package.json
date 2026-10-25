@@ -1,0 +1,18 @@
+{
+  "name": "@pp/registries",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@pp/core": "workspace:*",
+    "cheerio": "1.2.0",
+    "csv-parse": "7.0.3",
+    "undici": "8.12.3"
+  }
+}

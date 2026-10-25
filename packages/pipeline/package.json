@@ -1,0 +1,21 @@
+{
+  "name": "@pp/pipeline",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@pp/core": "workspace:*",
+    "@pp/maps": "workspace:*",
+    "@pp/registries": "workspace:*",
+    "@pp/sites": "workspace:*",
+    "csv-parse": "7.0.3",
+    "exceljs": "4.4.0",
+    "zod": "4.6.7"
+  }
+}

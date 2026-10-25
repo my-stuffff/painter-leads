@@ -1,0 +1,30 @@
+{
+  "name": "painter-leads",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "pp": "tsx apps/cli/src/pp.ts",
+    "test": "vitest run",
+    "test:unit": "vitest run --project unit",
+    "test:db": "vitest run --project db",
+    "test:golden": "vitest run --project golden",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "guards": "node scripts/check-guards.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "eslint": "10.13.0",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.0",
+    "undici": "8.12.3",
+    "vite": "8.3.5",
+    "vitest": "5.0.5"
+  }
+}
