@@ -447,7 +447,7 @@ painter-leads/
 │   └── pipeline/src/{area,filter,merge,select,qualify,report,accuracy,run}
 └── apps/cli/src/pp.ts           # collects `commands` from every package
 ```
-Runtime data (NOT committed, gitignored): `PP_DATA_DIR` (default `D:\Dev-Cache\painter-leads`, which is short and survives worktree deletion), holding `pages/ab/cd/<sha256>.html.gz`, `downloads/` (CSLB, NJ rosters), `runs/<run-id>/` (xlsx/csv). `[ASSUMED: path choice]`
+Runtime data (NOT committed, gitignored): `PP_DATA_DIR` (default `D:\ClaudeCode\Painter-Promotions\pp-data` — orchestrator correction: project evidence lives under the project folder per the owner's D-drive rule; short and survives worktree deletion), holding `pages/ab/cd/<sha256>.html.gz`, `downloads/` (CSLB, NJ rosters), `runs/<run-id>/` (xlsx/csv). `[ASSUMED: path choice]`
 
 ### Pattern 1: Evidence row per value (ENR-06, REP-03)
 **What:** Never write a "company.email" column directly. Every candidate value becomes an `evidence` row. The company's displayed value is *selected* from accepted evidence by a deterministic policy, so a later rejection (registry conflict, template name) changes the selection without losing history.
