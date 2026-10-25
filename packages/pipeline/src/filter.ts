@@ -54,8 +54,12 @@ const NON_PAINTER_EXACT = new Set([
   'interior decorator',
 ]);
 
+/**
+ * Any category naming a studio, pottery / ceramics or a paint-and-sip / paint party is a place to paint for fun,
+ * never a painting contractor ("Painting studio" would otherwise match the /^painting\b/ painter rule).
+ */
 const NON_PAINTER_PATTERN =
-  /\bwallpaper\b|\bmural|\bauto (?:body|paint)|\bcar (?:paint|detail)|\bart (?:studio|school|center|class)|\bpaint (?:store|shop|supplier|manufactur)|\bpaint(?:ing)? (?:lesson|class)|paint (?:and|&) sip|\binterior (?:design|decorat)/;
+  /\bwallpaper\b|\bmural|\bauto (?:body|paint)|\bcar (?:paint|detail)|\bart (?:studio|school|center|class)|\bpaint (?:store|shop|supplier|manufactur)|\bpaint(?:ing)? (?:lesson|class)|paint (?:and|&) sip|\bpaint(?:ing)? part(?:y|ies)\b|\bstudios?\b|\bpotter(?:y|s)\b|\bceramics?\b|\binterior (?:design|decorat)/;
 
 const CONTRACTOR_TYPES = new Set([
   'contractor',

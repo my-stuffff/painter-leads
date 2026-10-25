@@ -47,6 +47,32 @@ describe('non-painter filter (R6, D-24, QUAL-01)', () => {
     expect(classifyPainter([category], 'Some Business')).toMatchObject({ status: 'not_painter', category });
   });
 
+  it('marks paint-your-own and paint-and-sip studios not a painter (Edison run 8 real examples)', () => {
+    expect(classifyPainter(['Painting studio'], 'Color Me Mine')).toMatchObject({ status: 'not_painter', category: 'Painting studio' });
+    expect(classifyPainter(['Painting studio'], 'The Canvas & Grapes Experience')).toMatchObject({
+      status: 'not_painter',
+      category: 'Painting studio',
+    });
+  });
+
+  it.each([['Painting studio'], ['Pottery studio'], ['Pottery painting studio'], ['Ceramics studio'], ['Ceramic painting'], ['Pottery store'], ['Paint and sip'], ['Paint party venue'], ['Painting party'], ['Paint & sip studio'], ['Art studio']])(
+    'treats the category "%s" as a non-painter category',
+    (category) => {
+      expect(classifyPainter([category], 'Some Business')).toMatchObject({ status: 'not_painter', category });
+    },
+  );
+
+  it.each([['Painting'], ['Painting contractor'], ['Painter'], ['House painter'], ['Commercial painter'], ['Painting service'], ['Painting company'], ['Residential painter'], ['Industrial painter']])(
+    'still keeps the real painter category "%s"',
+    (category) => {
+      expect(classifyPainter([category], 'Acme').status).toBe('painter');
+    },
+  );
+
+  it('a painter category beats a studio category on the same listing', () => {
+    expect(classifyPainter(['Painting studio', 'House painter'], 'Acme Painters').status).toBe('painter');
+  });
+
   it('a painter category beats a non-painter one on the same listing', () => {
     expect(classifyPainter(['Wallpaper installer', 'Painter'], 'Walls Etc').status).toBe('painter');
     expect(classifyPainter(['Interior designer', 'House painter'], 'Design and Paint').status).toBe('painter');
