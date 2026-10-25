@@ -31,6 +31,7 @@ import {
   selectLatest,
   selectPhone,
 } from '../select/policy';
+import { isWebsiteMissingReason } from '../website-check';
 import { MASTER_COLUMNS } from './columns';
 
 export type Cell = string | number | null;
@@ -232,6 +233,21 @@ export async function buildReportData(db: Db, config: PpConfig, runId: number): 
       cells['Website'] = website.value;
       addSources('Website', website);
       show('website', website.value, website);
+    } else {
+      // The Google-listed domain does not exist: the cell stays blank and the Sources tab says why.
+      const missing = rows.find((r) => r.field === 'website' && r.status === 'rejected' && isWebsiteMissingReason(r.rejectReason));
+      if (missing) {
+        const checked = (missing.attrs.websiteCheck as { checkedAt?: string } | undefined)?.checkedAt;
+        sources.push({
+          companyId: c.id,
+          company: c.displayName,
+          field: 'Website',
+          value: missing.rejectReason as string,
+          sourceUrl: missing.sourceUrl,
+          capturedAt: checked ? new Date(checked) : missing.capturedAt,
+          confidence: missing.confidence,
+        });
+      }
     }
     holdBack('website', website);
 

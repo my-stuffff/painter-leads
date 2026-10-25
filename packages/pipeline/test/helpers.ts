@@ -2,7 +2,7 @@ import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import ExcelJS from 'exceljs';
-import { createLogger, DbEvidenceStore, loadConfig, type Db, type PpConfig } from '@pp/core';
+import { createLogger, DbEvidenceStore, loadConfig, type Db, type DnsResolver, type PpConfig } from '@pp/core';
 import type { PilotEnv } from '../src/env';
 
 process.env.PP_LOG_LEVEL ??= 'silent';
@@ -57,3 +57,27 @@ export async function sheetNames(file: string): Promise<string[]> {
   await wb.xlsx.readFile(file);
   return wb.worksheets.map((w) => w.name);
 }
+
+const dnsError = (code: string): Error => Object.assign(new Error(code), { code });
+
+export interface FakePublicResolver extends DnsResolver {
+  calls: string[];
+}
+
+/** A public resolver that never leaves the machine: per-host answers for A and AAAA. */
+export function publicResolver(answers: Record<string, { a?: string[] | string; aaaa?: string[] | string }>): FakePublicResolver {
+  const calls: string[] = [];
+  const answer = (kind: 'a' | 'aaaa', host: string): Promise<string[]> => {
+    calls.push(`${kind}:${host}`);
+    const v = answers[host]?.[kind];
+    if (Array.isArray(v)) return Promise.resolve(v);
+    return Promise.reject(dnsError(v ?? 'ENOTFOUND'));
+  };
+  return {
+    calls,
+    resolveMx: () => Promise.reject(dnsError('ENOTFOUND')),
+    resolve4: (h) => answer('a', h),
+    resolve6: (h) => answer('aaaa', h),
+  };
+}
+
