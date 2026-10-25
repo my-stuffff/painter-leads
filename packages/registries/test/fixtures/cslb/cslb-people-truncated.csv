@@ -1,0 +1,10 @@
+LIC-NO,LastUpdated,REC-TP,SEQ-NO,Name-TP,Name,EMP-Titl-CDE,CL-CDE,CL-CDE-STAT,ASSN-DT,DIS-ASSN-DT,SURETY-TP,SuretyCompany,BOND-NO,BOND-AMT,EffectiveDate,CancellationDate,JointVentureLicenseType,JointVentureLicenseNumber
+1002304,01/03/2026,Class/Title,900001, Principal, EXAMPLE                             CAROL          ANN         , Responsible Managing Officer/Chief Executive Officer/President, , Y, 01/05/2015, ,,,,,,,,
+1002304,01/03/2026,Class/Title,900002, Principal, FIXTURE                             PAT                        , Officer, , Y, 01/05/2015, ,,,,,,,,
+1002304,01/03/2026,Class/Title,900003, Principal, OLDTIMER                            SAM            J           , Chief Executive Officer/President, , Y, 03/03/2001, 06/06/2010,,,,,,,,
+1000441,01/03/2026,Class/Title,900004, Principal, SAMPLE                              LEE                        , LLC Member| Responsible Managing Employee, , Y| Y, 02/02/2016| 02/02/2016, | ,,,,,,,,
+1000918,01/03/2026,Class/Title,900005, Principal, TESTER                              JANE           Q           , Sole Owner, , Y, 04/04/2012, ,,,,,,,,
+1000070,01/03/2026,Class/Title,900006, Principal, GONE                                GUS                        , Sole Owner| Deceased, , Y| Y, 04/17/1972| 12/30/1996, 12/30/1996| 12/30/1996,,,,,,,,
+1000440,01/03/2026,Class/Title,900007, Principal| AKA, ROE                                 RICHARD                    |  ROE                                 RICK                       , Officer, , Y, 07/07/2007, ,,,,,,,,
+1000588,01/03/2026,Class/Title,900008, Business, SOME HOLDINGS COMPANY                                          , Entity (JV), , Y, 01/01/2010, ,,,,,,,,
+1163000,01/03/2026,Class/Title,900009, Principal, LATER     
