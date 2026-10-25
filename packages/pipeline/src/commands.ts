@@ -10,7 +10,7 @@ import { envFromCommand } from './env';
 import { planSearches } from './plan';
 import { computeFillRates, fillRateLines, writeFillRates } from './fillrates';
 import { qualifyRun } from './qualify';
-import { REPROCESS_STEPS, reprocessRun, type ReprocessStep } from './reprocess';
+import { LIVE_REGISTRIES_NEEDS_PP_LIVE, REPROCESS_STEPS, reprocessRun, type ReprocessStep } from './reprocess';
 import { generateReport, resolveOutDir, runOutputDir } from './report/stage';
 import { verifyReport } from './report/verify';
 import { runPilot } from './run';
@@ -136,15 +136,22 @@ const yieldsCommand: CommandSpec = {
 
 const reprocessCommand: CommandSpec = {
   name: 'pilot reprocess',
-  description: 'Re-run site-enrich, registries-match, classify, qualify and report from the page cache only (the fix loop)',
+  description: 'Re-apply the painter filter, then re-run site-enrich, registries-match, classify, qualify and report from the page cache only (the fix loop)',
   args: [{ name: 'runId', required: true, description: 'run id' }],
   options: [
     { flags: '--stages <list>', description: 'comma-separated subset of site-enrich,registries-match,classify (default: all)' },
     FAKE_OPTION,
+    {
+      flags: '--live-registries',
+      description: 'let registries-match (only) go to the registry sites, for companies whose lookup errored or skipped NJ towns; needs PP_LIVE=1',
+    },
   ],
   async run(ctx, args, opts) {
     const runId = runIdArg(args);
     const fake = Boolean(opts.fakeStages);
+    const liveRegistries = Boolean(opts.liveRegistries);
+    if (liveRegistries && process.env.PP_LIVE !== '1') throw new Error(LIVE_REGISTRIES_NEEDS_PP_LIVE);
+    if (liveRegistries && fake) throw new Error('--live-registries cannot be combined with --fake-stages');
     let steps: Set<ReprocessStep> | undefined;
     if (typeof opts.stages === 'string') {
       steps = new Set();
@@ -156,7 +163,7 @@ const reprocessCommand: CommandSpec = {
       }
     }
     const env = await envFromCommand(ctx, { needFetcher: !fake });
-    await reprocessRun(env, runId, { steps, fake });
+    await reprocessRun(env, runId, { steps, fake, liveRegistries });
   },
 };
 
