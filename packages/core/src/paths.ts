@@ -13,6 +13,6 @@ export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url
 export function dataDir(_config?: PpConfig): string {
   const fromEnv = process.env.PP_DATA_DIR;
   if (fromEnv && fromEnv.length > 0) return path.resolve(fromEnv);
-  if (process.platform === 'win32') return 'D:\ClaudeCode\Painter-Promotions\pp-data';
+  if (process.platform === 'win32') return path.normalize('D:/ClaudeCode/Painter-Promotions/pp-data');
   return path.join(REPO_ROOT, '.pp-data');
 }

@@ -143,10 +143,10 @@ describe('fetcher: robots.txt per source', () => {
 describe('fetcher: per-host rate limit', () => {
   it('spaces two requests to one host by minIntervalMs and does not delay other hosts', async () => {
     const { fetcher, agent, clock } = makeTestFetcher({ websitesIntervalMs: 1000 });
-    const starts: Record<string, number[]> = { a: [], b: [] };
+    const starts = { a: [] as number[], b: [] as number[] };
     const mk = (origin: string, key: 'a' | 'b') =>
       agent.get(origin).intercept({ path: /^\/p\d$/ }).reply(200, () => {
-        starts[key].push(clock.ms());
+        starts[key]!.push(clock.ms());
         return 'x';
       }, HTML).persist();
     mk('https://a.test', 'a');
@@ -157,9 +157,9 @@ describe('fetcher: per-host rate limit', () => {
     await fetcher.get('https://a.test/p2', { source: 'websites', cache: 'none' });
     await fetcher.get('https://b.test/p1', { source: 'websites', cache: 'none' });
 
-    expect(starts.a[0]).toBe(t0);
-    expect((starts.a[1] as number) - (starts.a[0] as number)).toBeGreaterThanOrEqual(1000);
-    expect(starts.b[0]).toBe(starts.a[1]); // b was not delayed by a's spacing
+    expect(starts.a[0]!).toBe(t0);
+    expect(starts.a[1]! - starts.a[0]!).toBeGreaterThanOrEqual(1000);
+    expect(starts.b[0]!).toBe(starts.a[1]!); // b was not delayed by a's spacing
   });
 });
 
