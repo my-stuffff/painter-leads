@@ -1,6 +1,7 @@
-import type { CommandSpec, GoldenReplayers, PackageModule, StageRegistry } from '@pp/core';
+import type { GoldenReplayers, PackageModule, StageRegistry } from '@pp/core';
+import { commands } from './commands';
 
-export const commands: CommandSpec[] = [];
+export { commands };
 export const stages: Partial<StageRegistry> = {};
 export const replayers: Partial<GoldenReplayers> = {};
 

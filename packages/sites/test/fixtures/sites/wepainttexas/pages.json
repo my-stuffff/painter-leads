@@ -1,0 +1,13 @@
+[
+  {
+    "url": "https://www.wepainttexas.com/",
+    "sha256": "0d458e680b8ad97b0628cfc73ecc53a4ec4f1fb62e31fc1f2006eae8e4489d38",
+    "rendered": true
+  },
+  {
+    "url": "https://www.wepainttexas.com/assets/index-DodNeZSb.js",
+    "sha256": "038050a805eeb7c647c65b9ac1718d848b42620170f2791f269167204dce49c9",
+    "rendered": false,
+    "kind": "bundle"
+  }
+]
