@@ -67,6 +67,10 @@ Recent decisions affecting current work:
 - [Init]: Three phases agreed: Pilot → Full state runs → Web app on Railway; fewer, bigger phases/plans.
 - [Init]: Pilot engine is built in the final architecture, not throwaway.
 - [Init]: Where the scraper runs (Railway vs this PC as an agent) is decided by the Phase 1 datacentre test.
+- [2026-10-25 owner]: "Go" — execution authorized; this also approves the 01-01 Task 1 package list (all of it, none dropped).
+- [2026-10-25 owner]: Texas Comptroller "is needed" — use it (gently: only matched companies, pause per D-36). 01-06 sets
+  sources.tx_comptroller {enabled true, robots "override"}; code default stays off.
+- [2026-10-25 owner]: Railway account comes later — not yet; 01-06 Railway items wait for it.
 
 ### Pending Todos
 
