@@ -14,6 +14,7 @@ export * from './evidence';
 export * from './fetch';
 export * from './browser';
 export * from './normalise';
+export * from './geo';
 export * from './stages/types';
 export { createFakeStages } from './stages/fakes';
 export { coreCommands, type CommandContext, type CommandSpec } from './commands';

@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PP_DATA_DIR: ${{ runner.temp }}/pp-data
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/painter_leads_test_ci
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm -r typecheck
+      - run: node scripts/check-guards.mjs
+      # Unit + db + golden. The network guard makes any live request fail; no browser is installed
+      # and PP_LIVE is never set: CI never scrapes (D-15, D-30).
+      - run: pnpm vitest run
