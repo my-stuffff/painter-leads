@@ -1,7 +1,15 @@
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { dataDir, type StageContext } from '@pp/core';
-import { downloadNjRoster, townSlug } from './roster-flow';
+import {
+  dataDir,
+  NetworkDisabledError,
+  OfflineCacheMissError,
+  RobotsDisallowedError,
+  SourceDisabledError,
+  SsrfRefusedError,
+  type StageContext,
+} from '@pp/core';
+import { downloadNjRoster, NjChargeError, townSlug } from './roster-flow';
 import { loadNjRosterRows, parseNjRoster } from './roster-parse';
 
 /** A roster pulled less than this many days ago is reused (the register changes slowly; fewer requests). */
@@ -32,6 +40,9 @@ async function freshFile(dir: string, town: string, now: Date): Promise<{ file: 
   }
   return best;
 }
+
+/** Pause before a town whose roster pull failed is tried once more (the site is a slow state service). */
+export const ROSTER_RETRY_PAUSE_MS = 30_000;
 
 export interface EnsuredRoster {
   town: string;
@@ -73,4 +84,54 @@ export function ensureNjRosterForTown(ctx: StageContext, town: string): Promise<
   const next = queue.then(run, run);
   queue = next.catch(() => undefined);
   return next;
+}
+
+/** Towns of one stage instance whose roster could not be pulled, with the reason (so later companies do not ask again). */
+export type SkippedTowns = Map<string, string>;
+
+export interface SkippedRoster {
+  town: string;
+  how: 'skipped';
+  rows: 0;
+  reason: string;
+}
+
+/** Failures that say nothing about the town: they stop the whole NJ source exactly as before (a charge, a switch, robots). */
+function stopsTheSource(e: unknown): boolean {
+  return e instanceof NjChargeError || e instanceof SourceDisabledError || e instanceof RobotsDisallowedError || e instanceof SsrfRefusedError;
+}
+
+/** No network at all (offline replay, tests): retrying cannot help. */
+function cannotDownload(e: unknown): boolean {
+  return e instanceof OfflineCacheMissError || e instanceof NetworkDisabledError;
+}
+
+/**
+ * ensureNjRosterForTown for one town of a company, without letting one town's failure take the others down: a failed
+ * pull is retried once after a pause; when that fails too the town is skipped (logged with the reason, remembered in
+ * `skipped` for the rest of the stage instance) and the caller carries on with the rosters it has. A charge, a
+ * switched-off source or a robots refusal still throw.
+ */
+export async function ensureNjRosterOrSkip(ctx: StageContext, town: string, skipped: SkippedTowns): Promise<EnsuredRoster | SkippedRoster> {
+  const known = skipped.get(town.toLowerCase());
+  if (known !== undefined) return { town, how: 'skipped', rows: 0, reason: known };
+  const skip = (reason: string): SkippedRoster => {
+    skipped.set(town.toLowerCase(), reason);
+    ctx.log.warn({ town, err: reason }, 'NJ roster town skipped: its roster could not be pulled');
+    return { town, how: 'skipped', rows: 0, reason };
+  };
+  try {
+    return await ensureNjRosterForTown(ctx, town);
+  } catch (first) {
+    if (stopsTheSource(first)) throw first;
+    if (cannotDownload(first)) return skip((first as Error).message);
+    ctx.log.warn({ town, err: (first as Error).message }, 'NJ roster pull failed, trying once more after a pause');
+    await ctx.sleep(ROSTER_RETRY_PAUSE_MS);
+    try {
+      return await ensureNjRosterForTown(ctx, town);
+    } catch (second) {
+      if (stopsTheSource(second)) throw second;
+      return skip((second as Error).message);
+    }
+  }
 }

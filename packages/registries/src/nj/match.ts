@@ -25,6 +25,7 @@ import {
   type LadderOutcome,
 } from '../match/ladder';
 import {
+  clearRegistryStatusKey,
   findByEmailDomain,
   findCandidates,
   getRecord,
@@ -36,7 +37,7 @@ import {
 import type { SourceOutcome, StageOptions } from '../types';
 import { fetchNjOwner, type NjDetail } from './detail-flow';
 import { confirmNjPrincipal } from './principal-search';
-import { ensureNjRosterForTown } from './roster-ensure';
+import { ensureNjRosterOrSkip, type SkippedTowns } from './roster-ensure';
 import { NJ_ROSTER_URL } from './roster-parse';
 
 const NJ_SOURCES = ['nj_hic_roster', 'nj_hic_detail', 'nj_principal_search'] as const;
@@ -197,7 +198,12 @@ function splitOwner(display: string): { first: string; last: string } | null {
  * New Jersey: roster match, then (strong matches only) the registered owner from the HIC detail page in the same
  * cookie session, the free principal-name check, and the roster email (D-21, D-22, D-25).
  */
-export async function matchNj(ctx: StageContext, input: RegistryMatchInput, opts: StageOptions): Promise<SourceOutcome> {
+export async function matchNj(
+  ctx: StageContext,
+  input: RegistryMatchInput,
+  opts: StageOptions,
+  shared: { njSkippedTowns?: SkippedTowns } = {},
+): Promise<SourceOutcome> {
   const { company } = input;
   const out: SourceOutcome = { statuses: {}, evidenceIds: [], owners: 0 };
 
@@ -206,10 +212,17 @@ export async function matchNj(ctx: StageContext, input: RegistryMatchInput, opts
     return out;
   }
 
-  // The roster of the town(s) must be in the database (pulled once per town within 7 days).
+  // The roster of the town(s) must be in the database (pulled once per town within 7 days). A town whose pull keeps
+  // failing is skipped: matching, the detail page and the principal check go on with the rosters that are loaded.
+  const skippedTowns: string[] = [];
   if (!opts.offline) {
-    for (const town of await townsFor(ctx, input)) await ensureNjRosterForTown(ctx, town);
+    const skipped = shared.njSkippedTowns ?? new Map<string, string>();
+    for (const town of await townsFor(ctx, input)) {
+      if ((await ensureNjRosterOrSkip(ctx, town, skipped)).how === 'skipped') skippedTowns.push(town);
+    }
   }
+
+  if (skippedTowns.length === 0 && !opts.offline) await clearRegistryStatusKey(ctx.db, company.companyId, 'nj_roster_skipped');
 
   const records = await candidateRecords(ctx, input);
   const emails = new Map(records.map((r) => [r.sourceKey, r.email]));
@@ -223,8 +236,9 @@ export async function matchNj(ctx: StageContext, input: RegistryMatchInput, opts
   await writeMatches(ctx.db, company.companyId, ['nj_hic_roster'], outcome.records);
 
   if (outcome.outcome !== 'match' || !outcome.chosen) {
-    const s = outcome.outcome === 'candidate_only' ? 'candidate_only' : 'no_match';
-    await setRegistryStatus(ctx.db, company.companyId, { nj_hic: s });
+    // Nothing found while a town's roster is missing is not "not registered": report the gap, never a false no_match.
+    const s = outcome.outcome === 'candidate_only' ? 'candidate_only' : skippedTowns.length > 0 ? 'error' : 'no_match';
+    await setRegistryStatus(ctx.db, company.companyId, skippedTowns.length > 0 ? { nj_hic: s, nj_roster_skipped: skippedTowns } : { nj_hic: s });
     out.statuses = { nj_hic_roster: s, nj_hic_detail: 'not_applicable', nj_principal_search: 'not_applicable' };
     return out;
   }
@@ -236,6 +250,7 @@ export async function matchNj(ctx: StageContext, input: RegistryMatchInput, opts
   out.evidenceIds.push(...(await ensureEvidence(ctx.evidence, company.companyId, njRosterEvidence(company.companyId, record, rung))));
 
   const status: Record<string, unknown> = { nj_hic: 'matched', nj_hic_active: active, nj_hic_rung: rung };
+  if (skippedTowns.length > 0) status.nj_roster_skipped = skippedTowns;
 
   // HIC detail page: the registered owner.
   let owner: { display: string; detail: NjDetail | null } | null = null;

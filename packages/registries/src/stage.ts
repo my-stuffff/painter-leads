@@ -12,6 +12,7 @@ import {
 import { matchCslb, type SourceMatchResult } from './cslb/match';
 import { BbbSession, matchBbb } from './bbb/match';
 import { matchNj } from './nj/match';
+import type { SkippedTowns } from './nj/roster-ensure';
 import { matchTx } from './tx/match';
 import { hasRecords, setRegistryStatus } from './records';
 import type { SourceOutcome, StageOptions } from './types';
@@ -56,6 +57,8 @@ async function cslbSource(ctx: StageContext, input: RegistryMatchInput): Promise
 /** State shared by every company of one stage instance (the BBB circuit breaker is per run). */
 export interface SharedState {
   bbb: BbbSession;
+  /** NJ towns whose roster pull failed twice: later companies of the stage do not ask the site again. */
+  njSkippedTowns: SkippedTowns;
 }
 
 export type SourceAdapter = (ctx: StageContext, input: RegistryMatchInput, opts: StageOptions, shared: SharedState) => Promise<SourceOutcome>;
@@ -64,14 +67,14 @@ export type SourceAdapter = (ctx: StageContext, input: RegistryMatchInput, opts:
 export function adaptersFor(state: RegistryMatchInput['company']['state']): { sources: SourceId[]; run: SourceAdapter }[] {
   const out: { sources: SourceId[]; run: SourceAdapter }[] = [];
   if (state === 'CA') out.push({ sources: ['cslb'], run: cslbSource });
-  if (state === 'NJ') out.push({ sources: ['nj_hic_roster', 'nj_hic_detail', 'nj_principal_search'], run: matchNj });
+  if (state === 'NJ') out.push({ sources: ['nj_hic_roster', 'nj_hic_detail', 'nj_principal_search'], run: (ctx, input, opts, shared) => matchNj(ctx, input, opts, shared) });
   if (state === 'TX') out.push({ sources: ['tx_open_data', 'tx_comptroller'], run: matchTx });
   out.push({ sources: ['bbb'], run: (ctx, input, opts, shared) => matchBbb(ctx, input, opts, shared.bbb) });
   return out;
 }
 
 export function createRegistriesStage(opts: StageOptions = {}): Stage<RegistryMatchInput, RegistryMatchResult> {
-  const shared: SharedState = { bbb: new BbbSession() };
+  const shared: SharedState = { bbb: new BbbSession(), njSkippedTowns: new Map() };
   return {
     name: 'registries-match',
     async run(ctx, input) {
