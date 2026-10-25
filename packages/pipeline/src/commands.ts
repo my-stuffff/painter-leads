@@ -3,7 +3,9 @@ import { loadRun } from './data';
 import { envFromCommand } from './env';
 import { planSearches } from './plan';
 import { qualifyRun } from './qualify';
+import { REPROCESS_STEPS, reprocessRun, type ReprocessStep } from './reprocess';
 import { generateReport, resolveOutDir, runOutputDir } from './report/stage';
+import { verifyReport } from './report/verify';
 import { runPilot } from './run';
 import { q1 } from './sql';
 import { computeYields, writeYieldCsv, yieldLines } from './yields';
@@ -124,6 +126,45 @@ const yieldsCommand: CommandSpec = {
   },
 };
 
+const reprocessCommand: CommandSpec = {
+  name: 'pilot reprocess',
+  description: 'Re-run site-enrich, registries-match, classify, qualify and report from the page cache only (the fix loop)',
+  args: [{ name: 'runId', required: true, description: 'run id' }],
+  options: [
+    { flags: '--stages <list>', description: 'comma-separated subset of site-enrich,registries-match,classify (default: all)' },
+    FAKE_OPTION,
+  ],
+  async run(ctx, args, opts) {
+    const runId = runIdArg(args);
+    const fake = Boolean(opts.fakeStages);
+    let steps: Set<ReprocessStep> | undefined;
+    if (typeof opts.stages === 'string') {
+      steps = new Set();
+      for (const part of opts.stages.split(',').map((p) => p.trim()).filter((p) => p.length > 0)) {
+        if (!REPROCESS_STEPS.includes(part as ReprocessStep)) {
+          throw new Error(`unknown stage "${part}"; choose from ${REPROCESS_STEPS.join(', ')}`);
+        }
+        steps.add(part as ReprocessStep);
+      }
+    }
+    const env = await envFromCommand(ctx, { needFetcher: !fake });
+    await reprocessRun(env, runId, { steps, fake });
+  },
+};
+
+export const verifyCommandSpec: CommandSpec = {
+  name: 'report verify',
+  description: 'Check a written report: tabs, exact headers, sources behind every value, ZIP as text, CSV headers; exit 1 on any violation',
+  args: [{ name: 'runId', required: true, description: 'run id' }],
+  async run(ctx, args) {
+    const runId = runIdArg(args);
+    const violations = await verifyReport(await ctx.db(), ctx.config(), runId);
+    for (const v of violations) ctx.out(`violation: ${v}`);
+    ctx.out(violations.length === 0 ? 'report verify: ok' : `report verify: ${violations.length} violation(s)`);
+    return violations.length === 0 ? 0 : 1;
+  },
+};
+
 export const pilotCommands: CommandSpec[] = [
   planCommand,
   runCommand,
@@ -131,4 +172,6 @@ export const pilotCommands: CommandSpec[] = [
   reportCommand,
   latestRunCommand,
   yieldsCommand,
+  reprocessCommand,
+  verifyCommandSpec,
 ];

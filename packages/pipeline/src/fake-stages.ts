@@ -227,7 +227,7 @@ export function createDbFakeStages(opts: FakeStageOptions = {}): StageRegistry {
         }
         const done = await q1<{ n: string }>(
           ctx.db,
-          `SELECT COUNT(*) AS n FROM evidence WHERE company_id = $1 AND extractor = 'fake-site'`,
+          `SELECT COUNT(*) AS n FROM evidence WHERE company_id = $1 AND extractor = 'fake-site' AND status = 'accepted'`,
           [company.companyId],
         );
         let emails = 0;
