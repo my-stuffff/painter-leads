@@ -187,10 +187,32 @@ describe('NJ: rung order and Active preference', () => {
     expect(await matches(i.company.companyId)).toEqual([{ rung: 'email_domain', strength: 'strong', source_key: '13VH90000001' }]);
   });
 
-  it('rung 4: street address + ZIP, when nothing earlier matches', async () => {
-    const i = await input({ name: 'Unrelated Painters', city: 'Edison', zip: '08817', street: '100 Fixture Road' });
+  it('rung 4: street address + ZIP + a name word in common, when nothing earlier matches', async () => {
+    const i = await input({ name: 'Bright Coat Wall Finishing', city: 'Edison', zip: '08817', street: '100 Fixture Road' });
     await run(i, noDetail());
     expect(await matches(i.company.companyId)).toEqual([{ rung: 'address', strength: 'strong', source_key: '13VH90000001' }]);
+    const detail = (await db.$client.query('SELECT detail FROM registry_matches WHERE company_id = $1', [i.company.companyId])).rows[0].detail;
+    expect(detail.note).toMatch(/BRIGHT/);
+  });
+
+  it('rung 4 never fires on the street address alone: another business at the same address is not a match', async () => {
+    const i = await input({ name: 'Unrelated Painters', city: 'Edison', zip: '08817', street: '100 Fixture Road' });
+    const { r } = await run(i, noDetail());
+    expect(await matches(i.company.companyId)).toEqual([]);
+    expect(r.status.nj_hic_roster).toBe('no_match');
+  });
+
+  it('a roster row with no ZIP is still found by the listing city, and a unit like "5B" on the roster address does not hide the street', async () => {
+    const header = fixture('nj', 'nj-roster-synthetic.txt').split('\n')[0];
+    await loadNjRosterRows(
+      db,
+      parseNjRoster(`${header}\nQUUX HOME IMPROVEMENT LLC|||||Home Improvement Contractors|Home Improvement Business Contr|13VH90000050|1/1/2020|3/31/2027|21 Quux Blvd 5B||Edison|NJ|||quux@gmail-example.test|Active|
+`),
+      { capturedAt: CAPTURED },
+    );
+    const i = await input({ name: 'Quux Wibble Painting & Remodeling', city: 'Edison', zip: '08837', street: '21 Quux Boulevard' });
+    await run(i, noDetail());
+    expect(await matches(i.company.companyId)).toEqual([{ rung: 'address', strength: 'strong', source_key: '13VH90000050' }]);
   });
 
   it('name + ZIP (rung 3) is tried before the street address (rung 4)', async () => {

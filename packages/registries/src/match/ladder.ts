@@ -31,6 +31,8 @@ export interface LadderHit {
   recordId: number;
   rung: string;
   strength: Strength;
+  /** Which key decided the hit, when the rung's name alone does not say (stored in registry_matches.detail). */
+  note?: string;
 }
 
 export interface LadderOutcome {
@@ -90,6 +92,49 @@ function nameSets(c: { nameNorm: string | null; nameCore: string | null; aliasNo
   const norms = [c.nameNorm, ...c.aliasNorms].filter((n): n is string => !!n);
   const cores = [c.nameCore, ...c.aliasNorms.map((a) => normaliseBusinessName(a).core)].filter((n): n is string => !!n);
   return { norms: [...new Set(norms)], cores: [...new Set(cores)] };
+}
+
+/** Words with no weight in a name: filler, place, entity words. */
+const NOISE_WORDS = new Set(['AND', 'THE', 'OF', 'FOR', 'WITH', 'THAT', 'YOUR', 'OUR', 'NEW', 'JERSEY', 'NJ', 'LLC', 'INC', 'CORP', 'CO', 'COMPANY']);
+
+/**
+ * Words that say what a business is, where it is or how good it claims to be. Two names sharing only one of these
+ * is not a shared name (a shared "Painting" or "Quality" is two businesses of one trade, not one business).
+ */
+const GENERIC_NAME_WORDS = new Set([
+  'NORTH', 'SOUTH', 'EAST', 'WEST', 'CENTRAL', 'AMERICAN', 'AMERICA', 'UNITED', 'NATIONAL', 'QUALITY', 'BEST', 'PREMIER',
+  'ELITE', 'FIRST', 'GREAT', 'SUPERIOR', 'EXPERT', 'EXPERTS', 'GENERAL', 'ALL', 'TOP', 'CUSTOM', 'MASTER', 'MASTERS',
+  'ROYAL', 'PERFECT', 'PRECISE', 'PRECISION', 'FINE', 'FINEST', 'EXPRESS', 'RELIABLE', 'AFFORDABLE', 'PRIME', 'PURE',
+  'ADVANCED', 'CLASSIC', 'COLOR', 'COLORS', 'EXTERIOR', 'INTERIOR', 'RESIDENTIAL', 'COMMERCIAL', 'PROFESSIONAL',
+  'PROFESSIONALS', 'PRO', 'PROS', 'PAINT', 'PAINTER', 'PAINTING', 'PAINTERS', 'DECORATING', 'DECORATOR', 'ROOFING',
+  'REMODELING', 'REMODELER', 'RENOVATION', 'CONSTRUCTION', 'CONTRACTOR', 'CONTRACTING', 'BUILDER', 'BUILDING',
+  'HANDYMAN', 'MAINTENANCE', 'PROPERTY', 'SERVICE', 'ENTERPRISE', 'GROUP', 'SOLUTION', 'HOME', 'HOUSE', 'IMPROVEMENT',
+  'WALL', 'POWERWASHING', 'CLEANING', 'CARPENTRY', 'FLOORING', 'SIDING', 'GUTTER', 'LANDSCAPING',
+]);
+
+/** A word compared without its plural / possessive S ("BARTS" and "BART", "PAINTERS" and "PAINTER"). */
+const stemWord = (t: string): string => (t.length >= 5 && t.endsWith('S') && !t.endsWith('SS') ? t.slice(0, -1) : t);
+
+/** The weighty words of a business name (and its trade names): at least 3 letters, no filler, plural/possessive S dropped. */
+export function nameWords(nameNorms: (string | null)[]): Set<string> {
+  const out = new Set<string>();
+  for (const n of nameNorms) {
+    for (const t of tokens(n ?? '')) {
+      const w = stemWord(t);
+      if (w.length >= 3 && !/^\d+$/.test(w) && !NOISE_WORDS.has(w)) out.add(w);
+    }
+  }
+  return out;
+}
+
+/**
+ * The words two names share when that is enough to tie two records at the same street address to one business: at
+ * least one distinctive word (not a trade / quality / place word), or at least two words of any kind. Else null.
+ */
+export function sharedNameWords(mine: Set<string>, theirs: Set<string>): string[] | null {
+  const shared = [...mine].filter((w) => theirs.has(w));
+  if (shared.some((w) => !GENERIC_NAME_WORDS.has(w)) || shared.length >= 2) return shared;
+  return null;
 }
 
 /** The best rung a single candidate reaches, or null. */
