@@ -1,12 +1,20 @@
-import { EXIT_BLOCKED, type CommandContext, type CommandSpec } from '@pp/core';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { EXIT_BLOCKED, REPO_ROOT, type CommandContext, type CommandSpec } from '@pp/core';
+import { buildAdjudicationSheet } from './accuracy/adjudication';
+import { compareRun } from './accuracy/compare';
+import { exportGolden } from './accuracy/golden-export';
+import { drawSample } from './accuracy/sample';
 import { loadRun } from './data';
 import { envFromCommand } from './env';
 import { planSearches } from './plan';
+import { computeFillRates, fillRateLines, writeFillRates } from './fillrates';
 import { qualifyRun } from './qualify';
 import { REPROCESS_STEPS, reprocessRun, type ReprocessStep } from './reprocess';
 import { generateReport, resolveOutDir, runOutputDir } from './report/stage';
 import { verifyReport } from './report/verify';
 import { runPilot } from './run';
+import { allReplayers } from './stages';
 import { q1 } from './sql';
 import { computeYields, writeYieldCsv, yieldLines } from './yields';
 
@@ -165,6 +173,127 @@ export const verifyCommandSpec: CommandSpec = {
   },
 };
 
+// ---- accuracy tools (ACC-01..03) ----------------------------------------------------------------------------------
+
+function required(opts: Record<string, unknown>, name: string): string {
+  const v = opts[name];
+  if (typeof v !== 'string' || v.length === 0) throw new Error(`--${name} is required`);
+  return v;
+}
+
+function readOptional(opts: Record<string, unknown>, name: string): string | undefined {
+  const v = opts[name];
+  return typeof v === 'string' && v.length > 0 ? readFileSync(v, 'utf8') : undefined;
+}
+
+async function checkState(ctx: CommandContext, runId: number, opts: Record<string, unknown>): Promise<void> {
+  if (typeof opts.state !== 'string') return;
+  const run = await loadRun(await ctx.db(), runId);
+  if (run.state.toLowerCase() !== opts.state.toLowerCase()) {
+    throw new Error(`Run ${runId} is a ${run.state} run, not ${opts.state}`);
+  }
+}
+
+const STATE_OPTION = { flags: '--state <state>', description: 'NJ | TX | CA (checked against the run; a run has one state)' };
+const TRUTH_OPTION = { flags: '--truth <file>', description: "the checker's truth.csv (sample_id, field, value, source_url, checked_at, notes)" };
+const ADJ_OPTION = { flags: '--adjudication <file>', description: 'verdicts (correct | wrong) for the unverifiable rows' };
+
+const sampleCommand: CommandSpec = {
+  name: 'accuracy sample',
+  description: 'Draw the seeded, stratified blind sample of a finished run; writes sample.csv (id, company, Google link only)',
+  args: [{ name: 'runId', required: true, description: 'run id (status done)' }],
+  options: [{ flags: '--seed <n>', description: 'integer seed, recorded with the sample' }, STATE_OPTION],
+  async run(ctx, args, opts) {
+    const runId = runIdArg(args);
+    const seed = Number(required(opts, 'seed'));
+    if (!Number.isInteger(seed)) throw new Error('--seed must be a whole number');
+    await checkState(ctx, runId, opts);
+    const r = await drawSample(await ctx.db(), ctx.config(), runId, seed);
+    const by = (s: string): number => r.samples.filter((x) => x.stratum === s).length;
+    ctx.out(`${r.state}: ${r.samples.length} companies (${by('qualified')} qualified, ${by('non_qualified')} other painters, ${by('non_painter')} filtered out), seed ${seed}`);
+    ctx.out(`give the checker ONLY: ${r.files.sample}`);
+    ctx.out(`truth form: ${r.files.truthTemplate}`);
+    ctx.out(`key (keep apart): ${r.files.key}`);
+  },
+};
+
+const compareCommand: CommandSpec = {
+  name: 'accuracy compare',
+  description: "Score the checker's truth against the system: correct / wrong / missed / unverifiable, drift rule, Wilson 95% intervals",
+  args: [{ name: 'runId', required: true, description: 'run id' }],
+  options: [TRUTH_OPTION, ADJ_OPTION, STATE_OPTION],
+  async run(ctx, args, opts) {
+    const runId = runIdArg(args);
+    await checkState(ctx, runId, opts);
+    const r = await compareRun(await ctx.db(), ctx.config(), runId, {
+      truthText: readFileSync(required(opts, 'truth'), 'utf8'),
+      adjudicationText: readOptional(opts, 'adjudication'),
+    });
+    const counts = (f: string): string => {
+      const c = r.summary.counts[f]?.shown;
+      return c ? `${c.correct}/${c.correct + c.wrong}` : '0/0';
+    };
+    ctx.out(`owner ${counts('owner_name')}, email ${counts('email')}, phone ${counts('phone')}, website ${counts('website')} correct among shown values`);
+    const unverifiable = r.rows.filter((x) => x.cls === 'unverifiable').length;
+    if (unverifiable > 0) ctx.out(`${unverifiable} unverifiable values need an adjudication verdict: pp accuracy adjudication-sheet ${runId}`);
+    if (r.summary.unchecked > 0) ctx.out(`${r.summary.unchecked} truth rows were left blank and not scored`);
+    if (r.summary.stale > 0) ctx.out(`${r.summary.stale} truth rows were checked more than ${ctx.config().accuracy.truthWithinHours} hours after the run (flagged)`);
+    ctx.out(`results: ${r.files.results}`);
+    ctx.out(`summary: ${r.files.summaryMd}`);
+  },
+};
+
+const adjudicationCommand: CommandSpec = {
+  name: 'accuracy adjudication-sheet',
+  description: 'List the values the checker could not find but the system filled, with their source URL and snippet, for a second look',
+  args: [{ name: 'runId', required: true, description: 'run id' }],
+  options: [TRUTH_OPTION, ADJ_OPTION, STATE_OPTION],
+  async run(ctx, args, opts) {
+    const runId = runIdArg(args);
+    await checkState(ctx, runId, opts);
+    const r = await buildAdjudicationSheet(await ctx.db(), ctx.config(), runId, {
+      truthText: readFileSync(required(opts, 'truth'), 'utf8'),
+      adjudicationText: readOptional(opts, 'adjudication'),
+    });
+    ctx.out(`${r.rows} values to adjudicate: ${r.file}`);
+  },
+};
+
+const goldenExportCommand: CommandSpec = {
+  name: 'accuracy golden-export',
+  description: "Save the sampled companies' pages, Maps card, registry rows and adjudicated truth as golden fixtures",
+  args: [{ name: 'runId', required: true, description: 'run id' }],
+  options: [TRUTH_OPTION, ADJ_OPTION, STATE_OPTION, { flags: '--out <dir>', description: 'default: <repo>/fixtures/golden' }],
+  async run(ctx, args, opts) {
+    const runId = runIdArg(args);
+    await checkState(ctx, runId, opts);
+    const r = await exportGolden(await ctx.db(), ctx.config(), runId, {
+      truthText: readFileSync(required(opts, 'truth'), 'utf8'),
+      adjudicationText: readOptional(opts, 'adjudication'),
+      outDir: typeof opts.out === 'string' ? opts.out : path.join(REPO_ROOT, 'fixtures', 'golden'),
+      fetcher: await ctx.fetcher(),
+      replayers: allReplayers(),
+    });
+    for (const w of r.warnings) ctx.out(`warning: ${w}`);
+    ctx.out(`${r.cases.length} golden cases, ${(r.totalBytes / 1_000_000).toFixed(1)} MB in total (target <= 50 MB)`);
+  },
+};
+
+const fillRatesCommand: CommandSpec = {
+  name: 'fillrates',
+  description: 'How often owner, email, phone and website are filled, per state (writes fillrates.json per run)',
+  args: [{ name: 'runIds', required: true, variadic: true, description: 'run ids' }],
+  async run(ctx, args) {
+    const db = await ctx.db();
+    for (const raw of args) {
+      const runId = runIdArg([raw]);
+      const r = await computeFillRates(db, ctx.config(), runId);
+      for (const line of fillRateLines(r)) ctx.out(line);
+      ctx.out(`  written: ${await writeFillRates(ctx.config(), r)}`);
+    }
+  },
+};
+
 export const pilotCommands: CommandSpec[] = [
   planCommand,
   runCommand,
@@ -174,4 +303,9 @@ export const pilotCommands: CommandSpec[] = [
   yieldsCommand,
   reprocessCommand,
   verifyCommandSpec,
+  sampleCommand,
+  compareCommand,
+  adjudicationCommand,
+  goldenExportCommand,
+  fillRatesCommand,
 ];

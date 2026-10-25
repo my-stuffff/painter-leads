@@ -11,7 +11,21 @@ describe('@pp/pipeline package module', () => {
   it('registers each command once, under the names the operator types', () => {
     const names = commands.map((c) => c.name);
     expect(new Set(names).size).toBe(names.length);
-    for (const n of ['pilot plan', 'pilot run', 'pilot resume', 'pilot report', 'pilot latest-run', 'pilot yields']) {
+    for (const n of [
+      'pilot plan',
+      'pilot run',
+      'pilot resume',
+      'pilot report',
+      'pilot reprocess',
+      'pilot latest-run',
+      'pilot yields',
+      'report verify',
+      'fillrates',
+      'accuracy sample',
+      'accuracy compare',
+      'accuracy adjudication-sheet',
+      'accuracy golden-export',
+    ]) {
       expect(names).toContain(n);
     }
   });

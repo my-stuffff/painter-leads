@@ -1,4 +1,4 @@
-import type { PackageModule, StageName, StageRegistry } from '@pp/core';
+import type { GoldenReplayers, PackageModule, StageName, StageRegistry } from '@pp/core';
 import { packageModule as maps } from '@pp/maps';
 import { packageModule as registries } from '@pp/registries';
 import { packageModule as sites } from '@pp/sites';
@@ -61,4 +61,9 @@ export function resolveStages(o: ResolveOptions = {}): StageRegistry {
     registry[name] = found;
   }
   return registry as unknown as StageRegistry;
+}
+
+/** The golden replayers of maps, sites and registries, merged (the harness looks them up by name). */
+export function allReplayers(modules: PackageModule[] = [maps, sites, registries]): Partial<GoldenReplayers> {
+  return Object.assign({}, ...modules.map((m) => m.replayers)) as Partial<GoldenReplayers>;
 }

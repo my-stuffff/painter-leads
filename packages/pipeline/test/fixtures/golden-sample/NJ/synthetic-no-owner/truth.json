@@ -1,0 +1,33 @@
+{
+  "sample_id": "NJ-002",
+  "company": {
+    "name": "No Owner Painting",
+    "state": "NJ",
+    "city": "Edison",
+    "zip": "08820",
+    "street": null,
+    "websiteUrl": "https://no-owner-painting.test",
+    "phoneE164": null,
+    "categories": [
+      "Painting contractor"
+    ]
+  },
+  "nj_hic_active": null,
+  "fields": {
+    "emails": "NOT_FINDABLE",
+    "owners": {
+      "expected": "NOT_FINDABLE",
+      "ignore": []
+    },
+    "residential": "residential_and_commercial",
+    "maps_card": {
+      "name": "No Owner Painting",
+      "rating": "4.8",
+      "review_count": "40",
+      "phone": null,
+      "category": "Painting contractor",
+      "website": "https://no-owner-painting.test"
+    },
+    "registry_match": []
+  }
+}

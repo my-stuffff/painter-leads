@@ -1,0 +1,11 @@
+{
+  "card_raw": {
+    "name": "Synthetic Painting Co",
+    "rating": "4.9",
+    "review_count": "25",
+    "phone": "+17325550199",
+    "category": "Painter",
+    "website": "https://synthetic-painting.test"
+  },
+  "place_raw": null
+}

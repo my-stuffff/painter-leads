@@ -5,6 +5,7 @@ import {
   type Db,
   type EvidenceRow,
   type ExclusionReason,
+  type Confidence,
   type ResidentialLabel,
   type SourceType,
 } from '@pp/core';
@@ -21,6 +22,8 @@ import {
 } from '../data';
 import { computeFacts, qualify } from '../qualify';
 import {
+  acceptedRows,
+  CONFIDENCE_RANK,
   policyFor,
   rowsBehind,
   selectEmail,
@@ -31,6 +34,14 @@ import {
 import { MASTER_COLUMNS } from './columns';
 
 export type Cell = string | number | null;
+
+/** A value the report shows (or held back for low confidence), with where it came from. */
+export interface ShownValue {
+  value: string;
+  confidence: Confidence;
+  sourceUrl: string;
+  snippet: string;
+}
 
 export const SAB_ADDRESS_TEXT = 'location approximate (service-area business)';
 
@@ -52,6 +63,10 @@ export interface ReportCompany {
   residentialStatus: ResidentialLabel | null;
   /** The company's own Google profile link (key for the verifier). */
   profileUrl: string | null;
+  /** Shown value per truth field (name, phone, website, email, owner_name, owner_title, rating, review_count, address, zip, category, residential_status, is_painter). */
+  shown: Record<string, ShownValue>;
+  /** Candidates held back below config.report.minConfidence, per field. */
+  lowCandidates: Record<string, ShownValue[]>;
 }
 
 export interface SourceRow {
@@ -151,11 +166,32 @@ export async function buildReportData(db: Db, config: PpConfig, runId: number): 
       }
     };
 
+    // What the accuracy tools compare against the checker's truth: the value shown per truth field, and the
+    // candidates that were held back for low confidence (so precision can be measured per confidence level).
+    const shown: Record<string, ShownValue> = {};
+    const lowCandidates: Record<string, ShownValue[]> = {};
+    const show = (field: string, value: string, row: EvidenceRow | null): void => {
+      if (row) shown[field] = { value, confidence: row.confidence, sourceUrl: row.sourceUrl, snippet: row.snippet };
+    };
+    const minRank = CONFIDENCE_RANK[policy.minConfidence];
+    const holdBack = (field: 'owner_name' | 'email' | 'phone' | 'website', chosen: EvidenceRow | null): void => {
+      const seen = new Set<string>(chosen ? [chosen.valueNorm] : []);
+      const out: ShownValue[] = [];
+      for (const r of acceptedRows(rows)) {
+        if (r.field !== field || CONFIDENCE_RANK[r.confidence] >= minRank || seen.has(r.valueNorm)) continue;
+        if (field === 'phone' && r.sourceType !== 'google_maps') continue;
+        seen.add(r.valueNorm);
+        out.push({ value: formatValue(field, r), confidence: r.confidence, sourceUrl: r.sourceUrl, snippet: r.snippet });
+      }
+      if (out.length > 0) lowCandidates[field] = out;
+    };
+
     // Company
     cells['Company'] = c.displayName;
     const nameRows = rows.filter((r) => r.field === 'company_name' && r.status === 'accepted' && r.value === c.displayName);
     const nameRow = nameRows[0] ?? null;
     addSources('Company', nameRow);
+    show('name', c.displayName, nameRow);
 
     // Owner
     const owner = selectField(rows, 'owner_name', policy);
@@ -166,14 +202,19 @@ export async function buildReportData(db: Db, config: PpConfig, runId: number): 
       cells['Owner source'] = sourceLabel(owner.sourceType);
       cells['Owner confidence'] = owner.confidence;
       addSources('Owner / decision-maker', owner);
+      show('owner_name', owner.value, owner);
+      if (cells['Owner title']) show('owner_title', cells['Owner title'] as string, owner);
     }
+    holdBack('owner_name', owner);
 
     // Phone: the Google listing phone, national format
     const phone = selectPhone(rows, policy);
     if (phone) {
       cells['Phone'] = formatValue('phone', phone);
       addSources('Phone', phone);
+      show('phone', cells['Phone'] as string, phone);
     }
+    holdBack('phone', phone);
 
     // Email
     const email = selectEmail(rows, policy);
@@ -181,25 +222,31 @@ export async function buildReportData(db: Db, config: PpConfig, runId: number): 
       cells['Email'] = email.valueNorm;
       cells['Email source'] = sourceLabel(email.sourceType);
       addSources('Email', email);
+      show('email', email.valueNorm, email);
     }
+    holdBack('email', email);
 
     // Website
     const website = selectLatest(rows, 'website', policy, ['google_maps']) ?? selectField(rows, 'website', policy);
     if (website) {
       cells['Website'] = website.value;
       addSources('Website', website);
+      show('website', website.value, website);
     }
+    holdBack('website', website);
 
     // Rating / reviews
     const rating = selectLatest(rows, 'rating', policy);
     if (rating && Number.isFinite(Number(rating.value))) {
       cells['Google rating'] = Number(rating.value);
       addSources('Google rating', rating);
+      show('rating', String(Number(rating.value)), rating);
     }
     const reviews = selectLatest(rows, 'review_count', policy);
     if (reviews && Number.isFinite(Number(reviews.value))) {
       cells['Google reviews'] = Number(reviews.value);
       addSources('Google reviews', reviews);
+      show('review_count', String(Number(reviews.value)), reviews);
     }
 
     // Profile link (the listing's own URL is its source)
@@ -224,6 +271,7 @@ export async function buildReportData(db: Db, config: PpConfig, runId: number): 
     if (category) {
       cells['Category'] = category.value;
       addSources('Category', category);
+      show('category', category.value, category);
     }
 
     // Address (a service-area business shows no address and no ZIP: its place comes from the map pin)
@@ -234,6 +282,7 @@ export async function buildReportData(db: Db, config: PpConfig, runId: number): 
       if (addr) {
         cells['Address'] = addr.value;
         addSources('Address', addr);
+        show('address', addr.value, addr);
       }
     }
     const city = selectLatest(rows, 'city', policy);
@@ -246,6 +295,7 @@ export async function buildReportData(db: Db, config: PpConfig, runId: number): 
       if (zip) {
         cells['ZIP'] = formatValue('zip', zip);
         addSources('ZIP', zip);
+        show('zip', formatValue('zip', zip), zip);
       }
     }
     const state = selectLatest(rows, 'state', policy);
@@ -291,8 +341,28 @@ export async function buildReportData(db: Db, config: PpConfig, runId: number): 
       }
     }
 
+    // Classifier decisions (rules, not evidence rows of their own) for the accuracy tools
+    const profileForShown = profileUrl ?? '';
+    if (c.residentialStatus) {
+      shown['residential_status'] = {
+        value: RESIDENTIAL_LABEL_TEXT[c.residentialStatus],
+        confidence: 'high',
+        sourceUrl: rows.find((r) => r.field === 'residential_signal' && r.status === 'accepted')?.sourceUrl ?? profileForShown,
+        snippet: c.residentialReason ?? RESIDENTIAL_LABEL_TEXT[c.residentialStatus],
+      };
+    }
+    if (c.painterStatus !== 'unknown') {
+      shown['is_painter'] = {
+        value: c.painterStatus === 'painter' ? 'yes' : 'no',
+        confidence: 'high',
+        sourceUrl: profileForShown,
+        snippet: c.painterReason ?? c.painterStatus,
+      };
+    }
+    if (!shown['name']) shown['name'] = { value: c.displayName, confidence: 'high', sourceUrl: profileForShown, snippet: c.displayName };
+
     // Dates
-    const firstSeen = ls.map((l) => l.firstSeenAt).sort((a, b) => a.getTime() - b.getTime())[0];
+    const firstSeen =ls.map((l) => l.firstSeenAt).sort((a, b) => a.getTime() - b.getTime())[0];
     const checked = ls
       .map((l) => l.lastCheckedAt)
       .filter((d): d is Date => d !== null)
@@ -324,6 +394,8 @@ export async function buildReportData(db: Db, config: PpConfig, runId: number): 
         ],
         residentialStatus: c.residentialStatus,
         profileUrl,
+        shown,
+        lowCandidates,
       },
       sources,
     });

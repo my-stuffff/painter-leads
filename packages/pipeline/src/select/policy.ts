@@ -37,7 +37,7 @@ export function policyFor(config: PpConfig): SelectionPolicy {
   return { ...PIPELINE_POLICY, minConfidence: config.report.minConfidence };
 }
 
-const CONFIDENCE_RANK: Record<Confidence, number> = { high: 3, medium: 2, low: 1 };
+export const CONFIDENCE_RANK: Record<Confidence, number> = { high: 3, medium: 2, low: 1 };
 
 /** Only accepted rows can be shown (needs_review and rejected never are). */
 export function acceptedRows(rows: EvidenceRow[]): EvidenceRow[] {
