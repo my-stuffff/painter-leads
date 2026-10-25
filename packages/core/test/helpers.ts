@@ -25,6 +25,8 @@ export function testConfig(over: {
     ...base,
     sources: {
       ...base.sources,
+      // Tests start from the code default (Comptroller off); the shipped switch is the owner's ruling.
+      tx_comptroller: { ...base.sources.tx_comptroller, enabled: false },
       websites: {
         enabled: true,
         minIntervalMs: over.websitesIntervalMs ?? 0,

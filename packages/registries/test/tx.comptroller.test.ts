@@ -10,7 +10,7 @@ const enabled = () => testConfig({ tx_comptroller: { enabled: true } });
 
 describe('Comptroller adapter while the switch is OFF (the default)', () => {
   it("returns 'disabled' and the mock agent records ZERO requests to comptroller.texas.gov", async () => {
-    const config = testConfig(); // pp.config.json ships tx_comptroller off
+    const config = testConfig(); // testConfig starts tx_comptroller at its code default, off
     expect(config.sources.tx_comptroller.enabled).toBe(false);
     const { fetcher, calls } = makeFetcher(config);
     const r = await fetchTxOfficers(fetcher, config, '32066330906');

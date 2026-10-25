@@ -45,7 +45,7 @@
     "nj_hic_detail": { "enabled": true, "minIntervalMs": 4000, "robots": "respect" },
     "nj_principal_search": { "enabled": true, "minIntervalMs": 4000, "robots": "respect" },
     "tx_open_data": { "enabled": true, "minIntervalMs": 1500, "robots": "respect" },
-    "tx_comptroller": { "enabled": false, "minIntervalMs": 4000, "robots": "respect" },
+    "tx_comptroller": { "enabled": true, "minIntervalMs": 4000, "robots": "override" },
     "bbb": { "enabled": true, "minIntervalMs": 4000, "robots": "respect" },
     "census": { "enabled": true, "minIntervalMs": 1000, "robots": "respect" }
   },

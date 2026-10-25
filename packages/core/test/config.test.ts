@@ -20,7 +20,9 @@ describe('config (QUAL-04)', () => {
     const c = loadConfig(REPO_CONFIG);
     expect(c.qualification).toMatchObject({ minRating: 4.7, minReviews: 10, maxReviews: 99 });
     expect(c.search.terms).toHaveLength(5);
-    expect(isSourceEnabled(c, 'tx_comptroller')).toBe(false);
+    // Owner ruled 2026-10-25 that the Texas Comptroller is used (robots.txt overridden on purpose).
+    expect(isSourceEnabled(c, 'tx_comptroller')).toBe(true);
+    expect(c.sources.tx_comptroller.robots).toBe('override');
     expect(isSourceEnabled(c, 'maps')).toBe(true);
     expect(c.fetch.dnsOverrides['*.texas.gov']).toEqual(['1.1.1.1', '8.8.8.8']);
   });

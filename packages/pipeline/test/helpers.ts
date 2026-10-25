@@ -13,10 +13,15 @@ export function tempDir(prefix = 'pp-pipeline-'): string {
   return mkdtempSync(path.join(tmpdir(), prefix));
 }
 
+/** Tests start from the code default (Comptroller off); the shipped switch is the owner's ruling. */
+function withComptrollerOff(c: PpConfig): PpConfig {
+  return { ...c, sources: { ...c.sources, tx_comptroller: { ...c.sources.tx_comptroller, enabled: false } } };
+}
+
 export function makeEnv(db: Db, over: Partial<PilotEnv> & { config?: PpConfig } = {}): PilotEnv & { lines: string[] } {
   const lines: string[] = [];
   return {
-    config: over.config ?? loadConfig(),
+    config: over.config ?? withComptrollerOff(loadConfig()),
     db,
     evidence: new DbEvidenceStore(db),
     fetcher: undefined as never,

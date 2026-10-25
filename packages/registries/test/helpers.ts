@@ -29,12 +29,13 @@ export function tempDir(prefix = 'pp-reg-'): string {
   return mkdtempSync(path.join(tmpdir(), prefix));
 }
 
-/** The repo config with every source un-throttled and robots overridden (tests never wait or fetch robots.txt). */
+/** The repo config with every source un-throttled and robots overridden (tests never wait or fetch robots.txt).
+ * The Comptroller starts from its code default (off) whatever the shipped switch says; tests turn it on explicitly. */
 export function testConfig(over: Partial<Record<SourceId, { enabled?: boolean; robots?: 'respect' | 'override' }>> = {}): PpConfig {
   const base = loadConfig();
   const sources = { ...base.sources };
   for (const id of Object.keys(sources) as SourceId[]) {
-    sources[id] = { ...sources[id], minIntervalMs: 0, robots: over[id]?.robots ?? 'override', enabled: over[id]?.enabled ?? sources[id].enabled };
+    sources[id] = { ...sources[id], minIntervalMs: 0, robots: over[id]?.robots ?? 'override', enabled: over[id]?.enabled ?? (id === 'tx_comptroller' ? false : sources[id].enabled) };
   }
   return { ...base, sources };
 }
