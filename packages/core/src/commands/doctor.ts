@@ -1,4 +1,9 @@
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { eq } from 'drizzle-orm';
+import { cacheKey, PageCache } from '../fetch/cache';
+import { createFetcher } from '../fetch/fetcher';
 import { migrationsApplied } from '../db/migrate';
 import { companies, listings, runs } from '../db/schema';
 import { DbEvidenceStore, MemoryEvidenceStore } from '../evidence/store';
@@ -83,6 +88,27 @@ export const doctorCommand: CommandSpec = {
         });
       } catch (e) {
         if (!(e instanceof Rollback)) throw e;
+      }
+    });
+
+    await check('fetcher', async () => {
+      const dir = await mkdtemp(path.join(tmpdir(), 'pp-doctor-'));
+      try {
+        const url = 'https://doctor.invalid/page';
+        const body = Buffer.from('<html>doctor</html>');
+        await new PageCache(dir).write(cacheKey('GET', url), body, {
+          requestedUrl: url,
+          finalUrl: url,
+          status: 200,
+          contentType: 'text/html',
+          fetchedAt: new Date().toISOString(),
+          rendered: false,
+        });
+        const fetcher = createFetcher({ config: ctx.config(), db: null, dataDir: dir });
+        const got = await fetcher.get(url, { source: 'websites', offline: true });
+        if (!got.fromCache || !got.body.equals(body)) throw new Error('cached page did not round-trip');
+      } finally {
+        await rm(dir, { recursive: true, force: true });
       }
     });
 

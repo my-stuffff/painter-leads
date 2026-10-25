@@ -1,4 +1,4 @@
-import { packageModule as core } from '@pp/core';
+import { createFetcher, packageModule as core } from '@pp/core';
 import { packageModule as maps } from '@pp/maps';
 import { packageModule as pipeline } from '@pp/pipeline';
 import { packageModule as registries } from '@pp/registries';
@@ -8,7 +8,7 @@ import { buildProgram } from './program';
 const modules = [core, maps, registries, sites, pipeline];
 
 async function main(): Promise<void> {
-  const handle = buildProgram(modules);
+  const handle = buildProgram(modules, { makeFetcher: (config, db) => createFetcher({ config, db }) });
   try {
     await handle.program.parseAsync(process.argv);
   } catch (e) {

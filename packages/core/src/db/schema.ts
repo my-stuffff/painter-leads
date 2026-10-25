@@ -55,7 +55,7 @@ export const runs = pgTable(
     finishedAt: ts('finished_at'),
     createdAt: ts('created_at').notNull().defaultNow(),
   },
-  (t) => [
+  () => [
     check('runs_status_check', inList('status', RUN_STATUSES)),
     check('runs_state_check', inList('state', ['NJ', 'TX', 'CA'])),
   ],

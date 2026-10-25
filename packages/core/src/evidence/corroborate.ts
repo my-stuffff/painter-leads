@@ -3,7 +3,7 @@ import type { DbOrTx } from '../db/client';
 import { evidence } from '../db/schema';
 import type { Field } from '../types';
 import { REGISTRY_SOURCE_TYPES, SOURCE_FAMILY } from './families';
-import { normaliseValue } from './normalise-value';
+import { personFirstLastKey } from '../normalise/person-name';
 import { toEvidenceRow, type EvidenceRow } from './store';
 
 async function acceptedRows(db: DbOrTx, companyId: number, field: Field): Promise<EvidenceRow[]> {
@@ -59,9 +59,9 @@ export async function resolveOwnerConflicts(db: DbOrTx, companyId: number): Prom
   const registry = owners.filter((r) => REGISTRY_SOURCE_TYPES.includes(r.sourceType));
   if (registry.length === 0) return 0;
 
-  const registryKeys = new Set(registry.map((r) => normaliseValue('owner_name', r.value)));
+  const registryKeys = new Set(registry.map((r) => personFirstLastKey(r.value)));
   const conflicting = owners.filter(
-    (r) => r.sourceType === 'website' && !registryKeys.has(normaliseValue('owner_name', r.value)),
+    (r) => r.sourceType === 'website' && !registryKeys.has(personFirstLastKey(r.value)),
   );
   if (conflicting.length > 0) {
     await db

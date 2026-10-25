@@ -11,8 +11,9 @@ export { migrateDb, migrationsApplied, createDatabaseIfMissing } from './db/migr
 export { getTestDb, truncateAll } from './db/test-utils';
 export * as schema from './db/schema';
 export * from './evidence';
-export * from './fetch/types';
-export * from './fetch/errors';
+export * from './fetch';
+export * from './browser';
+export * from './normalise';
 export * from './stages/types';
 export { createFakeStages } from './stages/fakes';
 export { coreCommands, type CommandContext, type CommandSpec } from './commands';
