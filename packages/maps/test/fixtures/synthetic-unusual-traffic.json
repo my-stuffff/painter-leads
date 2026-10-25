@@ -1,0 +1,13 @@
+{
+  "kind": "other",
+  "url": "https://www.google.com/maps/search/house%20painter%2008817/?hl=en&gl=us",
+  "landedUrl": "https://www.google.com/maps/search/house%20painter%2008817/?hl=en&gl=us",
+  "status": 200,
+  "signals": {
+    "hasRecaptcha": false,
+    "hasFeed": false,
+    "hasPlacePanel": false,
+    "bodyHasUnusualTraffic": true,
+    "endOfListText": false
+  }
+}
