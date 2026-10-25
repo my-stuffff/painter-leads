@@ -223,6 +223,10 @@ export async function setRegistryStatus(db: Db, companyId: number, patch: Record
   );
 }
 
+/** Drops a key from the company's registry_status (e.g. a "skipped" note a later, complete run supersedes). */
+export async function clearRegistryStatusKey(db: Db, companyId: number, key: string): Promise<void> {
+  await db.$client.query(`UPDATE companies SET registry_status = registry_status - $2::text WHERE id = $1 AND registry_status ? $2::text`, [companyId, key]);
+}
 
 /** Roster rows whose email is on exactly this domain (the roster is small: no index needed). */
 export async function findByEmailDomain(db: Db, sourceType: SourceType, domain: string): Promise<RegistryRecord[]> {

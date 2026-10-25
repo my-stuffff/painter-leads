@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { hiddenFields } from '../src/aspnet';
+import { AspNetFlowError } from '../src/aspnet';
 import { chargeShown, downloadNjRoster, isZeroCharge, NjChargeError } from '../src/nj/roster-flow';
 import { fixture, makeFetcher, tempDir } from './helpers';
 import { HOST, mockRosterFlow, roster } from './nj-mocks';
@@ -80,5 +81,21 @@ describe('NJ roster 5-step flow (replayed)', () => {
     const r = await downloadNjRoster(fetcher, config, 'Nowhereville', { destDir: tempDir() });
     expect(r).toMatchObject({ path: null, rows: 0 });
   });
-});
 
+  it('a results page with the Download List button but no licensee rows is an empty town: the button is never pressed (the live Woodbridge Township 500)', async () => {
+    const { fetcher, agent, config } = makeFetcher();
+    const seen = mockRosterFlow(agent, { results: fixture('nj', 'roster-02_results-empty.html') });
+    const r = await downloadNjRoster(fetcher, config, 'Woodbridge Township', { destDir: tempDir() });
+    expect(r).toMatchObject({ path: null, rows: 0, town: 'Woodbridge Township' });
+    expect(seen.filter((s) => s.method === 'POST')).toHaveLength(1);
+  });
+
+  it('a 500 at "Download List" is reported as a flow error of that step', async () => {
+    const { fetcher, agent, config } = makeFetcher();
+    mockRosterFlow(agent, { downloadListFails: true });
+    const err = await downloadNjRoster(fetcher, config, 'Edison', { destDir: tempDir() }).catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(AspNetFlowError);
+    expect((err as AspNetFlowError).step).toBe('roster download list');
+    expect((err as Error).message).toMatch(/HTTP 500 with an ASP\.NET error page/);
+  });
+});
