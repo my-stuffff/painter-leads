@@ -28,7 +28,28 @@ export interface EnrichOptions {
   steps?: ReadonlySet<'site-enrich' | 'registries-match' | 'classify'>;
   /** Public resolver for the second lookup of a listed website that the crawl could not resolve (tests inject a fake). */
   resolver?: DnsResolver;
+  /**
+   * Cache-only run (reprocess): a company that had no site_status and whose pages are not in the cache is left
+   * with site_status NULL and no residential decision, so it can never qualify on a site nobody read.
+   */
+  cacheOnly?: boolean;
+  /** The context registries-match runs with (reprocess --live-registries gives it the live fetcher). Default: the same context. */
+  registriesCtx?: StageContext;
+  /** registries-match only touches companies that never ran or whose last run failed; matched ones are left alone. */
+  registriesRetryOnly?: boolean;
 }
+
+/**
+ * True when a company's registry lookup never ran or did not finish: an error on any source, or NJ towns whose
+ * roster pull was skipped. `nj_hic_active` is the answer of a finished lookup, not a status.
+ */
+export function registryNeedsRetry(status: Record<string, unknown>): boolean {
+  const keys = Object.keys(status).filter((k) => k !== 'nj_hic_active');
+  return keys.length === 0 || keys.includes('nj_roster_skipped') || keys.some((k) => status[k] === 'error');
+}
+
+/** What the report says about a painter whose website pages are not in the cache (reprocess cannot fetch them). */
+export const SITE_NOT_CACHED_REASON = 'website not read: its pages are not in the page cache (the offline fix loop does not fetch)';
 
 export interface EnrichSummary {
   companies: number;
@@ -94,13 +115,21 @@ export async function enrichCompanies(
     return buildCompanyRef(c, listings.get(c.id) ?? [], ev);
   };
 
+  const unread = new Set<number>();
+
   if (want('site-enrich')) {
     for (const c of companies) {
       if (c.siteStatus !== null && !o.refresh) continue;
       const result = await stages['site-enrich'].run(ctx, await refOf(c));
+      const notCached =
+        o.cacheOnly === true &&
+        c.siteStatus === null &&
+        result.pages.length === 0 &&
+        (result.status === 'fetch_failed' || result.status === 'render_failed');
+      if (notCached) unread.add(c.id);
       await q(ctx.db, `UPDATE companies SET site_status = $2, last_checked_at = now(), updated_at = now() WHERE id = $1`, [
         c.id,
-        result.status,
+        notCached ? null : result.status,
       ]);
       summary.siteEnriched += 1;
     }
@@ -113,13 +142,16 @@ export async function enrichCompanies(
   }
 
   if (want('registries-match')) {
+    const registriesCtx = o.registriesCtx ?? ctx;
     const evidence = await evidenceByCompany(ctx.db, companies.map((c) => c.id));
     for (const c of companies) {
-      if (Object.keys(c.registryStatus).filter((k) => k !== 'nj_hic_active').length > 0 && !o.refresh) continue;
+      if (o.registriesRetryOnly) {
+        if (!registryNeedsRetry(c.registryStatus)) continue;
+      } else if (Object.keys(c.registryStatus).filter((k) => k !== 'nj_hic_active').length > 0 && !o.refresh) continue;
       const rows = evidence.get(c.id) ?? [];
       const ref = await refOf(c);
       const dom = ref.websiteUrl ? registrableDomain(ref.websiteUrl) : null;
-      const result = await stages['registries-match'].run(ctx, {
+      const result = await stages['registries-match'].run(registriesCtx, {
         company: ref,
         emails: acceptedValues(rows, 'email'),
         licenceNumbers: [...new Set([...acceptedValues(rows, 'nj_hic_number'), ...acceptedValues(rows, 'licence_number')])],
@@ -142,6 +174,18 @@ export async function enrichCompanies(
   if (want('classify')) {
     companies = await loadCompanies(ctx.db, companies.map((c) => c.id));
     for (const c of companies) {
+      if (unread.has(c.id)) {
+        // no pages were read, so there is nothing to classify on: 'unclear' keeps it out of Qualified
+        await q(
+          ctx.db,
+          `UPDATE companies SET residential_status = NULL, residential_reason = $2, updated_at = now() WHERE id = $1`,
+          [c.id, SITE_NOT_CACHED_REASON],
+        );
+        for (const old of await ctx.evidence.listForCompany(c.id, 'residential_signal')) {
+          if (old.extractor === CLASSIFY_EXTRACTOR && old.status === 'accepted') await ctx.evidence.reject(old.id, 'superseded');
+        }
+        continue;
+      }
       const njHic = c.registryStatus.nj_hic_active;
       const decision = await stages.classify.run(ctx, {
         company: await refOf(c),
