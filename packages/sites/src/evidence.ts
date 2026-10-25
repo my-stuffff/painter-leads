@@ -2,6 +2,8 @@ import type { Db, DnsResolver, EvidenceDraft } from '@pp/core';
 import type { EmailFinding } from './emails/extract';
 import { emailKind, type EmailKind } from './emails/rank';
 import { checkMailDomain, type MailDomainCheck } from './emails/mx';
+import type { LicenceFinding } from './licence';
+import type { OwnerFinding } from './owners/extract';
 
 export const EXTRACTOR_VERSION = '1';
 export const EMAIL_EXTRACTOR = 'sites/emails';
@@ -80,4 +82,46 @@ export function emailDrafts(findings: EmailFinding[], o: EmailDraftOptions): Evi
       },
     };
   });
+}
+
+export const OWNER_EXTRACTOR = 'sites/owners';
+export const LICENCE_EXTRACTOR = 'sites/licence';
+
+/** ENR-02 / ENR-06: one owner_name row per (person, page); rejected candidates are kept for the audit. */
+export function ownerDrafts(findings: OwnerFinding[], o: { companyId: number; capturedAt: Date }): EvidenceDraft[] {
+  return findings.map((f) => ({
+    companyId: o.companyId,
+    field: 'owner_name' as const,
+    value: f.name,
+    sourceType: 'website' as const,
+    sourceUrl: f.pageUrl,
+    pageSha256: f.pageSha256,
+    capturedAt: o.capturedAt,
+    snippet: f.snippet || f.name,
+    extractor: OWNER_EXTRACTOR,
+    extractorVersion: EXTRACTOR_VERSION,
+    confidence: f.confidence,
+    status: f.status,
+    rejectReason: f.rejectReason,
+    attrs: { title: f.title, method: f.method, rendered: f.rendered },
+  }));
+}
+
+/** D-16: the NJ home-improvement registration number shown on the site (the join key for 01-03). */
+export function licenceDrafts(findings: LicenceFinding[], o: { companyId: number; capturedAt: Date }): EvidenceDraft[] {
+  return findings.map((f) => ({
+    companyId: o.companyId,
+    field: 'nj_hic_number' as const,
+    value: f.number,
+    sourceType: 'website' as const,
+    sourceUrl: f.pageUrl,
+    pageSha256: f.pageSha256,
+    capturedAt: o.capturedAt,
+    snippet: f.snippet,
+    extractor: LICENCE_EXTRACTOR,
+    extractorVersion: EXTRACTOR_VERSION,
+    confidence: 'high' as const,
+    status: 'accepted' as const,
+    attrs: { rendered: f.rendered },
+  }));
 }

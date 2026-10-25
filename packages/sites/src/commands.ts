@@ -2,6 +2,7 @@ import { createDnsResolver, type CommandSpec } from '@pp/core';
 import { crawlSite } from './crawl/crawl';
 import { extractEmails } from './emails/extract';
 import { emailDrafts, mailDomainChecks } from './evidence';
+import { buildFirstNamesFiles } from './owners/names';
 
 export const sitesCrawlCommand: CommandSpec = {
   name: 'sites crawl',
@@ -87,4 +88,21 @@ export const sitesCrawlCommand: CommandSpec = {
   },
 };
 
-export const commands: CommandSpec[] = [sitesCrawlCommand];
+export const sitesNamesBuildCommand: CommandSpec = {
+  name: 'sites names build',
+  description: 'Build packages/sites/data/first-names.txt from the Census 1990 files (and the SSA files when given)',
+  options: [
+    { flags: '--census-dir <dir>', description: 'Read dist.male.first and dist.female.first from this folder instead of downloading' },
+    { flags: '--ssa-dir <dir>', description: 'Folder of extracted SSA yobYYYY.txt files to union (names with a total count >= 50, 1930-2005)' },
+  ],
+  async run(ctx, _args, opts) {
+    const censusDir = typeof opts.censusDir === 'string' ? opts.censusDir : undefined;
+    const ssaDir = typeof opts.ssaDir === 'string' ? opts.ssaDir : undefined;
+    const fetcher = censusDir ? null : await ctx.fetcher();
+    const r = await buildFirstNamesFiles({ fetcher, censusDir, ssaDir });
+    ctx.out(`first names: ${r.names.length} (census ${r.fromCensus}, ssa added ${r.fromSsa}, ssa files ${r.ssaFiles})`);
+    for (const s of r.sources) ctx.out(`  ${s.url} sha256 ${s.sha256} (${s.lines} lines)`);
+  },
+};
+
+export const commands: CommandSpec[] = [sitesCrawlCommand, sitesNamesBuildCommand];
