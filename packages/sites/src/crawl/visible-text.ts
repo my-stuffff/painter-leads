@@ -75,7 +75,8 @@ function classId(n: DomNode): string {
 function childFlags(n: DomNode, f: Flags): Flags {
   if (n.type !== 'tag') return f;
   const name = n.name ?? '';
-  const ci = classId(n);
+  // Page-level wrappers carry theme classes like "footer-sticky" or "menu-open" that say nothing about their content.
+  const ci = name === 'body' || name === 'html' || name === 'main' ? '' : classId(n);
   const role = n.attribs?.role ?? '';
   return {
     inFooter: f.inFooter || name === 'footer' || role === 'contentinfo' || FOOTER_WORDS.test(ci),

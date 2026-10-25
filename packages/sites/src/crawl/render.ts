@@ -60,3 +60,13 @@ export function createRenderer(deps: { fetcher: Fetcher; config: PpConfig }): Re
     },
   };
 }
+
+/** One-shot render: launches Chromium, renders the page, closes the browser. */
+export async function renderPage(deps: { fetcher: Fetcher; config: PpConfig }, url: string): Promise<string> {
+  const r = createRenderer(deps);
+  try {
+    return await r.render(url);
+  } finally {
+    await r.close();
+  }
+}

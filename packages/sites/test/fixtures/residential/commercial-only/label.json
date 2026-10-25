@@ -1,0 +1,5 @@
+{
+  "synthetic": true,
+  "expect": "commercial_only",
+  "note": "Only commercial phrases (office buildings, HOA, property management, tenant improvement)."
+}

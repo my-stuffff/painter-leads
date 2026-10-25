@@ -1,0 +1,5 @@
+{
+  "synthetic": true,
+  "expect": "residential_only",
+  "note": "An explicit negation next to the word commercial; residential phrases elsewhere."
+}

@@ -1,8 +1,10 @@
-import { createDnsResolver, type CommandSpec } from '@pp/core';
+import { createLogger, createDnsResolver, DbEvidenceStore, type CommandContext, type CommandSpec, type StageContext } from '@pp/core';
 import { crawlSite } from './crawl/crawl';
 import { extractEmails } from './emails/extract';
 import { emailDrafts, mailDomainChecks } from './evidence';
 import { buildFirstNamesFiles } from './owners/names';
+import { siteFinalizeStage } from './owners/template';
+import { classifyStage, createSiteEnrichStage, enrichCompanies, loadCompanyRefs, njHicActiveFrom } from './stage';
 
 export const sitesCrawlCommand: CommandSpec = {
   name: 'sites crawl',
@@ -105,4 +107,81 @@ export const sitesNamesBuildCommand: CommandSpec = {
   },
 };
 
-export const commands: CommandSpec[] = [sitesCrawlCommand, sitesNamesBuildCommand];
+async function stageContext(ctx: CommandContext, runId: number): Promise<StageContext> {
+  const db = await ctx.db();
+  return {
+    runId,
+    config: ctx.config(),
+    db,
+    evidence: new DbEvidenceStore(db),
+    fetcher: await ctx.fetcher(),
+    log: createLogger('sites'),
+    now: () => new Date(),
+    sleep: (ms) => new Promise((r) => setTimeout(r, ms)),
+  };
+}
+
+function runArgs(opts: Record<string, unknown>): { runId: number; companyId?: number } {
+  const runId = Number(opts.run);
+  if (!Number.isInteger(runId) || runId <= 0) throw new Error('--run <n> is required');
+  const companyId = opts.companyId === undefined ? undefined : Number(opts.companyId);
+  return { runId, companyId };
+}
+
+export const sitesEnrichCommand: CommandSpec = {
+  name: 'sites enrich',
+  description: 'Crawl the websites of the companies in a run and record email, owner, 13VH and residential-signal evidence',
+  options: [
+    { flags: '--run <n>', description: 'Run id' },
+    { flags: '--company-id <n>', description: 'Only this company' },
+    { flags: '--offline', description: 'Fetcher cache only: no network, no browser, no DNS (the fix loop)' },
+  ],
+  async run(ctx, _args, opts) {
+    const { runId, companyId } = runArgs(opts);
+    const sctx = await stageContext(ctx, runId);
+    const companies = await loadCompanyRefs(sctx.db, runId, companyId);
+    const stage = createSiteEnrichStage({ offline: opts.offline === true });
+    const outcomes = await enrichCompanies(sctx, stage, companies);
+    const done = outcomes.filter((o) => o.result);
+    const byStatus: Record<string, number> = {};
+    for (const o of done) byStatus[o.result!.status] = (byStatus[o.result!.status] ?? 0) + 1;
+    ctx.out(`companies: ${companies.length}, enriched: ${done.length}, failed: ${outcomes.length - done.length}`);
+    ctx.out(`site status: ${JSON.stringify(byStatus)}`);
+    ctx.out(`emails: ${done.reduce((n, o) => n + o.result!.emails, 0)}, owners: ${done.reduce((n, o) => n + o.result!.owners, 0)}, 13VH numbers: ${done.reduce((n, o) => n + o.result!.licenceNumbers.length, 0)}`);
+    for (const o of outcomes.filter((x) => x.error)) ctx.out(`failed: company ${o.company.companyId} ${o.company.name}: ${o.error}`);
+    if (companyId === undefined) {
+      const fin = await siteFinalizeStage.run(sctx, { runId });
+      ctx.out(`template names rejected: ${fin.templateNamesRejected}`);
+    }
+    return outcomes.some((o) => o.error) ? 1 : 0;
+  },
+};
+
+export const sitesClassifyCommand: CommandSpec = {
+  name: 'sites classify',
+  description: 'Decide residential_only / residential_and_commercial / commercial_only / unclear for the companies in a run',
+  options: [
+    { flags: '--run <n>', description: 'Run id' },
+    { flags: '--company-id <n>', description: 'Only this company' },
+  ],
+  async run(ctx, _args, opts) {
+    const { runId, companyId } = runArgs(opts);
+    const sctx = await stageContext(ctx, runId);
+    const companies = await loadCompanyRefs(sctx.db, runId, companyId);
+    const counts: Record<string, number> = {};
+    for (const company of companies) {
+      const status = await sctx.db.$client.query<{ site_status: string | null }>('SELECT site_status FROM companies WHERE id = $1', [company.companyId]);
+      const registry = await sctx.evidence.listForCompany(company.companyId, 'licence_status');
+      const decision = await classifyStage.run(sctx, {
+        company,
+        njHicActive: njHicActiveFrom(registry),
+        siteStatus: (status.rows[0]?.site_status ?? null) as never,
+      });
+      counts[decision.label] = (counts[decision.label] ?? 0) + 1;
+    }
+    ctx.out(`classified: ${companies.length}`);
+    for (const [label, n] of Object.entries(counts).sort()) ctx.out(`  ${label}: ${n}`);
+  },
+};
+
+export const commands: CommandSpec[] = [sitesCrawlCommand, sitesEnrichCommand, sitesClassifyCommand, sitesNamesBuildCommand];

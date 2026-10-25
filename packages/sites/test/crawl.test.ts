@@ -41,6 +41,11 @@ describe('visible text', () => {
     expect(v.links[0]).toMatchObject({ href: '/services', text: 'Services', inNav: true });
   });
 
+  it('ignores footer / menu / review words in the classes of the page wrapper (body, html, main)', () => {
+    const v = visibleText('<!doctype html><html class="menu-open"><body class="home footer-sticky review-page"><main class="nav-main"><p>Interior painting for homeowners</p></main></body></html>');
+    expect(v.lines[0]).toMatchObject({ inFooter: false, inNav: false, inReview: false });
+  });
+
   it('keeps each text node separate for scans that must not glue neighbours', () => {
     const v = visibleText(html('<span>Email us</span><span>info@acme.com</span>'));
     expect(v.text).toBe('Email usinfo@acme.com');

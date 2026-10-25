@@ -4,6 +4,7 @@ import { emailKind, type EmailKind } from './emails/rank';
 import { checkMailDomain, type MailDomainCheck } from './emails/mx';
 import type { LicenceFinding } from './licence';
 import type { OwnerFinding } from './owners/extract';
+import type { SignalHit } from './residential/signals';
 
 export const EXTRACTOR_VERSION = '1';
 export const EMAIL_EXTRACTOR = 'sites/emails';
@@ -124,4 +125,51 @@ export function licenceDrafts(findings: LicenceFinding[], o: { companyId: number
     status: 'accepted' as const,
     attrs: { rendered: f.rendered },
   }));
+}
+
+export const RESIDENTIAL_EXTRACTOR = 'sites/residential';
+export const CLASSIFY_EXTRACTOR = 'sites/classify';
+
+export interface CrawlMeta {
+  pages: number;
+  chars: number;
+  serviceContent: boolean;
+}
+
+/**
+ * One residential_signal row per hit: value `<polarity>:<id>`, snippet from the page. A commercial
+ * hit cancelled by a negation is stored rejected ('negated'). Website rows carry how much of the site
+ * was read (attrs.crawl), because the classify stage decides from the evidence alone.
+ */
+export function signalDrafts(
+  hits: SignalHit[],
+  o: { companyId: number; capturedAt: Date; extractor: string; pages?: Map<string, { sha256: string; rendered: boolean }>; crawl?: CrawlMeta },
+): EvidenceDraft[] {
+  return hits.map((h) => {
+    const page = o.pages?.get(h.sourceUrl);
+    return {
+      companyId: o.companyId,
+      field: 'residential_signal' as const,
+      value: `${h.polarity}:${h.id}`,
+      sourceType: h.sourceType === 'nj_hic_roster' ? ('nj_hic_roster' as const) : h.sourceType,
+      sourceUrl: h.sourceUrl,
+      pageSha256: page?.sha256 ?? null,
+      capturedAt: o.capturedAt,
+      snippet: h.snippet || h.text,
+      extractor: o.extractor,
+      extractorVersion: EXTRACTOR_VERSION,
+      confidence: h.strength === 'strong' ? ('high' as const) : ('medium' as const),
+      status: h.negated ? ('rejected' as const) : ('accepted' as const),
+      rejectReason: h.negated ? 'negated' : null,
+      attrs: {
+        id: h.id,
+        polarity: h.polarity,
+        strength: h.strength,
+        text: h.text,
+        pos: h.position,
+        rendered: page?.rendered ?? false,
+        ...(o.crawl ? { crawl: o.crawl } : {}),
+      },
+    };
+  });
 }

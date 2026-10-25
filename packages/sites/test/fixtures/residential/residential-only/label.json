@@ -1,0 +1,5 @@
+{
+  "synthetic": true,
+  "expect": "residential_only",
+  "note": "Residential phrases on every page, a services page, nothing commercial."
+}
