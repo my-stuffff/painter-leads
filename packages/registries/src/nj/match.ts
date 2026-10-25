@@ -20,6 +20,8 @@ import {
   rungFor,
   sameCity,
   sameZip,
+  sharedNameWords,
+  nameWords,
   type LadderCandidate,
   type LadderHit,
   type LadderOutcome,
@@ -50,6 +52,17 @@ export interface NjLadderInput {
 
 const upper = (s: string) => s.trim().toUpperCase();
 
+/**
+ * The business name before a Google tagline ("Ekar Home Improvement – Transforming Homes with Painting" → "Ekar Home
+ * Improvement"): cut at a spaced dash, en/em dash or bar only, so a hyphenated name stays whole.
+ */
+export function leadName(name: string): string {
+  const lead = (name.split(/\s+[–—|]\s+|\s+-\s+/)[0] ?? '').trim();
+  return normaliseBusinessName(lead).norm.length >= 3 ? lead : name;
+}
+
+const nameVariants = (name: string): string[] => [...new Set([name, leadName(name)])];
+
 /** Roster email domain = the company's own website domain (never a shared host or a free-mail provider). */
 export function emailDomainMatches(rosterEmail: string | null, websiteDomain: string | null): boolean {
   if (!rosterEmail || !websiteDomain) return false;
@@ -64,7 +77,8 @@ export function emailDomainMatches(rosterEmail: string | null, websiteDomain: st
 
 /**
  * The NJ ladder in its fixed order (D-21): 13VH number on the website, roster email domain = website domain,
- * normalised name + same ZIP/town, street address. The first rung with a strong hit decides (and is recorded);
+ * normalised name + same ZIP/town (the name before a Google tagline counts too), street address + a distinctive name
+ * word in common (another business at the same address is not a match). The first rung with a strong hit decides (and is recorded);
  * Active registrations are preferred and two Active strong hits are ambiguous (candidates only).
  * Without any strong hit, name-only hits are returned as candidates, never promoted.
  */
@@ -85,24 +99,32 @@ export function ladderNj(input: NjLadderInput, records: LadderCandidate[], email
     hits: records.filter((r) => emailDomainMatches(emails.get(r.key) ?? null, input.websiteDomain)).map((r) => hit(r, 'email_domain')),
   });
 
+  const names = nameVariants(input.company.name);
   const nameHits: LadderHit[] = [];
   const candidateHits: LadderHit[] = [];
   for (const r of records) {
-    const x = rungFor({ name: input.company.name, city: input.company.city, zip: input.company.zip, phoneLast10: null }, r);
-    if (!x) continue;
-    if (x.strength === 'strong') nameHits.push(hit(r, 'name_zip'));
-    else candidateHits.push(hit(r, x.rung, 'candidate'));
+    const found = names
+      .map((name) => rungFor({ name, city: input.company.city, zip: input.company.zip, phoneLast10: null }, r))
+      .filter((x): x is NonNullable<typeof x> => x !== null);
+    const strong = found.find((x) => x.strength === 'strong');
+    const weak = found.find((x) => x.strength === 'candidate');
+    if (strong) nameHits.push(hit(r, 'name_zip'));
+    else if (weak) candidateHits.push(hit(r, weak.rung, 'candidate'));
   }
   rungs.push({ rung: 'name_zip', hits: nameHits });
 
   const mine = streetKey(input.company.street);
   const addressHits: LadderHit[] = [];
   if (mine) {
+    const myWords = nameWords(names.flatMap((name) => {
+      const n = normaliseBusinessName(name);
+      return [n.norm, ...n.aliases];
+    }));
     for (const r of records) {
       const theirs = streetKey(streets.get(r.key) ?? null);
-      if (theirs && theirs.key === mine.key && (sameZip(input.company.zip, r.zip) || sameCity(input.company.city, r.city))) {
-        addressHits.push(hit(r, 'address'));
-      }
+      if (!theirs || theirs.key !== mine.key || !(sameZip(input.company.zip, r.zip) || sameCity(input.company.city, r.city))) continue;
+      const shared = sharedNameWords(myWords, nameWords([r.nameNorm, ...r.aliasNorms]));
+      if (shared) addressHits.push({ ...hit(r, 'address'), note: `same street address; shared name word ${shared.join(', ')}` });
     }
   }
   rungs.push({ rung: 'address', hits: addressHits });
@@ -148,7 +170,6 @@ export function njRosterEvidence(companyId: number, r: RegistryRecord, rung: str
 }
 
 async function candidateRecords(ctx: StageContext, input: RegistryMatchInput): Promise<RegistryRecord[]> {
-  const nm = normaliseBusinessName(input.company.name);
   const out = new Map<string, RegistryRecord>();
   const add = (rows: RegistryRecord[]) => rows.forEach((r) => out.set(r.sourceKey, r));
 
@@ -156,15 +177,21 @@ async function candidateRecords(ctx: StageContext, input: RegistryMatchInput): P
     const r = await getRecord(ctx.db, 'nj_hic_roster', upper(no));
     if (r) out.set(r.sourceKey, r);
   }
-  add(
-    await findCandidates(ctx.db, {
-      sourceTypes: ['nj_hic_roster'],
-      state: 'NJ',
-      phoneLast10: input.company.phoneE164 ? last10(input.company.phoneE164) : null,
-      core: nm.core || null,
-      zip: zip5(input.company.zip),
-    }),
-  );
+  // One query per name variant (the full Google name, and the name before its tagline), each also bringing the rows of
+  // the listing's own ZIP and city (roster rows without a ZIP are reached by the city).
+  const cores = [...new Set(nameVariants(input.company.name).map((n) => normaliseBusinessName(n).core))];
+  for (const [i, core] of (cores.length > 0 ? cores : ['']).entries()) {
+    add(
+      await findCandidates(ctx.db, {
+        sourceTypes: ['nj_hic_roster'],
+        state: 'NJ',
+        phoneLast10: i === 0 && input.company.phoneE164 ? last10(input.company.phoneE164) : null,
+        core: core || null,
+        zip: zip5(input.company.zip),
+        city: input.company.city,
+      }),
+    );
+  }
   if (input.websiteDomain) add(await findByEmailDomain(ctx.db, 'nj_hic_roster', input.websiteDomain));
   return [...out.values()];
 }
@@ -183,6 +210,28 @@ export async function townsFor(ctx: StageContext, input: RegistryMatchInput): Pr
     // no such run / area file: the listing's own city is enough
   }
   return [...towns].filter((t) => t.length > 0);
+}
+
+/**
+ * The other towns of the run's NJ painters (listing city of every painter of the run that is not out of area). A
+ * company registers in its own town, which is often not the town Google shows (an Edison listing registered in
+ * Fords), so these rosters are loaded for every company, before any of them is matched: the result then does not
+ * depend on which company happened to come first.
+ */
+export async function runTowns(ctx: StageContext): Promise<string[]> {
+  try {
+    const res = await ctx.db.$client.query(
+      `SELECT DISTINCT trim(l.city) AS city
+         FROM companies c JOIN listings l ON l.id = c.primary_listing_id
+        WHERE c.run_id = $1 AND c.state = 'NJ' AND c.painter_status = 'painter' AND c.in_area IS NOT FALSE
+          AND l.city IS NOT NULL AND trim(l.city) <> ''
+        ORDER BY 1`,
+      [ctx.runId],
+    );
+    return res.rows.map((r: { city: string }) => r.city);
+  } catch {
+    return [];
+  }
 }
 
 function splitOwner(display: string): { first: string; last: string } | null {
@@ -217,8 +266,16 @@ export async function matchNj(
   const skippedTowns: string[] = [];
   if (!opts.offline) {
     const skipped = shared.njSkippedTowns ?? new Map<string, string>();
-    for (const town of await townsFor(ctx, input)) {
+    const own = await townsFor(ctx, input);
+    for (const town of own) {
       if ((await ensureNjRosterOrSkip(ctx, town, skipped)).how === 'skipped') skippedTowns.push(town);
+    }
+    // The run's other towns: best effort. A town that cannot be pulled is skipped quietly (it is not this company's town).
+    const seen = new Set(own.map((t) => t.toLowerCase()));
+    for (const town of await runTowns(ctx)) {
+      if (seen.has(town.toLowerCase())) continue;
+      seen.add(town.toLowerCase());
+      await ensureNjRosterOrSkip(ctx, town, skipped);
     }
   }
 

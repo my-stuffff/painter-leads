@@ -124,7 +124,7 @@ export function toCandidate(r: RegistryRecord): LadderCandidate {
  */
 export async function findCandidates(
   db: Db,
-  q: { sourceTypes: SourceType[]; state: string; phoneLast10: string | null; core: string | null; zip: string | null },
+  q: { sourceTypes: SourceType[]; state: string; phoneLast10: string | null; core: string | null; zip: string | null; city?: string | null },
 ): Promise<RegistryRecord[]> {
   const ors: string[] = [];
   const params: unknown[] = [q.sourceTypes, q.state];
@@ -139,6 +139,10 @@ export async function findCandidates(
   if (q.zip) {
     params.push(q.zip);
     ors.push(`zip = $${params.length}`);
+  }
+  if (q.city?.trim()) {
+    params.push(q.city.trim());
+    ors.push(`upper(city) = upper($${params.length})`);
   }
   if (ors.length === 0) return [];
   const res = await db.$client.query(
