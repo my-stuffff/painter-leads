@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "sourceType": "nj_hic_roster",
+      "sourceKey": "13VH00099900",
+      "state": "NJ",
+      "legalName": "Synthetic Painting Co LLC",
+      "status": "Active",
+      "city": "Edison",
+      "zip": "08817",
+      "owners": [
+        {
+          "name": "Sam Synthetic",
+          "title": null
+        }
+      ]
+    },
+    {
+      "sourceType": "nj_hic_roster",
+      "sourceKey": "13VH00011100",
+      "state": "NJ",
+      "legalName": "Other Business Inc",
+      "status": "Expired",
+      "city": "Newark",
+      "zip": "07102",
+      "owners": []
+    }
+  ],
+  "matches": [
+    {
+      "sourceKey": "13VH00099900",
+      "strength": "strong"
+    }
+  ]
+}

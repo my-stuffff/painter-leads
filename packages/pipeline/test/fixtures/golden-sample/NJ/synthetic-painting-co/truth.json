@@ -1,0 +1,42 @@
+{
+  "sample_id": "NJ-001",
+  "company": {
+    "name": "Synthetic Painting Co",
+    "state": "NJ",
+    "city": "Edison",
+    "zip": "08817",
+    "street": "1 Synthetic St",
+    "websiteUrl": "https://synthetic-painting.test",
+    "phoneE164": "+17325550199",
+    "categories": [
+      "Painter"
+    ]
+  },
+  "nj_hic_active": true,
+  "fields": {
+    "emails": [
+      "info@synthetic-painting.test"
+    ],
+    "owners": {
+      "expected": [
+        "Sam Synthetic"
+      ],
+      "ignore": []
+    },
+    "residential": "residential_only",
+    "maps_card": {
+      "name": "Synthetic Painting Co",
+      "rating": "4.9",
+      "review_count": "25",
+      "phone": "+17325550199",
+      "category": "Painter",
+      "website": "https://synthetic-painting.test"
+    },
+    "registry_match": [
+      {
+        "sourceKey": "13VH00099900",
+        "strength": "strong"
+      }
+    ]
+  }
+}
