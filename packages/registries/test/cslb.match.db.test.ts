@@ -135,7 +135,7 @@ describe('registries-match stage for California', () => {
     const { fetcher } = makeFetcher();
     const config = testConfig();
     const company = await insertCompany(db, { name: 'Cabrales Painting', state: 'CA', city: 'San Jose', zip: '95133', phoneE164: '+14083983805' });
-    const r = await createRegistriesStage().run(stageContext(db, fetcher, config), { company, emails: [], licenceNumbers: [], websiteDomain: null });
+    const r = await createRegistriesStage({ only: new Set(['cslb']) }).run(stageContext(db, fetcher, config), { company, emails: [], licenceNumbers: [], websiteDomain: null });
     expect(r.status.cslb).toBe('error');
     const status = await db.$client.query('SELECT registry_status FROM companies WHERE id = $1', [company.companyId]);
     expect(status.rows[0].registry_status).toMatchObject({ cslb_error: 'CSLB master not loaded' });
@@ -147,11 +147,11 @@ describe('registries-match stage for California', () => {
     const input = { company, emails: [], licenceNumbers: [], websiteDomain: null };
 
     const off = testConfig({ cslb: { enabled: false } });
-    const rOff = await createRegistriesStage().run(stageContext(db, makeFetcher(off).fetcher, off), input);
+    const rOff = await createRegistriesStage({ only: new Set(['cslb']) }).run(stageContext(db, makeFetcher(off).fetcher, off), input);
     expect(rOff.status.cslb).toBe('disabled');
 
     const on = testConfig();
-    const rOn = await createRegistriesStage().run(stageContext(db, makeFetcher(on).fetcher, on), input);
+    const rOn = await createRegistriesStage({ only: new Set(['cslb']) }).run(stageContext(db, makeFetcher(on).fetcher, on), input);
     expect(rOn).toMatchObject({ companyId: company.companyId, status: { cslb: 'matched' }, owners: 1 });
     expect(rOn.evidenceIds.length).toBeGreaterThanOrEqual(6);
   });

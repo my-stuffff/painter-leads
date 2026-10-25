@@ -48,7 +48,7 @@ async function input(over: Partial<RegistryMatchInput['company']> & { name: stri
 const run = (i: RegistryMatchInput, config = testConfig(), mock?: (agent: ReturnType<typeof makeFetcher>['agent']) => void, opts = {}) => {
   const f = makeFetcher(config);
   mock?.(f.agent);
-  return createRegistriesStage(opts)
+  return createRegistriesStage({ only: new Set(['nj_hic_roster', 'nj_hic_detail', 'nj_principal_search']), ...opts })
     .run(stageContext(db, f.fetcher, config), i)
     .then((r) => ({ r, calls: f.calls() }));
 };

@@ -73,7 +73,10 @@ export function eventTargetOf(href: string | undefined): string | null {
 
 /** The absolute URL a page's form posts to (its `action` resolved against the page URL); the page URL when it has none. */
 export function formAction(html: string, pageUrl: string): string {
-  const action = cheerio.load(html)('form').first().attr('action');
+  const $ = cheerio.load(html);
+  // The page may carry a second, site-search form (CSLB does): the ASP.NET form is the one with the view state.
+  const aspnet = $('form').filter((_, f) => $(f).find('input[name="__VIEWSTATE"]').length > 0).first();
+  const action = (aspnet.length > 0 ? aspnet : $('form').first()).attr('action');
   if (!action) return pageUrl;
   return new URL(action, pageUrl).toString();
 }

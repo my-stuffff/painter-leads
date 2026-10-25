@@ -1,0 +1,50 @@
+{
+  "success": true,
+  "data": {
+    "taxpayerId": "32066330906",
+    "feiNumber": "824531595",
+    "name": "ALEXANDRIS PAINTING COMPANY, LLC",
+    "dbaName": null,
+    "mailingAddressStreet": "REDACTED",
+    "mailingAddressCity": "BONHAM",
+    "mailingAddressState": "TX",
+    "mailingAddressZip": "75418",
+    "mailingAddressZip4": "8937",
+    "rightToTransactTX": "ACTIVE",
+    "rightToTransactTXLink": null,
+    "stateOfFormation": " TX",
+    "sosRegistrationStatus": "ACTIVE",
+    "effectiveSosRegistrationDate": "02/23/2018",
+    "sosFileNumber": "0802944052",
+    "registeredAgentName": "DIMITRI ALEXANDRIS",
+    "registeredOfficeAddressStreet": "REDACTED",
+    "registeredOfficeAddressCity": "RICHARDSON",
+    "registeredOfficeAddressState": "TX",
+    "registeredOfficeAddressZip": "75081",
+    "taxId": 13,
+    "lastUpdated": "2026-10-25T13:50:22.000Z",
+    "reportYear": "2024",
+    "officerInfo": [
+      {
+        "AGNT_NM": "DIMITRI C ALEXANDRIS",
+        "AGNT_TITL_TX": "PRESIDENT",
+        "AGNT_ACTV_YR": "2024",
+        "AD_STR_POB_TX": "REDACTED",
+        "CITY_NM": "RICHADSON",
+        "ST_CD": "TX",
+        "AD_ZP": "75082",
+        "SOURCE": "SOS"
+      },
+      {
+        "AGNT_NM": "DIMITRI C ALEXANDRIS",
+        "AGNT_TITL_TX": "DIRECTOR",
+        "AGNT_ACTV_YR": "2024",
+        "AD_STR_POB_TX": "REDACTED",
+        "CITY_NM": "RICHADSON",
+        "ST_CD": "TX",
+        "AD_ZP": "75082",
+        "SOURCE": "SOS"
+      }
+    ]
+  }
+}

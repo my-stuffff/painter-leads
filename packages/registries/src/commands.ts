@@ -1,14 +1,18 @@
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { createLogger, SOURCE_IDS, type CommandContext, type CommandSpec, type SourceId, type StageContext } from '@pp/core';
+import { createLogger, EXIT_BLOCKED, SOURCE_IDS, type CommandContext, type CommandSpec, type SourceId, type StageContext } from '@pp/core';
+import { captureBbb, importBbb, parseBbbDir } from './bbb/capture';
 import { checkMasterComplete } from './cslb/completeness';
 import { downloadCslbFile, IncompleteDownloadError, type CslbKind } from './cslb/download';
 import { loadCslbMaster } from './cslb/master';
+import { lookupCslbPersonnel } from './cslb/lookup';
+import { IncompletePersonnelError, loadCslbPersonnel, masterMaxLicence } from './cslb/personnel';
 import { loadRunInputs } from './inputs';
 import { fetchNjOwner } from './nj/detail-flow';
 import { townsFor } from './nj/match';
 import { ensureNjRosterForTown } from './nj/roster-ensure';
 import { createRegistriesStage } from './stage';
+import { queryTxTaxpayers, txStatus } from './tx/opendata';
 
 const log = createLogger('registries');
 
@@ -67,14 +71,38 @@ const cslbDownload: CommandSpec = {
 
 const cslbLoad: CommandSpec = {
   name: 'registries cslb load',
-  description: 'Load a downloaded CSLB master CSV (--master FILE) into the registry tables',
+  description: 'Load a downloaded CSLB master CSV (--master FILE) or a COMPLETE personnel CSV (--personnel FILE)',
   options: [
     { flags: '--master <file>', description: 'path of the master CSV' },
+    { flags: '--personnel <file>', description: 'path of the personnel CSV (refused unless complete; the master must be loaded first)' },
     { flags: '--captured <date>', description: 'the date the file stands for (YYYY-MM-DD); default: from the download sidecar or file name' },
   ],
   async run(ctx, _args, opts) {
+    const personnel = str(opts.personnel);
+    const given0 = str(opts.captured);
+    if (given0 && !/^\d{4}-\d{2}-\d{2}$/.test(given0)) throw new Error('--captured must look like 2026-10-23');
+    if (personnel) {
+      const db = await ctx.db();
+      const masterMax = await masterMaxLicence(db);
+      if (!masterMax) {
+        ctx.out('REFUSED: load the CSLB master first (the personnel file is checked against its highest licence number)');
+        return 1;
+      }
+      try {
+        const capturedAt = given0 ? new Date(`${given0}T00:00:00Z`) : await capturedAtOf(personnel);
+        const r = await loadCslbPersonnel(db, personnel, { capturedAt, masterMax });
+        ctx.out(`loaded ${r.people} roles of ${r.licences} licences from ${r.rows} rows (${r.skippedUnknownLicence} rows on licences not in the master)`);
+      } catch (e) {
+        if (e instanceof IncompletePersonnelError) {
+          ctx.out(`REFUSED: ${personnel} is not a complete CSLB personnel file: ${e.verdict.reason}`);
+          return 1;
+        }
+        throw e;
+      }
+      return;
+    }
     const master = str(opts.master);
-    if (!master) throw new Error('give --master FILE (personnel files load with --personnel FILE)');
+    if (!master) throw new Error('give --master FILE or --personnel FILE');
     const verdict = await checkMasterComplete(master);
     if (!verdict.ok) {
       ctx.out(`REFUSED: ${master} is not a complete CSLB master file: ${verdict.reason}`);
@@ -166,4 +194,121 @@ const njOwner: CommandSpec = {
   },
 };
 
-export const commands: CommandSpec[] = [cslbDownload, cslbLoad, njRoster, njOwner, match];
+const cslbLookup: CommandSpec = {
+  name: 'registries cslb lookup',
+  description: 'Per-licence CSLB lookup for one matched licence (fallback; reports lookup_unavailable when the page needs interaction)',
+  args: [{ name: 'licenceNo', required: true, description: 'CSLB licence number' }],
+  async run(ctx, args) {
+    const r = await lookupCslbPersonnel(await ctx.fetcher(), (args[0] ?? '').trim());
+    ctx.out(`${r.licenceNo}: ${r.status} (${r.pages} pages) - ${r.reason}`);
+  },
+};
+
+const txLookup: CommandSpec = {
+  name: 'registries tx lookup',
+  description: 'Search data.texas.gov Active Franchise Taxpayers by ZIP and a name word (no Comptroller request)',
+  options: [
+    { flags: '--zip <zip>', description: '5-digit ZIP' },
+    { flags: '--name <word>', description: 'a word of the company name' },
+  ],
+  async run(ctx, _args, opts) {
+    const zip = str(opts.zip);
+    const name = str(opts.name);
+    if (!zip || !name) throw new Error('give --zip Z and --name WORD');
+    const r = await queryTxTaxpayers(await ctx.fetcher(), { zip, nameToken: name });
+    ctx.out(`${r.rows.length} taxpayers in ${zip} with "${name.toUpperCase()}" in the name`);
+    for (const t of r.rows) ctx.out(`  ${t.taxpayer_number}  ${t.taxpayer_name}  ${t.taxpayer_city ?? ''} ${t.taxpayer_zip ?? ''}  ${txStatus(t)}`);
+  },
+};
+
+const bbbCapture: CommandSpec = {
+  name: 'registries bbb capture',
+  description: 'Capture BBB profile pages (run where bbb.org loads, e.g. the Railway test service) into a folder for offline import',
+  options: [
+    { flags: '--urls <file>', description: 'text file with one profile URL per line' },
+    { flags: '--from-sitemaps', description: 'walk the business-profile sitemaps instead' },
+    { flags: '--state <st>', description: 'state code with --from-sitemaps' },
+    { flags: '--city <city...>', description: 'city name(s) with --from-sitemaps' },
+    { flags: '--out <dir>', description: 'output folder (gets <sha256>.html.gz files and manifest.json)' },
+    { flags: '--note <text>', description: 'where this capture ran (stored in the manifest)' },
+  ],
+  async run(ctx, _args, opts) {
+    const out = str(opts.out);
+    if (!out) throw new Error('give --out DIR');
+    const urlsFile = str(opts.urls);
+    const cities = Array.isArray(opts.city) ? (opts.city as string[]) : str(opts.city) ? [str(opts.city) as string] : [];
+    const state = str(opts.state);
+    let source: { urls: string[] } | { state: string; cities: string[] };
+    if (urlsFile) {
+      source = { urls: (await readFile(urlsFile, 'utf8')).split(/\r?\n/).map((l) => l.trim()).filter((l) => l.startsWith('https://www.bbb.org/')) };
+    } else if (opts.fromSitemaps === true && state && cities.length > 0) {
+      source = { state: state.toUpperCase(), cities };
+    } else {
+      throw new Error('give --urls FILE, or --from-sitemaps --state ST --city CITY');
+    }
+    const r = await captureBbb(await ctx.fetcher(), source, out, { note: str(opts.note) ?? null });
+    const ok = r.manifest.entries.filter((e) => e.status === 200).length;
+    ctx.out(`captured ${ok} of ${r.manifest.entries.length} entries into ${out}${r.blocked ? ' - STOPPED: bbb.org blocked this network (Cloudflare)' : ''}`);
+    return r.blocked ? EXIT_BLOCKED : undefined;
+  },
+};
+
+const bbbParse: CommandSpec = {
+  name: 'registries bbb parse',
+  description: 'Parse a captured BBB folder offline and print the profiles as JSON',
+  args: [{ name: 'dir', required: true, description: 'capture folder' }],
+  async run(ctx, args) {
+    const pages = await parseBbbDir(args[0] as string);
+    ctx.out(JSON.stringify(pages.map((p) => ({ ...p.page.profile, capturedAt: p.page.capturedAt })), null, 2));
+  },
+};
+
+const bbbImport: CommandSpec = {
+  name: 'registries bbb import',
+  description: "Offline: match a run's companies against a captured BBB folder and store owner evidence",
+  args: [{ name: 'dir', required: true, description: 'capture folder' }],
+  options: [{ flags: '--run <id>', description: 'run id' }],
+  async run(ctx, args, opts) {
+    const runId = Number(str(opts.run));
+    if (!Number.isInteger(runId) || runId <= 0) throw new Error('give --run <id>');
+    const sctx = await stageContext(ctx, runId);
+    const inputs = await loadRunInputs(sctx.db, runId);
+    const r = await importBbb(sctx, args[0] as string, inputs);
+    ctx.out(`imported ${r.profiles} profiles: ${r.matched} of ${r.companies} companies matched, ${r.owners} owners`);
+  },
+};
+
+const status: CommandSpec = {
+  name: 'registries status',
+  description: "Per-source registry status counts for a run's companies (from companies.registry_status)",
+  options: [{ flags: '--run <id>', description: 'run id' }],
+  async run(ctx, _args, opts) {
+    const runId = Number(str(opts.run));
+    if (!Number.isInteger(runId) || runId <= 0) throw new Error('give --run <id>');
+    const db = await ctx.db();
+    const res = await db.$client.query('SELECT state, registry_status FROM companies WHERE run_id = $1', [runId]);
+    const tally = new Map<string, number>();
+    for (const row of res.rows as { state: string | null; registry_status: Record<string, unknown> }[]) {
+      for (const [k, v] of Object.entries(row.registry_status ?? {})) {
+        const key = `${row.state ?? '?'}  ${k}=${String(v)}`;
+        tally.set(key, (tally.get(key) ?? 0) + 1);
+      }
+    }
+    ctx.out(`registry status for run ${runId}: ${res.rows.length} companies`);
+    for (const [k, n] of [...tally].sort()) ctx.out(`  ${k}  ${n}`);
+  },
+};
+
+export const commands: CommandSpec[] = [
+  cslbDownload,
+  cslbLoad,
+  cslbLookup,
+  njRoster,
+  njOwner,
+  txLookup,
+  bbbCapture,
+  bbbParse,
+  bbbImport,
+  match,
+  status,
+];

@@ -1,0 +1,42 @@
+#
+# robots.txt
+#
+# This file is to prevent the crawling and indexing of certain parts
+# of your site by web crawlers and spiders run by sites like Yahoo!
+# and Google. By telling these "robots" where not to go on your site,
+# you save bandwidth and server resources.
+#
+# This file will be ignored unless it is at the root of your host:
+# Used:    http://example.com/robots.txt
+# Ignored: http://example.com/site/robots.txt
+#
+# For more information about the robots.txt standard, see:
+# http://www.robotstxt.org/robotstxt.html
+
+User-agent: *
+Disallow: /*/
+Allow: /about/
+Allow: /auto-data/
+Allow: /application.php
+Allow: /data/
+Allow: /disaster-relief/
+Allow: /dist/
+Allow: /economy/
+Allow: /errors/
+Allow: /fonts/
+Allow: /forms/
+Allow: /fraud-alert/
+Allow: /help/
+Allow: /home/
+Allow: /images/
+Allow: /infocus/
+Allow: /programs/
+Allow: /purchasing/
+Allow: /tax-amnesty/
+Allow: /taxes/
+Allow: /transparency/
+Allow: /web-forms/
+
+Disallow: /fmtemp/
+
+Sitemap: https://comptroller.texas.gov/errors/404.php

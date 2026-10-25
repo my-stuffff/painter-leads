@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /*?
+Disallow: /authentication/*
+
+Sitemap: https://www.bbb.org/sitemap-index-business-profiles.xml
+Sitemap: https://www.bbb.org/sitemap-index-other.xml

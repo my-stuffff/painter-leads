@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "data": {
+    "taxpayerId": "32096453066",
+    "feiNumber": null,
+    "name": "HILL COUNTRY PAINTING AND REPAIR LLC",
+    "dbaName": null,
+    "mailingAddressStreet": "REDACTED",
+    "mailingAddressCity": "ELGIN",
+    "mailingAddressState": "TX",
+    "mailingAddressZip": "78621",
+    "mailingAddressZip4": "2333",
+    "rightToTransactTX": "FRANCHISE TAX INVOLUNTARILY ENDED",
+    "rightToTransactTXLink": "<a href='https://comptroller.texas.gov/taxes/franchise/certificate-letter-request.php'>Request tax clearance to reinstate entity</a>",
+    "stateOfFormation": " TX",
+    "sosRegistrationStatus": "INACTIVE",
+    "effectiveSosRegistrationDate": "08/22/2024",
+    "sosFileNumber": "0805672704",
+    "registeredAgentName": "ROSA EDIS REYES MARROQUIN",
+    "registeredOfficeAddressStreet": "REDACTED",
+    "registeredOfficeAddressCity": "ELGIN",
+    "registeredOfficeAddressState": "TX",
+    "registeredOfficeAddressZip": "78621",
+    "taxId": 13,
+    "lastUpdated": "2026-10-25T13:50:22.000Z",
+    "reportYear": "",
+    "officerInfo": []
+  }
+}

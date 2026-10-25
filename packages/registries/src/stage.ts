@@ -10,7 +10,9 @@ import {
   type StageContext,
 } from '@pp/core';
 import { matchCslb, type SourceMatchResult } from './cslb/match';
+import { BbbSession, matchBbb } from './bbb/match';
 import { matchNj } from './nj/match';
+import { matchTx } from './tx/match';
 import { hasRecords, setRegistryStatus } from './records';
 import type { SourceOutcome, StageOptions } from './types';
 
@@ -41,7 +43,7 @@ async function guarded(
   }
 }
 
-async function cslbSource(ctx: StageContext, input: RegistryMatchInput, _opts: StageOptions): Promise<SourceOutcome> {
+async function cslbSource(ctx: StageContext, input: RegistryMatchInput): Promise<SourceOutcome> {
   if (!isSourceEnabled(ctx.config, 'cslb')) return { statuses: { cslb: 'disabled' }, evidenceIds: [], owners: 0 };
   if (!(await hasRecords(ctx.db, 'cslb_master'))) {
     ctx.log.warn({ companyId: input.company.companyId }, 'CSLB master not loaded');
@@ -51,17 +53,25 @@ async function cslbSource(ctx: StageContext, input: RegistryMatchInput, _opts: S
   return one('cslb', await matchCslb({ db: ctx.db, store: ctx.evidence, now: ctx.now }, input.company));
 }
 
-export type SourceAdapter = (ctx: StageContext, input: RegistryMatchInput, opts: StageOptions) => Promise<SourceOutcome>;
+/** State shared by every company of one stage instance (the BBB circuit breaker is per run). */
+export interface SharedState {
+  bbb: BbbSession;
+}
 
-/** Which adapters run for a state (each one honours its own source switch). */
+export type SourceAdapter = (ctx: StageContext, input: RegistryMatchInput, opts: StageOptions, shared: SharedState) => Promise<SourceOutcome>;
+
+/** Which adapters run for a state, in order (each one honours its own source switch; every state also gets BBB). */
 export function adaptersFor(state: RegistryMatchInput['company']['state']): { sources: SourceId[]; run: SourceAdapter }[] {
   const out: { sources: SourceId[]; run: SourceAdapter }[] = [];
   if (state === 'CA') out.push({ sources: ['cslb'], run: cslbSource });
   if (state === 'NJ') out.push({ sources: ['nj_hic_roster', 'nj_hic_detail', 'nj_principal_search'], run: matchNj });
+  if (state === 'TX') out.push({ sources: ['tx_open_data', 'tx_comptroller'], run: matchTx });
+  out.push({ sources: ['bbb'], run: (ctx, input, opts, shared) => matchBbb(ctx, input, opts, shared.bbb) });
   return out;
 }
 
 export function createRegistriesStage(opts: StageOptions = {}): Stage<RegistryMatchInput, RegistryMatchResult> {
+  const shared: SharedState = { bbb: new BbbSession() };
   return {
     name: 'registries-match',
     async run(ctx, input) {
@@ -70,7 +80,7 @@ export function createRegistriesStage(opts: StageOptions = {}): Stage<RegistryMa
       let owners = 0;
       for (const adapter of adaptersFor(input.company.state)) {
         if (opts.only && !adapter.sources.some((s) => opts.only?.has(s))) continue;
-        const r = await guarded(ctx, adapter.sources, () => adapter.run(ctx, input, opts));
+        const r = await guarded(ctx, adapter.sources, () => adapter.run(ctx, input, opts, shared));
         Object.assign(status, r.statuses);
         evidenceIds.push(...r.evidenceIds);
         owners += r.owners;
