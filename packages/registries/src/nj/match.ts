@@ -212,6 +212,28 @@ export async function townsFor(ctx: StageContext, input: RegistryMatchInput): Pr
   return [...towns].filter((t) => t.length > 0);
 }
 
+/**
+ * The other towns of the run's NJ painters (listing city of every painter of the run that is not out of area). A
+ * company registers in its own town, which is often not the town Google shows (an Edison listing registered in
+ * Fords), so these rosters are loaded for every company, before any of them is matched: the result then does not
+ * depend on which company happened to come first.
+ */
+export async function runTowns(ctx: StageContext): Promise<string[]> {
+  try {
+    const res = await ctx.db.$client.query(
+      `SELECT DISTINCT trim(l.city) AS city
+         FROM companies c JOIN listings l ON l.id = c.primary_listing_id
+        WHERE c.run_id = $1 AND c.state = 'NJ' AND c.painter_status = 'painter' AND c.in_area IS NOT FALSE
+          AND l.city IS NOT NULL AND trim(l.city) <> ''
+        ORDER BY 1`,
+      [ctx.runId],
+    );
+    return res.rows.map((r: { city: string }) => r.city);
+  } catch {
+    return [];
+  }
+}
+
 function splitOwner(display: string): { first: string; last: string } | null {
   const tokens = display
     .replace(/[.,]/g, ' ')
@@ -244,8 +266,16 @@ export async function matchNj(
   const skippedTowns: string[] = [];
   if (!opts.offline) {
     const skipped = shared.njSkippedTowns ?? new Map<string, string>();
-    for (const town of await townsFor(ctx, input)) {
+    const own = await townsFor(ctx, input);
+    for (const town of own) {
       if ((await ensureNjRosterOrSkip(ctx, town, skipped)).how === 'skipped') skippedTowns.push(town);
+    }
+    // The run's other towns: best effort. A town that cannot be pulled is skipped quietly (it is not this company's town).
+    const seen = new Set(own.map((t) => t.toLowerCase()));
+    for (const town of await runTowns(ctx)) {
+      if (seen.has(town.toLowerCase())) continue;
+      seen.add(town.toLowerCase());
+      await ensureNjRosterOrSkip(ctx, town, skipped);
     }
   }
 

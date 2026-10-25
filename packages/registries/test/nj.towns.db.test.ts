@@ -168,3 +168,69 @@ describe('NJ roster: a charge still stops the flow', () => {
     expect(rosterFlows(t.calls())).toBe(1);
   });
 });
+
+/** A company of the run with a Google listing in `city`, as the pipeline stores it (painter, not out of area). */
+async function runCompany(runId: number, over: { name: string; city: string; zip: string; websiteDomain?: string | null; inArea?: boolean | null; state?: string }): Promise<RegistryMatchInput> {
+  const n = (await db.$client.query('SELECT count(*)::int AS n FROM listings')).rows[0].n as number;
+  const l = await db.$client.query(
+    `INSERT INTO listings (place_id, profile_url, name, city, zip, state) VALUES ($1, $2, $3, $4, $5, 'NJ') RETURNING id`,
+    [`place-${n}`, `https://maps.example.test/${n}`, over.name, over.city, over.zip],
+  );
+  const c = await db.$client.query(
+    `INSERT INTO companies (run_id, display_name, state, painter_status, in_area, primary_listing_id) VALUES ($1, $2, $3, 'painter', $4, $5) RETURNING id`,
+    [runId, over.name, over.state ?? 'NJ', over.inArea === undefined ? true : over.inArea, l.rows[0].id],
+  );
+  const company = { companyId: c.rows[0].id as number, name: over.name, state: 'NJ' as const, city: over.city, zip: over.zip, street: null, websiteUrl: null, phoneE164: null, categories: ['Painter'] };
+  return { company, emails: [], licenceNumbers: [], websiteDomain: over.websiteDomain ?? null };
+}
+
+const fordsRoster = `${fixture('nj', 'nj-roster-synthetic.txt').split('\n')[0]}\nZORBLAT PAINTING CO INC|||||Home Improvement Contractors|Home Improvement Business Contr|13VH90000099|1/1/2020|3/31/2027|900 Quux Road||Fords|NJ||Middlesex|info@zorblat-example.test|Active|\n`;
+
+describe('NJ roster: every town of the run is loaded, whichever company comes first', () => {
+  it('(e) an Edison listing is matched to a registration in Fords when another company of the run is in Fords, even if it is processed first', async () => {
+    const t = setup();
+    const runId = await edisonRun();
+    const first = await runCompany(runId, { name: 'Zorblat Painting Company', city: 'Edison', zip: '08837', websiteDomain: 'zorblat-example.test' });
+    await runCompany(runId, { name: 'Some Fords Painter', city: 'Fords', zip: '08863' });
+    mockRosterFlow(t.agent); // Edison, the company's own town
+    mockRosterFlow(t.agent, { roster: fordsRoster }); // Fords, from the other company of the run
+
+    const r = await createRegistriesStage({ only: NJ, offline: false }).run(t.ctxFor(runId), first);
+
+    expect(rosterFlows(t.calls())).toBe(2);
+    expect((await rosterRows()).map((x) => x.city)).toEqual(['EDISON', 'FORDS']);
+    expect(r.status.nj_hic_roster).toBe('matched');
+    expect((await db.$client.query(`SELECT m.rung, r.source_key FROM registry_matches m JOIN registry_records r ON r.id = m.registry_record_id WHERE m.company_id = $1`, [first.company.companyId])).rows).toEqual([
+      { rung: 'email_domain', source_key: '13VH90000099' },
+    ]);
+  });
+
+  it('(e) towns of companies that are out of area, not painters of this run or in another state are not pulled', async () => {
+    const t = setup();
+    const runId = await edisonRun();
+    const first = await runCompany(runId, { name: 'Nobody Painting', city: 'Edison', zip: '08837' });
+    await runCompany(runId, { name: 'Far Away Painter', city: 'Iselin', zip: '08830', inArea: false });
+    await runCompany(runId, { name: 'Texas Painter', city: 'Austin', zip: '78701', state: 'TX' });
+    mockRosterFlow(t.agent); // Edison only
+
+    const r = await createRegistriesStage({ only: NJ }).run(t.ctxFor(runId), first);
+
+    expect(rosterFlows(t.calls())).toBe(1);
+    expect(r.status.nj_hic_roster).toBe('no_match');
+  });
+
+  it('(e) a run town that cannot be pulled does not turn other towns\' companies into errors; the company keeps its own result', async () => {
+    const t = setup();
+    const runId = await edisonRun();
+    const first = await runCompany(runId, { name: 'Nobody Painting', city: 'Edison', zip: '08837' });
+    await runCompany(runId, { name: 'Some Fords Painter', city: 'Fords', zip: '08863' });
+    mockRosterFlow(t.agent); // Edison
+    mockRosterFlow(t.agent, { downloadListFails: true }); // Fords, first try
+    mockRosterFlow(t.agent, { downloadListFails: true }); // Fords, retry
+
+    const r = await createRegistriesStage({ only: NJ }).run(t.ctxFor(runId), first);
+
+    expect(r.status.nj_hic_roster).toBe('no_match');
+    expect((await statusOf(first.company.companyId)).nj_roster_skipped).toBeUndefined();
+  });
+});
