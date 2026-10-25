@@ -43,6 +43,13 @@ from a datacentre IP. No web app in this phase (Phase 3); no statewide runs (Pha
   ZCTA-to-place relationship) × search terms {"house painter", "painting contractor", "interior painter",
   "exterior house painting", "cabinet painting"}. The pilot records how many NEW companies each term and each ZIP
   adds, so Phase 2 can drop low-yield terms.
+  **Amended after research (orchestrator, 2026-10-25):** the full city lists (Edison 3 ZCTAs, Austin 38, San Diego 45
+  at ≥20% land share ≈ 430 searches ≈ 2 days throttled) are too slow for a pilot. The pilot uses a ZIP SUBSET:
+  Edison's 3 ZCTAs (+ Metuchen 08840 / Woodbridge ZCTAs only if Edison yields < 60 painting companies), and 12 ZCTAs
+  each for Austin and San Diego, picked to span the urban core and the suburbs (highest land share first, spread
+  across the city). All 5 terms on every pilot ZIP (≈ 135 searches) so per-term yield is measured cleanly. The full
+  ZIP lists are kept in the area files for Phase 2. Run order: Edison → Austin → San Diego; within a city, term 1
+  over all ZIPs before term 2.
 - **D-10:** A company belongs to the area by its address/ZIP when shown; service-area businesses (no street address —
   29% in San Diego) are placed by the coordinates in their Google link (offline point-in-ZIP using Census ZCTA shapes)
   and marked `location: approximate (service-area business)`.
@@ -83,8 +90,9 @@ from a datacentre IP. No web app in this phase (Phase 3); no statewide runs (Pha
   a capitalised surname; reject names that equal company-name tokens, cities, or painting words; schema.org
   `founder`/`Person` JSON-LD counts as a statement. Reviewer mentions ("John the owner was great") are low-confidence
   only. **Theme placeholders are real and observed** (rutgerspainting.com: "Brennan Price Owner" next to filler Latin
-  and "Projects Complete 0 +" — the state register says the owner is Donal Lopez): a page with filler text
-  (lorem ipsum / Latin filler, zeroed counters, demo-content markers) yields NO owner names, and a name that appears
+  — the state register says the owner is Donal Lopez): a page with filler text (lorem ipsum AND other Latin filler
+  variants, demo-content markers — NOT "0 +" counters, which research showed are Elementor count-up widgets with real
+  `data-to-value`) yields NO owner names, and a name that appears
   as "owner" on several unrelated companies' sites is treated as a template and rejected. When a registry owner and a
   website owner disagree, the registry wins and the website claim is stored as `rejected: conflicts with registry`.
 - **D-19:** California: match each listing to a CSLB licence — exact 10-digit phone match = strong; normalised name
@@ -158,7 +166,14 @@ from a datacentre IP. No web app in this phase (Phase 3); no statewide runs (Pha
   Texas coverage looks like with it off and on.
 - **D-37:** The datacentre test (D-30) and the BBB fixture capture need the owner's new paid Railway account; the
   orchestrator asks for it at the start of execution. If it is not ready by plan 01-06, those two items are recorded
-  as carried to Phase 3 — the rest of the pilot does not wait.
+  as carried to Phase 3 — the rest of the pilot does not wait. The Railway CLI on this machine is logged into the
+  owner's NASEEHA account — it must NEVER be used for this project; the test uses a token/login for the new account
+  only. The same Railway service may fetch the SSA baby-names file once (ssa.gov returns 403 here); until then the
+  Census 1990 first-name lists are the name dictionary.
+- **D-38:** Hand-check drift tolerance: a review count is correct if live ≥ captured and live − captured ≤ max(2, 3%);
+  a rating is correct if equal, or within 0.1 when the review count also changed. Truth is collected within 48 hours
+  of the run. Precision is reported per field and per confidence level with Wilson 95% intervals, per state and
+  pooled — per-state-per-field numbers on 50 companies are indicative only (research Pitfall 16).
 
 ### Records, report
 - **D-26:** One company = one record: merge on Google place id, then exact phone, then website registrable domain,
