@@ -9,6 +9,7 @@ import { withLocale } from './parse/url';
 import { persistPlace, type PersistCtx } from './persist';
 import { recentRunBlock, resumeRun, stopRun } from './run-state';
 import { randomPause } from './throttle';
+import { MAX_TRANSIENT_STREAK, openWithRetry } from './transient';
 
 export interface DetailDeps {
   driverFactory?: (ctx: StageContext) => Promise<PageDriver>;
@@ -17,10 +18,6 @@ export interface DetailDeps {
 
 /** A listing whose place page showed no review count is retried this many times at most. */
 export const MAX_LIMITED_ATTEMPTS = 3;
-
-function isTimeout(e: unknown): boolean {
-  return e instanceof Error && e.name === 'TimeoutError';
-}
 
 export function createDetailStage(deps: DetailDeps = {}): Stage<DetailInput, DetailResult> {
   return {
@@ -60,6 +57,7 @@ export function createDetailStage(deps: DetailDeps = {}): Stage<DetailInput, Det
       const pctx: PersistCtx = { db, evidence: ctx.evidence, now: () => ctx.now() };
       let driver: PageDriver | null = null;
       let streak = 0;
+      let transientStreak = 0;
       try {
         for (let i = 0; i < queue.length; i++) {
           const listing = queue[i];
@@ -79,22 +77,34 @@ export function createDetailStage(deps: DetailDeps = {}): Stage<DetailInput, Det
 
           const url = withLocale(listing.profileUrl);
           driver ??= await (deps.driverFactory ?? defaultDriverFactory)(ctx);
-          const started = Date.now();
-          let opened;
-          try {
-            opened = await driver.open(url);
-          } catch (e) {
-            await logRequest(db, {
-              runId,
-              url,
-              status: null,
-              ms: Date.now() - started,
-              outcome: isTimeout(e) ? 'timeout' : 'http_error',
-              note: 'place',
-              at: ctx.now(),
-            });
-            throw e;
+          const attempt = await openWithRetry(driver, url, {
+            db,
+            runId,
+            kind: 'place',
+            now: () => ctx.now(),
+            sleep: ctx.sleep,
+            rng: deps.rng,
+            log: ctx.log,
+          });
+          if (!attempt.ok) {
+            // Slow page, not a block: the listing keeps its status (still wanted by the next run) and its card data.
+            transientStreak++;
+            if (transientStreak >= MAX_TRANSIENT_STREAK) {
+              result.stopped = await stopRun(
+                db,
+                runId,
+                'daily_cap',
+                `network looks down: ${transientStreak} place pages in a row did not load (listing ${listing.id} last: ${attempt.error.message.split('\n')[0]})`,
+                ctx.now(),
+                { listingId: listing.id },
+              );
+              break;
+            }
+            if (i < queue.length - 1) await ctx.sleep(randomPause(config.maps.placePauseMs, deps.rng));
+            continue;
           }
+          transientStreak = 0;
+          const { opened, started } = attempt;
           const signals = await driver.pageSignals();
           const block = detectBlock(signals, opened.status);
           if (block) {

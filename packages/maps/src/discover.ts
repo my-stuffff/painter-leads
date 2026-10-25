@@ -18,6 +18,7 @@ import { persistCard, persistPlace, type PersistCtx } from './persist';
 import { buildSearchUrl, type QueryForm } from './query';
 import { resumeRun, stopRun } from './run-state';
 import { randomPause } from './throttle';
+import { MAX_TRANSIENT_STREAK, openWithRetry } from './transient';
 
 export interface DiscoverDeps {
   /** Builds the browser page for one stage run. Tests pass a FixtureDriver; the default launches Chromium. */
@@ -35,10 +36,6 @@ export function requestOutcomeFor(signal: BlockSignal): 'sorry' | 'captcha' | 'b
   if (signal === 'sorry') return 'sorry';
   if (signal === 'captcha') return 'captcha';
   return 'blocked';
-}
-
-function isTimeout(e: unknown): boolean {
-  return e instanceof Error && e.name === 'TimeoutError';
 }
 
 export function createDiscoverStage(deps: DiscoverDeps = {}): Stage<DiscoverInput, DiscoverResult> {
@@ -82,6 +79,7 @@ export function createDiscoverStage(deps: DiscoverDeps = {}): Stage<DiscoverInpu
       await resumeRun(db, runId, ctx.now());
       let driver: PageDriver | null = null;
       let emptyStreak = 0;
+      let transientStreak = 0;
       try {
         for (let i = 0; i < queue.length; i++) {
           const s = queue[i];
@@ -116,22 +114,36 @@ export function createDiscoverStage(deps: DiscoverDeps = {}): Stage<DiscoverInpu
             .where(eq(searches.id, s.id));
 
           driver ??= await makeDriver();
-          const started = Date.now();
-          let opened;
-          try {
-            opened = await driver.open(url);
-          } catch (e) {
-            await logRequest(db, {
-              runId,
-              url,
-              status: null,
-              ms: Date.now() - started,
-              outcome: isTimeout(e) ? 'timeout' : 'http_error',
-              note: 'search',
-              at: ctx.now(),
-            });
-            throw e; // the search stays 'running'; a re-run retries it
+          // A non-transient error is thrown: the search stays 'running' and a re-run retries it.
+          const attempt = await openWithRetry(driver, url, {
+            db,
+            runId,
+            kind: 'search',
+            now: () => ctx.now(),
+            sleep: ctx.sleep,
+            rng: deps.rng,
+            log: ctx.log,
+          });
+          if (!attempt.ok) {
+            // Slow page, not a block: leave the search pending (nothing stored for it) and carry on with the next one.
+            await db.update(searches).set({ status: 'pending' }).where(eq(searches.id, s.id));
+            transientStreak++;
+            if (transientStreak >= MAX_TRANSIENT_STREAK) {
+              result.stopped = await stopRun(
+                db,
+                runId,
+                'daily_cap',
+                `network looks down: ${transientStreak} searches in a row did not load (search ${s.id} last: ${attempt.error.message.split('\n')[0]})`,
+                ctx.now(),
+                { searchId: s.id },
+              );
+              break;
+            }
+            if (i < queue.length - 1) await ctx.sleep(randomPause(config.maps.searchPauseMs, deps.rng));
+            continue;
           }
+          transientStreak = 0;
+          const { opened, started } = attempt;
           const signals = await driver.pageSignals();
           const block = detectBlock(signals, opened.status);
           if (block) {
