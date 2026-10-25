@@ -1,0 +1,30 @@
+{
+  "kind": "place",
+  "url": "https://www.google.com/maps?cid=6521733200173090033&hl=en&gl=us",
+  "landedUrl": "https://www.google.com/maps?cid=6521733200173090033&hl=en&gl=us",
+  "status": 200,
+  "place": {
+    "url": "https://www.google.com/maps?cid=6521733200173090033&hl=en&gl=us",
+    "h1": "Color Chameleon Paint Company",
+    "phoneItemId": "phone:tel:+16094426378",
+    "phoneAria": "Phone: (609) 442-6378 ",
+    "authorityHref": "https://www.colorchameleoncompany.com/",
+    "addressAria": "Address: Stelton Rd, Piscataway, NJ 08854 ",
+    "ratingAria": "5.0 stars ",
+    "reviewCountAria": "43 reviews",
+    "reviewsTabPresent": true,
+    "categoryTexts": [
+      "Painter"
+    ],
+    "closedText": "Open 24 hours",
+    "bodyHasLimitedViewText": true
+  },
+  "signals": {
+    "landedUrl": "https://www.google.com/maps?cid=6521733200173090033&hl=en&gl=us",
+    "hasRecaptcha": false,
+    "hasFeed": false,
+    "hasPlacePanel": true,
+    "bodyHasUnusualTraffic": false,
+    "endOfListText": false
+  }
+}

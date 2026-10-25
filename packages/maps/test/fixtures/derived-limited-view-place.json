@@ -1,0 +1,30 @@
+{
+  "kind": "place",
+  "url": "https://www.google.com/maps?cid=14758101291504647232&hl=en&gl=us",
+  "landedUrl": "https://www.google.com/maps?cid=14758101291504647232&hl=en&gl=us",
+  "status": 200,
+  "place": {
+    "url": "https://www.google.com/maps?cid=14758101291504647232&hl=en&gl=us",
+    "h1": "CertaPro Painters of Edison, NJ",
+    "phoneItemId": "phone:tel:+17322046020",
+    "phoneAria": "Phone: (732) 204-6020 ",
+    "authorityHref": "https://certapro.com/edison/landing-page/residential-gbp/?utm_source=google&utm_medium=organic&utm_campaign=gbp_landing",
+    "addressAria": "Address: 2045 Woodbridge Ave, Edison, NJ 08817 ",
+    "ratingAria": null,
+    "reviewsTabPresent": false,
+    "categoryTexts": [
+      "Painter"
+    ],
+    "closedText": null,
+    "bodyHasLimitedViewText": true,
+    "reviewCountAria": null
+  },
+  "signals": {
+    "landedUrl": "https://www.google.com/maps?cid=14758101291504647232&hl=en&gl=us",
+    "hasRecaptcha": false,
+    "hasFeed": false,
+    "hasPlacePanel": true,
+    "bodyHasUnusualTraffic": false,
+    "endOfListText": false
+  }
+}

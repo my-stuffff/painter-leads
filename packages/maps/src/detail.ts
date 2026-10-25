@@ -1,0 +1,163 @@
+import { schema, type DetailInput, type DetailResult, type Stage, type StageContext } from '@pp/core';
+import { and, asc, eq, inArray, lt, or } from 'drizzle-orm';
+import { detectBlock } from './blocks';
+import { logRequest, remainingToday } from './cap';
+import { defaultDriverFactory, requestOutcomeFor } from './discover';
+import type { PageDriver } from './driver/types';
+import { parsePlace } from './parse/place';
+import { withLocale } from './parse/url';
+import { persistPlace, type PersistCtx } from './persist';
+import { recentRunBlock, resumeRun, stopRun } from './run-state';
+import { randomPause } from './throttle';
+
+export interface DetailDeps {
+  driverFactory?: (ctx: StageContext) => Promise<PageDriver>;
+  rng?: () => number;
+}
+
+/** A listing whose place page showed no review count is retried this many times at most. */
+export const MAX_LIMITED_ATTEMPTS = 3;
+
+function isTimeout(e: unknown): boolean {
+  return e instanceof Error && e.name === 'TimeoutError';
+}
+
+export function createDetailStage(deps: DetailDeps = {}): Stage<DetailInput, DetailResult> {
+  return {
+    name: 'detail',
+    async run(ctx, input) {
+      const { db, config } = ctx;
+      const { runId } = input;
+      const { listings, searchHits, searches } = schema;
+      const result: DetailResult = { done: 0, limitedView: 0, failed: 0, stopped: null };
+
+      const backoff = await recentRunBlock(db, runId, ctx.now(), config.maps.blockBackoffMinutes);
+      if (backoff) {
+        result.stopped = backoff;
+        return result;
+      }
+
+      const reached = db
+        .select({ id: searchHits.listingId })
+        .from(searchHits)
+        .innerJoin(searches, eq(searches.id, searchHits.searchId))
+        .where(eq(searches.runId, runId));
+      const wanted = input.retryLimited
+        ? or(
+            inArray(listings.detailStatus, ['pending', 'blocked']),
+            and(eq(listings.detailStatus, 'limited_view'), lt(listings.detailAttempts, MAX_LIMITED_ATTEMPTS)),
+          )
+        : inArray(listings.detailStatus, ['pending', 'blocked']);
+      let queue = await db
+        .select()
+        .from(listings)
+        .where(and(inArray(listings.id, reached), wanted))
+        .orderBy(asc(listings.id));
+      if (input.limit !== undefined) queue = queue.slice(0, input.limit);
+      if (queue.length === 0) return result;
+
+      await resumeRun(db, runId, ctx.now());
+      const pctx: PersistCtx = { db, evidence: ctx.evidence, now: () => ctx.now() };
+      let driver: PageDriver | null = null;
+      let streak = 0;
+      try {
+        for (let i = 0; i < queue.length; i++) {
+          const listing = queue[i];
+          if (!listing) break;
+
+          if ((await remainingToday(db, 'place', config.maps.dailyCap.placePages, ctx.now())) <= 0) {
+            result.stopped = await stopRun(
+              db,
+              runId,
+              'daily_cap',
+              `${config.maps.dailyCap.placePages} place pages already logged today`,
+              ctx.now(),
+              { listingId: listing.id },
+            );
+            break;
+          }
+
+          const url = withLocale(listing.profileUrl);
+          driver ??= await (deps.driverFactory ?? defaultDriverFactory)(ctx);
+          const started = Date.now();
+          let opened;
+          try {
+            opened = await driver.open(url);
+          } catch (e) {
+            await logRequest(db, {
+              runId,
+              url,
+              status: null,
+              ms: Date.now() - started,
+              outcome: isTimeout(e) ? 'timeout' : 'http_error',
+              note: 'place',
+              at: ctx.now(),
+            });
+            throw e;
+          }
+          const signals = await driver.pageSignals();
+          const block = detectBlock(signals, opened.status);
+          if (block) {
+            await logRequest(db, {
+              runId,
+              url,
+              status: opened.status,
+              ms: Date.now() - started,
+              outcome: requestOutcomeFor(block),
+              note: 'place',
+              at: ctx.now(),
+            });
+            await db.update(listings).set({ detailStatus: 'blocked' }).where(eq(listings.id, listing.id));
+            result.stopped = await stopRun(db, runId, block, `place page of listing ${listing.id} landed on ${opened.landedUrl}`, ctx.now(), {
+              listingId: listing.id,
+            });
+            break;
+          }
+
+          const snapshot = await driver.snapshotPlace();
+          const parsed = parsePlace(snapshot);
+          const saved = await persistPlace(pctx, runId, listing, snapshot, parsed);
+          await logRequest(db, {
+            runId,
+            url,
+            status: opened.status,
+            ms: Date.now() - started,
+            outcome: saved.outcome === 'done' ? 'ok' : saved.outcome === 'limited_view' ? 'limited_view' : 'http_error',
+            note: 'place',
+            at: ctx.now(),
+          });
+
+          if (saved.outcome === 'done') {
+            result.done++;
+            streak = 0;
+          } else if (saved.outcome === 'limited_view') {
+            result.limitedView++;
+            streak++;
+            if (streak >= config.maps.limitedViewStreakStop) {
+              result.stopped = await stopRun(
+                db,
+                runId,
+                'limited_view_streak',
+                `${streak} place pages in a row showed no review count (listing ${listing.id} last)`,
+                ctx.now(),
+                { listingId: listing.id },
+              );
+              break;
+            }
+          } else {
+            result.failed++;
+            streak = 0;
+          }
+
+          if (i < queue.length - 1) await ctx.sleep(randomPause(config.maps.placePauseMs, deps.rng));
+        }
+      } finally {
+        await driver?.close();
+      }
+      return result;
+    },
+  };
+}
+
+export const detailStage: Stage<DetailInput, DetailResult> = createDetailStage();
+
