@@ -1,0 +1,30 @@
+{
+  "kind": "place",
+  "url": "https://www.google.com/maps?cid=13500872669370068703&hl=en&gl=us",
+  "landedUrl": "https://www.google.com/maps?cid=13500872669370068703&hl=en&gl=us",
+  "status": 200,
+  "place": {
+    "url": "https://www.google.com/maps?cid=13500872669370068703&hl=en&gl=us",
+    "h1": "Five Star Painting of Edison & Red Bank",
+    "phoneItemId": "phone:tel:+17329431599",
+    "phoneAria": "Phone: (732) 943-1599 ",
+    "authorityHref": "https://www.fivestarpainting.com/edison-nj/?cid=LSTL_FSP-US000189&utm_source=gmb&utm_campaign=local&utm_medium=organic",
+    "addressAria": null,
+    "ratingAria": "4.9 stars ",
+    "reviewCountAria": "174 reviews",
+    "reviewsTabPresent": true,
+    "categoryTexts": [
+      "Painter"
+    ],
+    "closedText": null,
+    "bodyHasLimitedViewText": true
+  },
+  "signals": {
+    "landedUrl": "https://www.google.com/maps?cid=13500872669370068703&hl=en&gl=us",
+    "hasRecaptcha": false,
+    "hasFeed": false,
+    "hasPlacePanel": true,
+    "bodyHasUnusualTraffic": false,
+    "endOfListText": false
+  }
+}

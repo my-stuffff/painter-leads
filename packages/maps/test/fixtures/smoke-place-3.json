@@ -1,0 +1,30 @@
+{
+  "kind": "place",
+  "url": "https://www.google.com/maps?cid=17316578955514737383&hl=en&gl=us",
+  "landedUrl": "https://www.google.com/maps?cid=17316578955514737383&hl=en&gl=us",
+  "status": 200,
+  "place": {
+    "url": "https://www.google.com/maps?cid=17316578955514737383&hl=en&gl=us",
+    "h1": "Jersey Pro Painters",
+    "phoneItemId": "phone:tel:+17328958975",
+    "phoneAria": "Phone: (732) 895-8975 ",
+    "authorityHref": "https://jersey-pro-painters.jpainter4512.chatgpt.site/",
+    "addressAria": "Address: 180 Liberty St, Metuchen, NJ 08840 ",
+    "ratingAria": "4.9 stars ",
+    "reviewCountAria": "71 reviews",
+    "reviewsTabPresent": true,
+    "categoryTexts": [
+      "Painter"
+    ],
+    "closedText": "Open · Closes 6 PM",
+    "bodyHasLimitedViewText": true
+  },
+  "signals": {
+    "landedUrl": "https://www.google.com/maps?cid=17316578955514737383&hl=en&gl=us",
+    "hasRecaptcha": false,
+    "hasFeed": false,
+    "hasPlacePanel": true,
+    "bodyHasUnusualTraffic": false,
+    "endOfListText": false
+  }
+}
