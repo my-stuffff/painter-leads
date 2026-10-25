@@ -223,3 +223,13 @@ export async function setRegistryStatus(db: Db, companyId: number, patch: Record
   );
 }
 
+
+/** Roster rows whose email is on exactly this domain (the roster is small: no index needed). */
+export async function findByEmailDomain(db: Db, sourceType: SourceType, domain: string): Promise<RegistryRecord[]> {
+  const like = `%@${domain.toLowerCase().replace(/[\\%_]/g, (c) => `\\${c}`)}`;
+  const res = await db.$client.query(
+    `SELECT ${RECORD_COLUMNS} FROM registry_records WHERE source_type = $1 AND email LIKE $2 LIMIT 200`,
+    [sourceType, like],
+  );
+  return res.rows.map(toRecord);
+}

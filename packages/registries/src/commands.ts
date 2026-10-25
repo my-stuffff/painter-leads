@@ -5,6 +5,9 @@ import { checkMasterComplete } from './cslb/completeness';
 import { downloadCslbFile, IncompleteDownloadError, type CslbKind } from './cslb/download';
 import { loadCslbMaster } from './cslb/master';
 import { loadRunInputs } from './inputs';
+import { fetchNjOwner } from './nj/detail-flow';
+import { townsFor } from './nj/match';
+import { ensureNjRosterForTown } from './nj/roster-ensure';
 import { createRegistriesStage } from './stage';
 
 const log = createLogger('registries');
@@ -123,4 +126,44 @@ const match: CommandSpec = {
   },
 };
 
-export const commands: CommandSpec[] = [cslbDownload, cslbLoad, match];
+const njRoster: CommandSpec = {
+  name: 'registries nj roster',
+  description: 'Pull (or reuse, if under 7 days old) the free NJ Home Improvement Contractor roster of one or more towns and load it',
+  options: [
+    { flags: '--town <town...>', description: 'town name (repeat the flag or list several)' },
+    { flags: '--from-run <id>', description: 'every distinct listing city of that run (NJ companies), plus the area town' },
+  ],
+  async run(ctx, _args, opts) {
+    const towns = new Set<string>(Array.isArray(opts.town) ? (opts.town as string[]) : typeof opts.town === 'string' ? [opts.town] : []);
+    const sctx = await stageContext(ctx, Number(str(opts.fromRun) ?? 0));
+    if (str(opts.fromRun)) {
+      const runId = Number(str(opts.fromRun));
+      if (!Number.isInteger(runId) || runId <= 0) throw new Error('--from-run needs a run id');
+      for (const input of await loadRunInputs(sctx.db, runId)) {
+        if (input.company.state !== 'NJ') continue;
+        for (const t of await townsFor(sctx, input)) towns.add(t);
+      }
+    }
+    if (towns.size === 0) throw new Error('give --town <town> or --from-run <id>');
+    for (const town of towns) {
+      const r = await ensureNjRosterForTown(sctx, town);
+      ctx.out(`${town}: ${r.how}, ${r.rows} registrations loaded`);
+    }
+  },
+};
+
+const njOwner: CommandSpec = {
+  name: 'registries nj owner',
+  description: 'Read the registered owner of one HIC registration (e.g. 13VH06161800) from the NJ verification site',
+  args: [{ name: 'licenceNo', required: true, description: 'HIC registration number, 13VH...' }],
+  async run(ctx, args) {
+    const no = (args[0] ?? '').trim();
+    if (!/^\d{2}VH\d+$/i.test(no)) throw new Error('licence number must look like 13VH06161800');
+    const d = await fetchNjOwner(await ctx.fetcher(), no.toUpperCase());
+    ctx.out(
+      `${d.licenceNo}: ${d.fullName ?? '?'} - owner ${d.ownerName ?? '(none shown)'} - ${d.status ?? '?'} - issued ${d.issueDate ?? '?'} - expires ${d.expirationDate ?? '?'}`,
+    );
+  },
+};
+
+export const commands: CommandSpec[] = [cslbDownload, cslbLoad, njRoster, njOwner, match];

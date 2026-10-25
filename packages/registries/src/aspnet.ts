@@ -70,3 +70,17 @@ export function eventTargetOf(href: string | undefined): string | null {
   const m = /__doPostBack\(\s*['"]([^'"]+)['"]/.exec(href);
   return m ? (m[1] as string) : null;
 }
+
+/** The absolute URL a page's form posts to (its `action` resolved against the page URL); the page URL when it has none. */
+export function formAction(html: string, pageUrl: string): string {
+  const action = cheerio.load(html)('form').first().attr('action');
+  if (!action) return pageUrl;
+  return new URL(action, pageUrl).toString();
+}
+
+/** Visible text of a page, whitespace collapsed (scripts and styles dropped). */
+export function pageText(html: string): string {
+  const $ = cheerio.load(html);
+  $('script, style').remove();
+  return $('body').text().replace(/\s+/g, ' ').trim();
+}

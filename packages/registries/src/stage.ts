@@ -10,15 +10,11 @@ import {
   type StageContext,
 } from '@pp/core';
 import { matchCslb, type SourceMatchResult } from './cslb/match';
+import { matchNj } from './nj/match';
 import { hasRecords, setRegistryStatus } from './records';
+import type { SourceOutcome, StageOptions } from './types';
 
-/** What one source adapter gives back to the stage. */
-export interface SourceOutcome {
-  /** Per-source statuses the adapter decided (an adapter may report several sources, e.g. NJ). */
-  statuses: Partial<Record<SourceId, RegistrySourceStatus>>;
-  evidenceIds: number[];
-  owners: number;
-}
+export type { SourceOutcome, StageOptions } from './types';
 
 function one(source: SourceId, r: SourceMatchResult): SourceOutcome {
   return { statuses: { [source]: r.status }, evidenceIds: r.evidenceIds, owners: r.owners };
@@ -55,20 +51,13 @@ async function cslbSource(ctx: StageContext, input: RegistryMatchInput, _opts: S
   return one('cslb', await matchCslb({ db: ctx.db, store: ctx.evidence, now: ctx.now }, input.company));
 }
 
-/** Options of one stage instance (the CLI's --source and --offline flags). */
-export interface StageOptions {
-  /** Run only these sources. */
-  only?: ReadonlySet<SourceId>;
-  /** Replay from the page cache only: no network (a miss is an error for that source). */
-  offline?: boolean;
-}
-
 export type SourceAdapter = (ctx: StageContext, input: RegistryMatchInput, opts: StageOptions) => Promise<SourceOutcome>;
 
 /** Which adapters run for a state (each one honours its own source switch). */
 export function adaptersFor(state: RegistryMatchInput['company']['state']): { sources: SourceId[]; run: SourceAdapter }[] {
   const out: { sources: SourceId[]; run: SourceAdapter }[] = [];
   if (state === 'CA') out.push({ sources: ['cslb'], run: cslbSource });
+  if (state === 'NJ') out.push({ sources: ['nj_hic_roster', 'nj_hic_detail', 'nj_principal_search'], run: matchNj });
   return out;
 }
 

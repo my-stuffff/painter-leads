@@ -1,0 +1,9 @@
+full_name|first_name|middle_name|last_name|name_suffix|profession_name|license_type_name|license_no|issue_date|expiration_date|addr_line_1|addr_line_2|addr_city|addr_state|addr_zipcode|addr_county|addr_email|license_status_name|
+BRIGHT COAT PAINTING LLC|||||Home Improvement Contractors|Home Improvement Business Contr|13VH90000001|4/2/2021|3/31/2027|100 Fixture Rd||Edison|NJ|08817|Middlesex|info@brightcoat-example.test|Active|
+BRIGHT COAT PAINTING LLC|||||Home Improvement Contractors|Home Improvement Business Contr|13VH90000002|5/9/2012|3/31/2019|100 Fixture Rd||Edison|NJ|08817|Middlesex|info@brightcoat-example.test|Expired|
+CHERRY PAINTING CONTRACTORS & HOME IMPROVEMENT T/A ANTHONY CHERRY|||||Home Improvement Contractors|Home Improvement Business Contr|13VH90000003|1/15/2016|3/31/2026|14 Sample Ln||Edison|NJ|08820|Middlesex|anthony@cherry-example.test|Active|
+ANTONIO FIXTURE|||||Home Improvement Contractors|Home Improvement Business Contr|13VH90000004|6/1/2018|3/31/2026|7 Placeholder Ct||Edison|NJ|08837|Middlesex||Active|
+GREEN HILL HOME IMPROVEMENT INC|||||Home Improvement Contractors|Home Improvement Business Contr|13VH90000005|2/20/2019|3/31/2027|22 Sample Avenue, Suite 4||Edison|NJ|08837|Middlesex|office@greenhill-example.test|Active|
+NORTHSIDE DECKS & PAINTING LLC|||||Home Improvement Contractors|Home Improvement Business Contr|13VH90000006|8/8/2020|3/31/2026|31 Example Blvd||Edison|NJ|08820|Middlesex||Active|
+NORTHSIDE DECKS & PAINTING LLC|||||Home Improvement Contractors|Home Improvement Business Contr|13VH90000007|9/9/2022|3/31/2027|33 Example Blvd||Edison|NJ|08820|Middlesex||Active|
+ZENITH ROOFING CO|||||Home Improvement Contractors|Home Improvement Business Contr|13VH90000008|3/3/2017|3/31/2025|9 Nowhere St||Edison|NJ|08820|Middlesex|zenith@zenith-example.test|Reinstatement Pending|
