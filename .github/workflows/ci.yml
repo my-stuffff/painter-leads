@@ -20,7 +20,7 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
-      PP_DATA_DIR: ${{ runner.temp }}/pp-data
+      PP_DATA_DIR: /tmp/pp-data
       TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/painter_leads_test_ci
     steps:
       - uses: actions/checkout@v7
