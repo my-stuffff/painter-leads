@@ -1,4 +1,4 @@
-import { schema, type DetailInput, type DetailResult, type Stage, type StageContext } from '@pp/core';
+import { getArea, schema, type DetailInput, type DetailResult, type Stage, type StageContext } from '@pp/core';
 import { and, asc, eq, inArray, lt, or } from 'drizzle-orm';
 import { detectBlock } from './blocks';
 import { logRequest, remainingToday } from './cap';
@@ -7,6 +7,7 @@ import type { PageDriver } from './driver/types';
 import { parsePlace } from './parse/place';
 import { withLocale } from './parse/url';
 import { persistPlace, type PersistCtx } from './persist';
+import { createPinSkipper } from './pin-skip';
 import { recentRunBlock, resumeRun, stopRun } from './run-state';
 import { randomPause } from './throttle';
 import { MAX_TRANSIENT_STREAK, openWithRetry } from './transient';
@@ -18,6 +19,37 @@ export interface DetailDeps {
 
 /** A listing whose place page showed no review count is retried this many times at most. */
 export const MAX_LIMITED_ATTEMPTS = 3;
+
+type ListingRow = typeof schema.listings.$inferSelect;
+
+/**
+ * Drops the listings whose map pin is clearly outside the run's area (farther than PIN_SKIP_KM from every ZIP
+ * polygon, expansion ZIPs included): no place page is opened for them. They keep detail_status 'pending' (no
+ * existing status fits and the status list is frozen); the area step later puts their company outside the pilot
+ * area from the same pin. A listing without a pin is always kept.
+ */
+async function withoutFarListings(ctx: StageContext, runId: number, queue: ListingRow[]): Promise<ListingRow[]> {
+  const [run] = await ctx.db.select({ areaId: schema.runs.areaId }).from(schema.runs).where(eq(schema.runs.id, runId)).limit(1);
+  if (!run || queue.length === 0) return queue;
+  const farKm = createPinSkipper(getArea(ctx.config, run.areaId));
+  const kept: ListingRow[] = [];
+  let skipped = 0;
+  for (const listing of queue) {
+    const km =
+      listing.coordsStatus === 'captured' && listing.lat !== null && listing.lng !== null ? farKm(listing.lat, listing.lng) : null;
+    if (km === null) {
+      kept.push(listing);
+      continue;
+    }
+    skipped++;
+    ctx.log.debug(
+      { listingId: listing.id, name: listing.name, km: Math.round(km * 10) / 10 },
+      `place page not opened: outside pilot area (card pin ${km.toFixed(1)} km away)`,
+    );
+  }
+  if (skipped > 0) ctx.log.info({ runId, skipped }, `${skipped} listings skipped: card pin outside the pilot area`);
+  return kept;
+}
 
 export function createDetailStage(deps: DetailDeps = {}): Stage<DetailInput, DetailResult> {
   return {
@@ -50,6 +82,7 @@ export function createDetailStage(deps: DetailDeps = {}): Stage<DetailInput, Det
         .from(listings)
         .where(and(inArray(listings.id, reached), wanted))
         .orderBy(asc(listings.id));
+      queue = await withoutFarListings(ctx, runId, queue);
       if (input.limit !== undefined) queue = queue.slice(0, input.limit);
       if (queue.length === 0) return result;
 
