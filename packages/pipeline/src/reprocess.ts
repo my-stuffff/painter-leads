@@ -67,7 +67,8 @@ export interface ReprocessResult {
  * The fix loop (01-06): re-apply the painter filter, then re-run site-enrich -> site-finalize -> registries-match ->
  * classify -> qualify -> report from the page cache only (no new searches are planned; the area is left as it was).
  * Earlier evidence of the chosen steps is marked rejected 'superseded' first (history stays, nothing is deleted), so a
- * changed extractor replaces its old answers instead of adding to them. With `liveRegistries` the registries step
+ * changed extractor replaces its old answers instead of adding to them. A registry value the re-run could not look up
+ * again (offline cache miss, blocked, error) is put back; one it found changed is replaced. With `liveRegistries` the registries step
  * alone may go out to the registry sites, and only for companies whose lookup failed.
  */
 export async function reprocessRun(env: PilotEnv, runId: number, o: ReprocessOptions = {}): Promise<ReprocessResult> {
@@ -113,6 +114,7 @@ export async function reprocessRun(env: PilotEnv, runId: number, o: ReprocessOpt
     cacheOnly: true,
     registriesCtx,
     registriesRetryOnly: live,
+    keepEarlierRegistryEvidence: steps.has('registries-match'),
   };
   await enrichCompanies(ctx, stages, runId, enrichOpts);
   await qualifyRun(env.db, env.config, runId);
