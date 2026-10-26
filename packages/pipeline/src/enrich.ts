@@ -1,3 +1,4 @@
+import { restoreSupersededRegistryEvidence } from '@pp/registries';
 import {
   corroborate,
   registrableDomain,
@@ -37,6 +38,11 @@ export interface EnrichOptions {
   registriesCtx?: StageContext;
   /** registries-match only touches companies that never ran or whose last run failed; matched ones are left alone. */
   registriesRetryOnly?: boolean;
+  /**
+   * After the registries stage ran for a company, put back the earlier registry values the reprocess retired and the
+   * stage did not write again (a lookup that could not be made must never erase what was captured before).
+   */
+  keepEarlierRegistryEvidence?: boolean;
 }
 
 /**
@@ -161,6 +167,7 @@ export async function enrichCompanies(
         c.id,
         JSON.stringify(result.status),
       ]);
+      if (o.keepEarlierRegistryEvidence) await restoreSupersededRegistryEvidence(ctx.db, { companyIds: [c.id] });
       if (Object.keys(result.status).length > 0) summary.registryMatched += 1;
     }
   }

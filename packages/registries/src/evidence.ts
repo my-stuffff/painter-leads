@@ -2,6 +2,9 @@ import { normaliseValue, type EvidenceDraft, type EvidenceStore } from '@pp/core
 
 export const EXTRACTOR_VERSION = '1';
 
+/** reject_reason of evidence that a re-run (reprocess) retired in order to replace it. */
+export const SUPERSEDED = 'superseded';
+
 /** A registry value's provenance: where it came from, when, and the line it was read from. */
 export interface Provenance {
   companyId: number;
@@ -48,12 +51,17 @@ export function clipSnippet(s: string): string {
 /**
  * Records the drafts that this company does not already have (same field + source + normalised value), so a
  * re-run of the stage never piles up duplicates. Returns the ids of every row (new and pre-existing).
+ * A row retired as 'superseded' (reprocess clears the evidence it is about to re-create) does not count as already
+ * having the value: a stage that finds the same value again writes it again, otherwise the value would be lost.
  */
 export async function ensureEvidence(store: EvidenceStore, companyId: number, drafts: EvidenceDraft[]): Promise<number[]> {
   if (drafts.length === 0) return [];
   const existing = await store.listForCompany(companyId);
   const seen = new Map<string, number>();
-  for (const r of existing) seen.set(`${r.field}|${r.sourceType}|${r.valueNorm}`, r.id);
+  for (const r of existing) {
+    if (r.status === 'rejected' && r.rejectReason === SUPERSEDED) continue;
+    seen.set(`${r.field}|${r.sourceType}|${r.valueNorm}`, r.id);
+  }
 
   const ids: number[] = [];
   const fresh: EvidenceDraft[] = [];

@@ -31,6 +31,7 @@ import {
   findByEmailDomain,
   findCandidates,
   getRecord,
+  peopleOf,
   setRegistryStatus,
   toCandidate,
   writeMatches,
@@ -167,6 +168,30 @@ export function njRosterEvidence(companyId: number, r: RegistryRecord, rung: str
     );
   }
   return out;
+}
+
+/** The registered owner as evidence: read from the HIC detail page of this licence. */
+function ownerDraft(
+  companyId: number,
+  record: RegistryRecord,
+  rung: string,
+  display: string,
+  ownerRaw: string,
+  detailUrl: string,
+  capturedAt: Date,
+  /** The licence status shown on the page; undefined when the owner is re-used from the stored row (no page read). */
+  status?: string | null,
+): EvidenceDraft {
+  const prov: Provenance = {
+    companyId,
+    registryRecordId: record.id,
+    sourceType: 'nj_hic_detail',
+    sourceUrl: detailUrl,
+    capturedAt,
+    extractor: 'nj-hic-detail',
+  };
+  const snippet = `Owner Name: ${ownerRaw}; License No: ${record.sourceKey}${status === undefined ? '' : `; License Status: ${status ?? ''}`}`;
+  return makeDraft(prov, 'owner_name', display, snippet, 'high', { title: 'Owner', rung, licenceNo: record.sourceKey });
 }
 
 async function candidateRecords(ctx: StageContext, input: RegistryMatchInput): Promise<RegistryRecord[]> {
@@ -312,34 +337,30 @@ export async function matchNj(
   // HIC detail page: the registered owner.
   let owner: { display: string; detail: NjDetail | null } | null = null;
   const prior = (await ctx.evidence.listForCompany(company.companyId, 'owner_name')).find((e) => e.sourceType === 'nj_hic_detail' && e.status !== 'rejected');
+  /** The owner already captured from this licence's detail page (registry_people), rewritten with its own source and date. */
+  const reuseStored = async (): Promise<{ display: string; detail: null } | null> => {
+    const stored = (await peopleOf(ctx.db, record.id, ['nj_hic_detail'])).find((p) => p.fullName && p.sourceUrl && p.capturedAt);
+    if (!stored?.fullName || !stored.sourceUrl || !stored.capturedAt) return null;
+    const draft = ownerDraft(company.companyId, record, rung, stored.fullName, stored.nameRaw ?? stored.fullName, stored.sourceUrl, stored.capturedAt);
+    out.evidenceIds.push(...(await ensureEvidence(ctx.evidence, company.companyId, [draft])));
+    return { display: stored.fullName, detail: null };
+  };
   if (prior) {
     owner = { display: prior.value, detail: null };
     out.statuses.nj_hic_detail = 'matched';
   } else if (!isSourceEnabled(ctx.config, 'nj_hic_detail')) {
     out.statuses.nj_hic_detail = 'disabled';
   } else if (opts.offline) {
-    out.statuses.nj_hic_detail = 'disabled';
+    // a lookup that cannot be made never erases what was captured before
+    owner = await reuseStored();
+    out.statuses.nj_hic_detail = owner ? 'matched' : 'disabled';
   } else {
     try {
       const detail = await fetchNjOwner(ctx.fetcher, record.sourceKey);
       const display = detail.ownerName ? titleCaseName(detail.ownerName) : null;
       if (display && personNameKey(display).split(' ').length >= 2) {
         owner = { display, detail };
-        const prov: Provenance = {
-          companyId: company.companyId,
-          registryRecordId: record.id,
-          sourceType: 'nj_hic_detail',
-          sourceUrl: detail.detailUrl,
-          capturedAt: ctx.now(),
-          extractor: 'nj-hic-detail',
-        };
-        const ids = await ensureEvidence(ctx.evidence, company.companyId, [
-          makeDraft(prov, 'owner_name', display, `Owner Name: ${detail.ownerName}; License No: ${record.sourceKey}; License Status: ${detail.status ?? ''}`, 'high', {
-            title: 'Owner',
-            rung,
-            licenceNo: record.sourceKey,
-          }),
-        ]);
+        const ids = await ensureEvidence(ctx.evidence, company.companyId, [ownerDraft(company.companyId, record, rung, display, detail.ownerName ?? display, detail.detailUrl, ctx.now(), detail.status)]);
         out.evidenceIds.push(...ids);
         const names = splitOwner(display);
         await ctx.db.$client.query(`DELETE FROM registry_people WHERE registry_record_id = $1 AND source_type = 'nj_hic_detail'`, [record.id]);
@@ -353,8 +374,10 @@ export async function matchNj(
         out.statuses.nj_hic_detail = 'no_match';
       }
     } catch (e) {
+      // the page could not be read (offline cache miss, HTTP error): the owner captured before, if any, still stands
       ctx.log.warn({ licence: record.sourceKey, err: (e as Error).message }, 'NJ HIC detail lookup failed');
-      out.statuses.nj_hic_detail = 'error';
+      owner = await reuseStored();
+      out.statuses.nj_hic_detail = owner ? 'matched' : 'error';
     }
   }
 

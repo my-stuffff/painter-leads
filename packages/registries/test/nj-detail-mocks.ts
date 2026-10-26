@@ -20,7 +20,7 @@ const cookieOf = (o: { headers?: unknown }): string | undefined => (o.headers as
  * The HIC verification flow as the site behaves: the search sets the session cookie, the results link to
  * Details.aspx?result=GUID, and a Details request WITHOUT that cookie answers HTTP 500 "Runtime Error".
  */
-export function mockDetailFlow(agent: Agent, who: DetailWho, over: { drop?: 'detail500' } = {}): SeenRequest[] {
+export function mockDetailFlow(agent: Agent, who: DetailWho, over: { drop?: 'detail500'; ownerName?: string } = {}): SeenRequest[] {
   const pool = agent.get(HOST);
   const results = fixture('nj', `${who}-02_search_results.html`);
   const link = /Details\.aspx\?result=([0-9a-f-]+)/.exec(results)?.[1] as string;
@@ -43,7 +43,10 @@ export function mockDetailFlow(agent: Agent, who: DetailWho, over: { drop?: 'det
     if (over.drop === 'detail500' || !cookie?.includes('ASP.NET_SessionId=sessD')) {
       return { statusCode: 500, data: fixture('nj', 'detail-nocookie-500.html'), responseOptions: HTML };
     }
-    return { statusCode: 200, data: fixture('nj', `${who}-03_detail.html`), responseOptions: HTML };
+    const page = fixture('nj', `${who}-03_detail.html`);
+    // a registry whose owner has changed since the page was last read
+    const data = over.ownerName ? page.replace(/(id="owner_name">)[^<]*/, `$1${over.ownerName}`) : page;
+    return { statusCode: 200, data, responseOptions: HTML };
   });
   return seen;
 }
