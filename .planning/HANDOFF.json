@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-10-26T12:55+05:00",
+  "phase": "01",
+  "phase_name": "pilot",
+  "phase_dir": ".planning/phases/01-pilot",
+  "plan": "01-06",
+  "task": 1,
+  "total_tasks": 4,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": "01-01..01-05", "name": "foundation, maps, registries, sites, pipeline", "status": "done"},
+    {"id": 1, "name": "pilot runs", "status": "in_progress", "progress": "Edison run 8 done+repaired (43 painters, 3 qualified); Austin run 9 searches done, ~912 place pages left (cap); San Diego not started"}
+  ],
+  "remaining_tasks": [
+    {"id": 2, "name": "spot-check + fill-rate review", "status": "not_started"},
+    {"id": 3, "name": "blind checker 50/state, adjudicate, fix loop, golden set in CI, 01-PILOT-REPORT.md", "status": "not_started"},
+    {"id": 4, "name": "owner reviews workbooks", "status": "not_started"}
+  ],
+  "blockers": [
+    {"description": "Austin auto-resume timer (bq3kiqesh) reaped for low memory before 00:05; run 9 not resumed", "type": "technical", "workaround": "re-run `pp pilot resume 9` after PKT midnight with owner OK"},
+    {"description": "New Railway account", "type": "external", "workaround": "owner provides later"}
+  ],
+  "async_jobs": [],
+  "human_actions_pending": [
+    {"action": "Decide: strict list only vs extra labelled 'Likely fits' tab (recommended)", "context": "Edison has only 3 qualified; tab would add ~15", "blocking": false},
+    {"action": "OK to re-arm Austin midnight resume", "context": "harness reaped the timer", "blocking": true}
+  ],
+  "decisions": [
+    {"decision": "Pilot go, Texas Comptroller on (gently), Railway later", "rationale": "owner 2026-10-25", "phase": "01"},
+    {"decision": "Pin skip threshold 5 km", "rationale": "measured on Edison; saves place-page cap", "phase": "01"}
+  ],
+  "uncommitted_files": [],
+  "next_action": "Ask owner the two questions; then after PKT midnight run `PP_LIVE=1 DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/painter_leads corepack pnpm -s pp pilot resume 9`",
+  "context_notes": "See .planning/phases/01-pilot/.continue-here.md"
+}
