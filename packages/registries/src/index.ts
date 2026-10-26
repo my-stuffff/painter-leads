@@ -17,6 +17,7 @@ export { pickCslbOwner } from './cslb/owner';
 export { downloadNjRoster } from './nj/roster-flow';
 export { parseNjRoster } from './nj/roster-parse';
 export { matchNj } from './nj/match';
+export { restoreSupersededRegistryEvidence, REGISTRY_EVIDENCE_SOURCES, type RestoreResult } from './restore';
 export { fetchNjOwner } from './nj/detail-flow';
 export { confirmNjPrincipal } from './nj/principal-search';
 export { ensureNjRosterForTown } from './nj/roster-ensure';

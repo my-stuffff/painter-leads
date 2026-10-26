@@ -11,6 +11,7 @@ import { loadRunInputs } from './inputs';
 import { fetchNjOwner } from './nj/detail-flow';
 import { townsFor } from './nj/match';
 import { ensureNjRosterForTown } from './nj/roster-ensure';
+import { restoreSupersededRegistryEvidence } from './restore';
 import { createRegistriesStage } from './stage';
 import { queryTxTaxpayers, txStatus } from './tx/opendata';
 
@@ -299,6 +300,19 @@ const status: CommandSpec = {
   },
 };
 
+const restoreSuperseded: CommandSpec = {
+  name: 'registries restore-superseded',
+  description: "Put back a run's registry evidence that a reprocess retired ('superseded') and did not write again (safe to repeat)",
+  options: [{ flags: '--run <id>', description: 'run id' }],
+  async run(ctx, _args, opts) {
+    const runId = Number(str(opts.run));
+    if (!Number.isInteger(runId) || runId <= 0) throw new Error('give --run <id>');
+    const r = await restoreSupersededRegistryEvidence(await ctx.db(), { runId });
+    ctx.out(`run ${runId}: ${r.restored} registry values put back on ${r.companies} companies`);
+    for (const [k, n] of Object.entries(r.byKind).sort()) ctx.out(`  ${k}  ${n}`);
+  },
+};
+
 export const commands: CommandSpec[] = [
   cslbDownload,
   cslbLoad,
@@ -311,4 +325,5 @@ export const commands: CommandSpec[] = [
   bbbImport,
   match,
   status,
+  restoreSuperseded,
 ];
