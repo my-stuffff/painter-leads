@@ -8,6 +8,8 @@ export { commands } from './commands';
 export { createDiscoverStage, discoverStage, type DiscoverDeps } from './discover';
 export { createDetailStage, detailStage, type DetailDeps } from './detail';
 export { runDatacentreTest, type DatacentreSummary } from './datacentre';
+export { runProbe, probeOne, type ProbeResult, type ProbeRunOptions } from './probe/run';
+export { buildRamp, StepMonitor, type ProbeStep, type StepSummary } from './probe/ramp';
 export { runSmoke, SmokeBudgetError } from './smoke';
 export { collectStatus } from './status';
 export { detectBlock, isLimitedView } from './blocks';

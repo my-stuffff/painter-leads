@@ -5,6 +5,7 @@ import { isBlockSignal } from './blocks';
 import { logRequest } from './cap';
 import { runDatacentreTest } from './datacentre';
 import { createDetailStage } from './detail';
+import { probeCommand } from './probe/command';
 import { discoverStage } from './discover';
 import { PlaywrightDriver } from './driver/playwright';
 import { QUERY_FORM, type QueryForm } from './query';
@@ -166,4 +167,11 @@ const datacentreCommand: CommandSpec = {
   },
 };
 
-export const commands: CommandSpec[] = [smokeCommand, discoverCommand, detailCommand, statusCommand, datacentreCommand];
+export const commands: CommandSpec[] = [
+  smokeCommand,
+  discoverCommand,
+  detailCommand,
+  statusCommand,
+  datacentreCommand,
+  probeCommand,
+];

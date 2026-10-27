@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { commands, packageModule, replayers, stages } from '../src/index';
 
 describe('@pp/maps package module', () => {
-  it('registers the discover and detail stages, the card replayer and the five commands', () => {
+  it('registers the discover and detail stages, the card replayer and the six commands', () => {
     expect(packageModule.name).toBe('maps');
     expect(packageModule.commands).toBe(commands);
     expect(packageModule.stages).toBe(stages);
@@ -17,6 +17,7 @@ describe('@pp/maps package module', () => {
       'maps discover',
       'maps smoke',
       'maps status',
+      'probe maps-rate',
     ]);
   });
 });
