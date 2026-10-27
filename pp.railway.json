@@ -1,0 +1,171 @@
+{
+  "qualification": {
+    "minRating": 4.7,
+    "minReviews": 10,
+    "maxReviews": 99,
+    "requireGoogleProfile": true,
+    "requireResidentialOnly": true
+  },
+  "search": {
+    "terms": [
+      "house painter",
+      "painting contractor",
+      "interior painter",
+      "exterior house painting",
+      "cabinet painting"
+    ],
+    "order": "term-major",
+    "zctaMinShare": 0.2
+  },
+  "areas": {
+    "file": "data/geo/pilot-areas.json",
+    "pilotOrder": [
+      "edison_nj",
+      "austin_tx",
+      "san_diego_ca"
+    ],
+    "expandIfPaintersBelow": {
+      "edison_nj": 60
+    }
+  },
+  "maps": {
+    "headless": true,
+    "locale": "en-US",
+    "timezoneId": "America/Chicago",
+    "searchPauseMs": [
+      3000,
+      6000
+    ],
+    "placePauseMs": [
+      1000,
+      2000
+    ],
+    "dailyCap": {
+      "searches": 3000,
+      "placePages": 30000
+    },
+    "limitedViewStreakStop": 5,
+    "maxScrolls": 30,
+    "blockBackoffMinutes": 60,
+    "smokeBudget": {
+      "searches": 3,
+      "placePages": 6
+    },
+    "dcTest": {
+      "queries": [
+        "house painter 78701",
+        "house painter 92101",
+        "painting contractor 08817",
+        "house painter 78745",
+        "house painter 92109"
+      ]
+    }
+  },
+  "sources": {
+    "maps": {
+      "enabled": true,
+      "minIntervalMs": 4000,
+      "robots": "respect"
+    },
+    "websites": {
+      "enabled": true,
+      "minIntervalMs": 1000,
+      "robots": "respect"
+    },
+    "cslb": {
+      "enabled": true,
+      "minIntervalMs": 3000,
+      "robots": "respect"
+    },
+    "nj_hic_roster": {
+      "enabled": true,
+      "minIntervalMs": 3000,
+      "robots": "respect"
+    },
+    "nj_hic_detail": {
+      "enabled": true,
+      "minIntervalMs": 4000,
+      "robots": "respect"
+    },
+    "nj_principal_search": {
+      "enabled": true,
+      "minIntervalMs": 4000,
+      "robots": "respect"
+    },
+    "tx_open_data": {
+      "enabled": true,
+      "minIntervalMs": 1500,
+      "robots": "respect"
+    },
+    "tx_comptroller": {
+      "enabled": true,
+      "minIntervalMs": 4000,
+      "robots": "override"
+    },
+    "bbb": {
+      "enabled": true,
+      "minIntervalMs": 4000,
+      "robots": "respect"
+    },
+    "census": {
+      "enabled": true,
+      "minIntervalMs": 1000,
+      "robots": "respect"
+    }
+  },
+  "fetch": {
+    "timeoutMs": 20000,
+    "maxBodyBytes": 5000000,
+    "maxDownloadBytes": 200000000,
+    "maxRedirects": 5,
+    "robotsCacheHours": 24,
+    "dnsOverrides": {
+      "*.texas.gov": [
+        "1.1.1.1",
+        "8.8.8.8"
+      ]
+    }
+  },
+  "crawl": {
+    "maxInternalPages": 7,
+    "linkPattern": "contact|about|team|our-story|meet|owner|services|residential|commercial",
+    "renderIfVisibleCharsBelow": 200,
+    "concurrency": 4,
+    "maxBundles": 3,
+    "maxBundleBytes": 2000000
+  },
+  "confidence": {
+    "websiteOwner": "medium"
+  },
+  "report": {
+    "minConfidence": "medium",
+    "outDir": "runs"
+  },
+  "franchise": {
+    "brands": [
+      "CertaPro Painters",
+      "Five Star Painting",
+      "Fresh Coat Painters",
+      "WOW 1 DAY PAINTING",
+      "ProTect Painters"
+    ],
+    "domains": [
+      "certapro.com",
+      "fivestarpainting.com",
+      "freshcoatpainters.com",
+      "wow1day.com",
+      "protectpainters.com"
+    ]
+  },
+  "accuracy": {
+    "perState": 50,
+    "minQualified": 25,
+    "maxNonPainters": 5,
+    "drift": {
+      "reviewAbs": 2,
+      "reviewPct": 0.03,
+      "ratingTol": 0.1
+    },
+    "truthWithinHours": 48
+  }
+}

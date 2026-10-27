@@ -36,7 +36,7 @@ export async function launchBrowser(o: {
   const browser = await chromium.launch({
     headless: o.headless ?? o.config.maps.headless,
     executablePath,
-    args: ['--disable-extensions'],
+    args: ['--disable-extensions', '--disable-dev-shm-usage'],
   });
   const context = await browser.newContext({
     locale: o.config.maps.locale,
