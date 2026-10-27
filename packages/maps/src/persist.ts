@@ -409,6 +409,9 @@ export async function persistPlace(
   }
   const outcome: PlaceOutcome = parsed.limitedView ? 'limited_view' : 'done';
   const target = listing ?? (await findListing(ctx.db, parsed.placeId, parsed.cid));
+  // A search that landed on a place page whose URL carries no place id or CID (or that shows no name) cannot be
+  // tied to a business for sure: nothing is stored, the search is recorded as failed.
+  if (!target && ((!parsed.placeId && !parsed.cid) || !parsed.name)) return { outcome: 'failed', listingId: null, inserted: false };
   const { row, inserted } = await upsertListing(ctx, runId, {
     source: 'place',
     placeId: parsed.placeId ?? target?.placeId ?? null,

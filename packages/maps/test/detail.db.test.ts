@@ -334,23 +334,33 @@ describe('detail: blocks, back-off and the daily cap', () => {
 const cidOf = (n: number): string => BigInt(`0x2452b5fb1a89${n.toString(16).padStart(4, '0')}`).toString();
 
 /** Drivers that serve each page by the cid in the opened URL, so the order workers open pages in does not matter. */
-function byCidFactory(pages: Map<string, FixturePage>) {
+function byCidFactory(pages: Map<string, FixturePage>, crashes = new Map<string, number>()) {
   const drivers: { opened: string[]; closed: boolean }[] = [];
   const make = async (): Promise<PageDriver> => {
     const log = { opened: [] as string[], closed: false };
     drivers.push(log);
     let current = new FixtureDriver([]);
+    let cid = '';
     return {
       async open(url) {
         log.opened.push(url);
         const page = pages.get(/cid=(\d+)/.exec(url)?.[1] ?? '');
         if (!page) throw new Error(`no page for ${url}`);
         current = new FixtureDriver([page]);
+        cid = /cid=(\d+)/.exec(url)?.[1] ?? '';
         return current.open(url);
       },
       scrollFeed: () => current.scrollFeed(),
       snapshotCards: () => current.snapshotCards(),
-      snapshotPlace: () => current.snapshotPlace(),
+      snapshotPlace: () => {
+        // crashes: cid -> how many more reads of that page die like an out-of-memory tab
+        const left = crashes.get(cid) ?? 0;
+        if (left > 0) {
+          crashes.set(cid, left - 1);
+          return Promise.reject(new Error('page.evaluate: Target crashed '));
+        }
+        return current.snapshotPlace();
+      },
       pageSignals: () => current.pageSignals(),
       async close() {
         log.closed = true;
@@ -395,5 +405,41 @@ describe('detail: several place pages at once (maps.placeConcurrency)', () => {
     expect((await listingByName('Painter 2')).detailStatus).toBe('blocked');
     const pending = await db.select().from(schema.listings).where(eq(schema.listings.detailStatus, 'pending'));
     expect(pending.length).toBeGreaterThan(0);
+  });
+
+  it('a crashed browser is replaced and the crashed place page is read again later', async () => {
+    const ns = [1, 2, 3, 4, 5];
+    const runId = await seed(ns.map((n) => fakeCard(n)));
+    const f = byCidFactory(placesFor(ns), new Map([[cidOf(2), 1]]));
+    const stage = createDetailStage({ driverFactory: f.make, rng: rng() });
+    const result = await stage.run(makeCtx(db, runId, makeClock(), testConfig({ placeConcurrency: 2 })), { runId });
+
+    expect(result).toEqual({ done: 5, limitedView: 0, failed: 0, stopped: null });
+    expect(f.drivers).toHaveLength(3);
+    expect(f.drivers.every((d) => d.closed)).toBe(true);
+    const rows = await db.select().from(schema.listings).orderBy(asc(schema.listings.id));
+    expect(rows.map((r) => r.detailStatus)).toEqual(Array(5).fill('done'));
+  });
+
+  it('a page that crashes the browser twice is left pending, and five crashes in a row stop with the error', async () => {
+    const once = [1, 2, 3];
+    let runId = await seed(once.map((n) => fakeCard(n)));
+    let f = byCidFactory(placesFor(once), new Map([[cidOf(2), 2]]));
+    const result = await createDetailStage({ driverFactory: f.make, rng: rng() }).run(
+      makeCtx(db, runId, makeClock(), testConfig({ placeConcurrency: 1 })),
+      { runId },
+    );
+    expect(result).toEqual({ done: 2, limitedView: 0, failed: 0, stopped: null });
+    expect((await listingByName('Painter 2')).detailStatus).toBe('pending');
+
+    const ns = [4, 5, 6, 7, 8, 9];
+    runId = await seed(ns.map((n) => fakeCard(n)));
+    f = byCidFactory(placesFor(ns), new Map(ns.map((n) => [cidOf(n), 9])));
+    await expect(
+      createDetailStage({ driverFactory: f.make, rng: rng() }).run(makeCtx(db, runId, makeClock(), testConfig({ placeConcurrency: 1 })), {
+        runId,
+      }),
+    ).rejects.toThrow(/Target crashed/);
+    expect(f.drivers.every((d) => d.closed)).toBe(true);
   });
 });

@@ -10,7 +10,7 @@ import { persistPlace, type PersistCtx } from './persist';
 import { createPinSkipper } from './pin-skip';
 import { recentRunBlock, resumeRun, stopRun } from './run-state';
 import { randomPause } from './throttle';
-import { MAX_TRANSIENT_STREAK, openWithRetry } from './transient';
+import { isBrowserCrash, MAX_CRASH_STREAK, MAX_TRANSIENT_STREAK, openWithRetry } from './transient';
 
 export interface DetailDeps {
   driverFactory?: (ctx: StageContext) => Promise<PageDriver>;
@@ -93,6 +93,8 @@ export function createDetailStage(deps: DetailDeps = {}): Stage<DetailInput, Det
       let next = 0;
       let streak = 0;
       let transientStreak = 0;
+      let crashStreak = 0;
+      const crashRetried = new Set<number>();
       let crashed = false;
       const halt = async (...args: Parameters<typeof stopRun>): Promise<void> => {
         const stopped = await stopRun(...args);
@@ -115,88 +117,110 @@ export function createDetailStage(deps: DetailDeps = {}): Stage<DetailInput, Det
             }
 
             const url = withLocale(listing.profileUrl);
-            driver ??= await (deps.driverFactory ?? defaultDriverFactory)(ctx);
-            const attempt = await openWithRetry(driver, url, {
-              db,
-              runId,
-              kind: 'place',
-              now: () => ctx.now(),
-              sleep: ctx.sleep,
-              rng: deps.rng,
-              log: ctx.log,
-            });
-            if (!attempt.ok) {
-              // Slow page, not a block: the listing keeps its status (still wanted by the next run) and its card data.
-              transientStreak++;
-              if (transientStreak >= MAX_TRANSIENT_STREAK) {
-                await halt(
-                  db,
+            try {
+              driver ??= await (deps.driverFactory ?? defaultDriverFactory)(ctx);
+              const attempt = await openWithRetry(driver, url, {
+                db,
+                runId,
+                kind: 'place',
+                now: () => ctx.now(),
+                sleep: ctx.sleep,
+                rng: deps.rng,
+                log: ctx.log,
+              });
+              if (!attempt.ok) {
+                // Slow page, not a block: the listing keeps its status (still wanted by the next run) and its card data.
+                transientStreak++;
+                if (transientStreak >= MAX_TRANSIENT_STREAK) {
+                  await halt(
+                    db,
+                    runId,
+                    'daily_cap',
+                    `network looks down: ${transientStreak} place pages in a row did not load (listing ${listing.id} last: ${attempt.error.message.split('\n')[0]})`,
+                    ctx.now(),
+                    { listingId: listing.id },
+                  );
+                  break;
+                }
+                if (next < queue.length) await ctx.sleep(randomPause(config.maps.placePauseMs, deps.rng));
+                continue;
+              }
+              transientStreak = 0;
+              const { opened, started } = attempt;
+              const signals = await driver.pageSignals();
+              const block = detectBlock(signals, opened.status);
+              if (block) {
+                await logRequest(db, {
                   runId,
-                  'daily_cap',
-                  `network looks down: ${transientStreak} place pages in a row did not load (listing ${listing.id} last: ${attempt.error.message.split('\n')[0]})`,
-                  ctx.now(),
-                  { listingId: listing.id },
-                );
+                  url,
+                  status: opened.status,
+                  ms: Date.now() - started,
+                  outcome: requestOutcomeFor(block),
+                  note: 'place',
+                  at: ctx.now(),
+                });
+                await db.update(listings).set({ detailStatus: 'blocked' }).where(eq(listings.id, listing.id));
+                await halt(db, runId, block, `place page of listing ${listing.id} landed on ${opened.landedUrl}`, ctx.now(), {
+                  listingId: listing.id,
+                });
                 break;
               }
-              if (next < queue.length) await ctx.sleep(randomPause(config.maps.placePauseMs, deps.rng));
-              continue;
-            }
-            transientStreak = 0;
-            const { opened, started } = attempt;
-            const signals = await driver.pageSignals();
-            const block = detectBlock(signals, opened.status);
-            if (block) {
+
+              const snapshot = await driver.snapshotPlace();
+              const parsed = parsePlace(snapshot);
+              const saved = await persistPlace(pctx, runId, listing, snapshot, parsed);
               await logRequest(db, {
                 runId,
                 url,
                 status: opened.status,
                 ms: Date.now() - started,
-                outcome: requestOutcomeFor(block),
+                outcome: saved.outcome === 'done' ? 'ok' : saved.outcome === 'limited_view' ? 'limited_view' : 'http_error',
                 note: 'place',
                 at: ctx.now(),
               });
-              await db.update(listings).set({ detailStatus: 'blocked' }).where(eq(listings.id, listing.id));
-              await halt(db, runId, block, `place page of listing ${listing.id} landed on ${opened.landedUrl}`, ctx.now(), {
-                listingId: listing.id,
-              });
-              break;
-            }
 
-            const snapshot = await driver.snapshotPlace();
-            const parsed = parsePlace(snapshot);
-            const saved = await persistPlace(pctx, runId, listing, snapshot, parsed);
-            await logRequest(db, {
-              runId,
-              url,
-              status: opened.status,
-              ms: Date.now() - started,
-              outcome: saved.outcome === 'done' ? 'ok' : saved.outcome === 'limited_view' ? 'limited_view' : 'http_error',
-              note: 'place',
-              at: ctx.now(),
-            });
-
-            if (saved.outcome === 'done') {
-              result.done++;
-              streak = 0;
-            } else if (saved.outcome === 'limited_view') {
-              result.limitedView++;
-              streak++;
-              if (streak >= config.maps.limitedViewStreakStop) {
-                await halt(
-                  db,
-                  runId,
-                  'limited_view_streak',
-                  `${streak} place pages in a row showed no review count (listing ${listing.id} last)`,
-                  ctx.now(),
-                  { listingId: listing.id },
-                );
-                break;
+              if (saved.outcome === 'done') {
+                result.done++;
+                streak = 0;
+              } else if (saved.outcome === 'limited_view') {
+                result.limitedView++;
+                streak++;
+                if (streak >= config.maps.limitedViewStreakStop) {
+                  await halt(
+                    db,
+                    runId,
+                    'limited_view_streak',
+                    `${streak} place pages in a row showed no review count (listing ${listing.id} last)`,
+                    ctx.now(),
+                    { listingId: listing.id },
+                  );
+                  break;
+                }
+              } else {
+                result.failed++;
+                streak = 0;
               }
-            } else {
-              result.failed++;
-              streak = 0;
+
+            } catch (e) {
+              if (!isBrowserCrash(e)) throw e;
+              // The browser died under this page (out of memory): the listing keeps its status and goes to the back of
+              // the queue once, and this worker starts a fresh browser.
+              crashStreak++;
+              ctx.log.warn(
+                { listingId: listing.id, crashStreak, message: (e as Error).message.split('\n')[0] },
+                'browser crashed; place page retried later on a fresh browser',
+              );
+              if (!crashRetried.has(listing.id)) {
+                crashRetried.add(listing.id);
+                queue.push(listing);
+              }
+              const dead = driver;
+              driver = null;
+              await dead?.close().catch(() => undefined);
+              if (crashStreak >= MAX_CRASH_STREAK) throw e;
+              continue;
             }
+            crashStreak = 0;
 
             if (next < queue.length) await ctx.sleep(randomPause(config.maps.placePauseMs, deps.rng));
           }

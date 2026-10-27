@@ -14,6 +14,19 @@ export function isTransientNavError(e: unknown): boolean {
   return e instanceof Error && (e.name === 'TimeoutError' || /net::ERR_/.test(e.message));
 }
 
+/** This many browser crashes in a row stop the stage with the error; fewer are survived by starting a fresh browser. */
+export const MAX_CRASH_STREAK = 5;
+
+/** The browser or its tab died under the page (out of memory in a small container), as opposed to a page or parse error. */
+export function isBrowserCrash(e: unknown): boolean {
+  return (
+    e instanceof Error &&
+    /Target crashed|Page crashed|Target page, context or browser has been closed|Browser has been closed|browser has disconnected/i.test(
+      e.message,
+    )
+  );
+}
+
 export type OpenAttempt = { ok: true; opened: OpenResult; started: number } | { ok: false; error: Error };
 
 /**

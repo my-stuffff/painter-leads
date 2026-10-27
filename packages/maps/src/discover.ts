@@ -18,7 +18,7 @@ import { persistCard, persistPlace, type PersistCtx } from './persist';
 import { buildSearchUrl, type QueryForm } from './query';
 import { resumeRun, stopRun } from './run-state';
 import { randomPause } from './throttle';
-import { MAX_TRANSIENT_STREAK, openWithRetry } from './transient';
+import { isBrowserCrash, MAX_CRASH_STREAK, MAX_TRANSIENT_STREAK, openWithRetry } from './transient';
 
 export interface DiscoverDeps {
   /** Builds the browser page for one stage run. Tests pass a FixtureDriver; the default launches Chromium. */
@@ -94,6 +94,8 @@ export function createDiscoverStage(deps: DiscoverDeps = {}): Stage<DiscoverInpu
       let next = 0;
       let emptyStreak = 0;
       let transientStreak = 0;
+      let crashStreak = 0;
+      let cardErrorStreak = 0;
       let crashed = false;
       const persisting = serial();
       const halt = async (...args: Parameters<typeof stopRun>): Promise<void> => {
@@ -130,170 +132,203 @@ export function createDiscoverStage(deps: DiscoverDeps = {}): Stage<DiscoverInpu
               })
               .where(eq(searches.id, s.id));
 
-            driver ??= await makeDriver();
-            // A non-transient error is thrown: the search stays 'running' and a re-run retries it.
-            const attempt = await openWithRetry(driver, url, {
-              db,
-              runId,
-              kind: 'search',
-              now: () => ctx.now(),
-              sleep: ctx.sleep,
-              rng: deps.rng,
-              log: ctx.log,
-            });
-            if (!attempt.ok) {
-              // Slow page, not a block: leave the search pending (nothing stored for it) and carry on with the next one.
-              await db.update(searches).set({ status: 'pending' }).where(eq(searches.id, s.id));
-              transientStreak++;
-              if (transientStreak >= MAX_TRANSIENT_STREAK) {
-                await halt(
-                  db,
+            try {
+              driver ??= await makeDriver();
+              // A non-transient error is thrown: the search stays 'running' and a re-run retries it.
+              const attempt = await openWithRetry(driver, url, {
+                db,
+                runId,
+                kind: 'search',
+                now: () => ctx.now(),
+                sleep: ctx.sleep,
+                rng: deps.rng,
+                log: ctx.log,
+              });
+              if (!attempt.ok) {
+                // Slow page, not a block: leave the search pending (nothing stored for it) and carry on with the next one.
+                await db.update(searches).set({ status: 'pending' }).where(eq(searches.id, s.id));
+                transientStreak++;
+                if (transientStreak >= MAX_TRANSIENT_STREAK) {
+                  await halt(
+                    db,
+                    runId,
+                    'daily_cap',
+                    `network looks down: ${transientStreak} searches in a row did not load (search ${s.id} last: ${attempt.error.message.split('\n')[0]})`,
+                    ctx.now(),
+                    { searchId: s.id },
+                  );
+                  break;
+                }
+                if (next < queue.length) await ctx.sleep(randomPause(config.maps.searchPauseMs, deps.rng));
+                continue;
+              }
+              transientStreak = 0;
+              const { opened, started } = attempt;
+              const signals = await driver.pageSignals();
+              const block = detectBlock(signals, opened.status);
+              if (block) {
+                await logRequest(db, {
                   runId,
-                  'daily_cap',
-                  `network looks down: ${transientStreak} searches in a row did not load (search ${s.id} last: ${attempt.error.message.split('\n')[0]})`,
-                  ctx.now(),
-                  { searchId: s.id },
-                );
+                  url,
+                  status: opened.status,
+                  ms: Date.now() - started,
+                  outcome: requestOutcomeFor(block),
+                  note: 'search',
+                  at: ctx.now(),
+                });
+                await db
+                  .update(searches)
+                  .set({ status: 'blocked', blockSignal: block, landedUrl: opened.landedUrl, finishedAt: ctx.now() })
+                  .where(eq(searches.id, s.id));
+                await halt(db, runId, block, `search ${s.id} (${s.query}) landed on ${opened.landedUrl}`, ctx.now(), {
+                  searchId: s.id,
+                });
                 break;
               }
-              if (next < queue.length) await ctx.sleep(randomPause(config.maps.searchPauseMs, deps.rng));
+
+              if (!signals.hasFeed && signals.hasPlacePanel) {
+                // The search landed straight on one place page: that is one listing.
+                const snapshot = await driver.snapshotPlace();
+                const parsed = parsePlace(snapshot);
+                const { placed, isNew } = await persisting(async () => {
+                  const placed = await persistPlace(pctx, runId, null, snapshot, parsed);
+                  let isNew = 0;
+                  if (placed.listingId !== null) {
+                    const hit = await db
+                      .insert(schema.searchHits)
+                      .values({ searchId: s.id, listingId: placed.listingId, position: 1, isNew: placed.inserted })
+                      .onConflictDoNothing({ target: [schema.searchHits.searchId, schema.searchHits.listingId] })
+                      .returning({ id: schema.searchHits.id });
+                    if (hit.length > 0 && placed.inserted) isNew = 1;
+                  }
+                  return { placed, isNew };
+                });
+                await logRequest(db, {
+                  runId,
+                  url,
+                  status: opened.status,
+                  ms: Date.now() - started,
+                  outcome: parsed.limitedView ? 'limited_view' : 'ok',
+                  note: 'search',
+                  at: ctx.now(),
+                });
+                await db
+                  .update(searches)
+                  .set({
+                    status: placed.listingId !== null ? 'done' : 'failed',
+                    cardsFound: placed.listingId !== null ? 1 : 0,
+                    newPlaceIds: isNew,
+                    endReached: true,
+                    landedUrl: opened.landedUrl,
+                    finishedAt: ctx.now(),
+                  })
+                  .where(eq(searches.id, s.id));
+                emptyStreak = 0;
+                if (placed.listingId !== null) {
+                  result.searchesDone++;
+                  result.cardsSeen++;
+                  result.newListings += isNew;
+                }
+              } else if (!signals.hasFeed) {
+                // Neither a results list nor a place panel and not a recognised block: record it, do not guess.
+                await logRequest(db, {
+                  runId,
+                  url,
+                  status: opened.status,
+                  ms: Date.now() - started,
+                  outcome: 'http_error',
+                  note: 'search',
+                  at: ctx.now(),
+                });
+                await db
+                  .update(searches)
+                  .set({ status: 'failed', landedUrl: opened.landedUrl, finishedAt: ctx.now() })
+                  .where(eq(searches.id, s.id));
+                ctx.log.warn({ searchId: s.id, landedUrl: opened.landedUrl }, 'search page has no results list and no place panel');
+                emptyStreak++;
+                if (emptyStreak >= MAX_CONSECUTIVE_EMPTY) {
+                  await halt(
+                    db,
+                    runId,
+                    'unusual_traffic',
+                    `${MAX_CONSECUTIVE_EMPTY} searches in a row showed no results list and no place panel (possible new interstitial); last landed on ${opened.landedUrl}`,
+                    ctx.now(),
+                    { searchId: s.id },
+                  );
+                  break;
+                }
+              } else {
+                emptyStreak = 0;
+                const feed = await scrollFeedToEnd(driver, config.maps.maxScrolls);
+                const cards = await driver.snapshotCards();
+                let newCount = 0;
+                let position = 0;
+                for (const snap of cards) {
+                  position++;
+                  const at = position;
+                  let saved: Awaited<ReturnType<typeof persistCard>>;
+                  try {
+                    saved = await persisting(() => persistCard(pctx, runId, s.id, at, snap, parseCard(snap)));
+                    cardErrorStreak = 0;
+                  } catch (e) {
+                    // One card the database refuses is skipped (a missing listing, never a wrong one); many in a row is a real fault.
+                    cardErrorStreak++;
+                    const cause = (e as { cause?: unknown }).cause;
+                    ctx.log.warn(
+                      { searchId: s.id, position, href: snap.href, cause: cause instanceof Error ? cause.message : String(cause) },
+                      'card skipped: could not be stored',
+                    );
+                    if (cardErrorStreak >= 10) throw e;
+                    continue;
+                  }
+                  if (!saved) {
+                    ctx.log.warn({ searchId: s.id, position, href: snap.href }, 'card skipped: no name or place id');
+                    continue;
+                  }
+                  if (saved.isNew) newCount++;
+                }
+                await logRequest(db, {
+                  runId,
+                  url,
+                  status: opened.status,
+                  ms: Date.now() - started,
+                  outcome: 'ok',
+                  note: 'search',
+                  at: ctx.now(),
+                });
+                await db
+                  .update(searches)
+                  .set({
+                    status: 'done',
+                    cardsFound: cards.length,
+                    newPlaceIds: newCount,
+                    endReached: feed.endReached,
+                    landedUrl: opened.landedUrl,
+                    finishedAt: ctx.now(),
+                  })
+                  .where(eq(searches.id, s.id));
+                result.searchesDone++;
+                result.cardsSeen += cards.length;
+                result.newListings += newCount;
+              }
+
+            } catch (e) {
+              if (!isBrowserCrash(e)) throw e;
+              // The browser died under this search (out of memory): the search goes back to pending for the next
+              // pass and this worker starts a fresh browser.
+              crashStreak++;
+              ctx.log.warn(
+                { searchId: s.id, crashStreak, message: (e as Error).message.split('\n')[0] },
+                'browser crashed; search left pending, fresh browser next',
+              );
+              await db.update(searches).set({ status: 'pending' }).where(eq(searches.id, s.id));
+              const dead = driver;
+              driver = null;
+              await dead?.close().catch(() => undefined);
+              if (crashStreak >= MAX_CRASH_STREAK) throw e;
               continue;
             }
-            transientStreak = 0;
-            const { opened, started } = attempt;
-            const signals = await driver.pageSignals();
-            const block = detectBlock(signals, opened.status);
-            if (block) {
-              await logRequest(db, {
-                runId,
-                url,
-                status: opened.status,
-                ms: Date.now() - started,
-                outcome: requestOutcomeFor(block),
-                note: 'search',
-                at: ctx.now(),
-              });
-              await db
-                .update(searches)
-                .set({ status: 'blocked', blockSignal: block, landedUrl: opened.landedUrl, finishedAt: ctx.now() })
-                .where(eq(searches.id, s.id));
-              await halt(db, runId, block, `search ${s.id} (${s.query}) landed on ${opened.landedUrl}`, ctx.now(), {
-                searchId: s.id,
-              });
-              break;
-            }
-
-            if (!signals.hasFeed && signals.hasPlacePanel) {
-              // The search landed straight on one place page: that is one listing.
-              const snapshot = await driver.snapshotPlace();
-              const parsed = parsePlace(snapshot);
-              const { placed, isNew } = await persisting(async () => {
-                const placed = await persistPlace(pctx, runId, null, snapshot, parsed);
-                let isNew = 0;
-                if (placed.listingId !== null) {
-                  const hit = await db
-                    .insert(schema.searchHits)
-                    .values({ searchId: s.id, listingId: placed.listingId, position: 1, isNew: placed.inserted })
-                    .onConflictDoNothing({ target: [schema.searchHits.searchId, schema.searchHits.listingId] })
-                    .returning({ id: schema.searchHits.id });
-                  if (hit.length > 0 && placed.inserted) isNew = 1;
-                }
-                return { placed, isNew };
-              });
-              await logRequest(db, {
-                runId,
-                url,
-                status: opened.status,
-                ms: Date.now() - started,
-                outcome: parsed.limitedView ? 'limited_view' : 'ok',
-                note: 'search',
-                at: ctx.now(),
-              });
-              await db
-                .update(searches)
-                .set({
-                  status: placed.listingId !== null ? 'done' : 'failed',
-                  cardsFound: placed.listingId !== null ? 1 : 0,
-                  newPlaceIds: isNew,
-                  endReached: true,
-                  landedUrl: opened.landedUrl,
-                  finishedAt: ctx.now(),
-                })
-                .where(eq(searches.id, s.id));
-              emptyStreak = 0;
-              if (placed.listingId !== null) {
-                result.searchesDone++;
-                result.cardsSeen++;
-                result.newListings += isNew;
-              }
-            } else if (!signals.hasFeed) {
-              // Neither a results list nor a place panel and not a recognised block: record it, do not guess.
-              await logRequest(db, {
-                runId,
-                url,
-                status: opened.status,
-                ms: Date.now() - started,
-                outcome: 'http_error',
-                note: 'search',
-                at: ctx.now(),
-              });
-              await db
-                .update(searches)
-                .set({ status: 'failed', landedUrl: opened.landedUrl, finishedAt: ctx.now() })
-                .where(eq(searches.id, s.id));
-              ctx.log.warn({ searchId: s.id, landedUrl: opened.landedUrl }, 'search page has no results list and no place panel');
-              emptyStreak++;
-              if (emptyStreak >= MAX_CONSECUTIVE_EMPTY) {
-                await halt(
-                  db,
-                  runId,
-                  'unusual_traffic',
-                  `${MAX_CONSECUTIVE_EMPTY} searches in a row showed no results list and no place panel (possible new interstitial); last landed on ${opened.landedUrl}`,
-                  ctx.now(),
-                  { searchId: s.id },
-                );
-                break;
-              }
-            } else {
-              emptyStreak = 0;
-              const feed = await scrollFeedToEnd(driver, config.maps.maxScrolls);
-              const cards = await driver.snapshotCards();
-              let newCount = 0;
-              let position = 0;
-              for (const snap of cards) {
-                position++;
-                const at = position;
-                const saved = await persisting(() => persistCard(pctx, runId, s.id, at, snap, parseCard(snap)));
-                if (!saved) {
-                  ctx.log.warn({ searchId: s.id, position, href: snap.href }, 'card skipped: no name or place id');
-                  continue;
-                }
-                if (saved.isNew) newCount++;
-              }
-              await logRequest(db, {
-                runId,
-                url,
-                status: opened.status,
-                ms: Date.now() - started,
-                outcome: 'ok',
-                note: 'search',
-                at: ctx.now(),
-              });
-              await db
-                .update(searches)
-                .set({
-                  status: 'done',
-                  cardsFound: cards.length,
-                  newPlaceIds: newCount,
-                  endReached: feed.endReached,
-                  landedUrl: opened.landedUrl,
-                  finishedAt: ctx.now(),
-                })
-                .where(eq(searches.id, s.id));
-              result.searchesDone++;
-              result.cardsSeen += cards.length;
-              result.newListings += newCount;
-            }
+            crashStreak = 0;
 
             if (next < queue.length) await ctx.sleep(randomPause(config.maps.searchPauseMs, deps.rng));
           }
