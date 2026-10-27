@@ -115,8 +115,9 @@ describe('localityShare on the live smoke searches (query form decision)', () =>
     expect(l.shareInAreaOrRing).toBeCloseTo(0.5584, 3);
   });
 
-  it('smoke 3 (zip_text, Austin 78701): 119 cards with coordinates, 100 / 84 / 14', () => {
+  // 100 in area or ring when measured; 102 since the ZCTA file also holds every ZCTA touching the whole cities.
+  it('smoke 3 (zip_text, Austin 78701): 119 cards with coordinates, 102 / 84 / 14', () => {
     const l = localityShare(testConfig(), '78701', cards('smoke-3-search.json'));
-    expect(l).toMatchObject({ area: 'austin_tx', cardsWithCoords: 119, inAreaOrNeighbourRing: 100, inAreaZctas: 84, inTargetZip: 14 });
+    expect(l).toMatchObject({ area: 'austin_tx', cardsWithCoords: 119, inAreaOrNeighbourRing: 102, inAreaZctas: 84, inTargetZip: 14 });
   });
 });

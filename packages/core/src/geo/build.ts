@@ -31,9 +31,11 @@ export const PILOT_ZIPS_PER_BIG_CITY = 12;
 export const EDISON_PILOT = ['08817', '08820', '08837'];
 export const WOODBRIDGE_MIN_SHARE = 0.98;
 export const METUCHEN_MIN_SHARE = 0.5;
+/** Owner ruling (01-06): La Jolla 92037 replaces the campus ZIP 92092 in the San Diego pilot list, same position. */
+export const PILOT_REPLACEMENTS: Record<string, Record<string, string>> = { san_diego_ca: { '92092': '92037' } };
 
 interface AreaSpec {
-  id: AreaDef['id'];
+  id: string;
   label: string;
   state: AreaDef['state'];
   city: string;
@@ -74,6 +76,57 @@ const AREA_SPECS: AreaSpec[] = [
     seedZip: '92101',
     poBoxZips: [],
   },
+];
+
+/** A whole city searched in full: a Census place (NJ cities too), checked against its 2020 Census name. */
+export interface CitySpec {
+  id: string;
+  state: AreaDef['state'];
+  city: string;
+  /** Census 2020 place GEOID (state FIPS + place code). */
+  geoid: string;
+  /** NAMELSAD_PLACE_20 the relationship file must show for the GEOID (guards a wrong code). */
+  censusName: string;
+}
+
+const city = (id: string, state: AreaDef['state'], name: string, geoid: string): CitySpec => ({
+  id,
+  state,
+  city: name,
+  geoid,
+  censusName: `${name} city`,
+});
+
+/**
+ * Whole cities in the owner's order (biggest first by 2020 Census population). Austin and San Diego already exist
+ * as 12-ZIP pilot areas (austin_tx, san_diego_ca, referenced by earlier runs), so their whole-city areas carry a
+ * _city suffix.
+ */
+export const CITY_SPECS: CitySpec[] = [
+  city('los_angeles_ca', 'CA', 'Los Angeles', '0644000'),
+  city('houston_tx', 'TX', 'Houston', '4835000'),
+  city('san_antonio_tx', 'TX', 'San Antonio', '4865000'),
+  city('san_diego_ca_city', 'CA', 'San Diego', '0666000'),
+  city('dallas_tx', 'TX', 'Dallas', '4819000'),
+  city('san_jose_ca', 'CA', 'San Jose', '0668000'),
+  city('austin_tx_city', 'TX', 'Austin', '4805000'),
+  city('fort_worth_tx', 'TX', 'Fort Worth', '4827000'),
+  city('san_francisco_ca', 'CA', 'San Francisco', '0667000'),
+  city('el_paso_tx', 'TX', 'El Paso', '4824000'),
+  city('fresno_ca', 'CA', 'Fresno', '0627000'),
+  city('sacramento_ca', 'CA', 'Sacramento', '0664000'),
+  city('long_beach_ca', 'CA', 'Long Beach', '0643000'),
+  city('oakland_ca', 'CA', 'Oakland', '0653000'),
+  city('bakersfield_ca', 'CA', 'Bakersfield', '0603526'),
+  city('arlington_tx', 'TX', 'Arlington', '4804000'),
+  city('anaheim_ca', 'CA', 'Anaheim', '0602000'),
+  city('corpus_christi_tx', 'TX', 'Corpus Christi', '4817000'),
+  city('newark_nj', 'NJ', 'Newark', '3451000'),
+  city('plano_tx', 'TX', 'Plano', '4858016'),
+  city('jersey_city_nj', 'NJ', 'Jersey City', '3436000'),
+  city('lubbock_tx', 'TX', 'Lubbock', '4845000'),
+  city('paterson_nj', 'NJ', 'Paterson', '3457000'),
+  city('elizabeth_nj', 'NJ', 'Elizabeth', '3421000'),
 ];
 
 const METUCHEN_GEOID = '3402345690';
@@ -164,6 +217,68 @@ export function sharesByGeoid(rows: Row[], geoidCol: string, wanted: Set<string>
   return out;
 }
 
+const byShareThenZip = (a: AreaZcta, b: AreaZcta): number => b.share - a.share || a.zcta.localeCompare(b.zcta);
+
+/** geoid -> NAMELSAD of each wanted geoid, as the relationship file names it. */
+export function namesByGeoid(rows: Row[], geoidCol: string, nameCol: string, wanted: Set<string>): Map<string, string> {
+  const out = new Map<string, string>();
+  for (const r of rows) {
+    const geoid = (r[geoidCol] ?? '').trim();
+    if (wanted.has(geoid) && !out.has(geoid)) out.set(geoid, (r[nameCol] ?? '').trim());
+  }
+  return out;
+}
+
+/** Fails the build when a city GEOID is missing or names a different place than expected (a wrong code). */
+export function checkCityGeoids(specs: CitySpec[], names: Map<string, string>): void {
+  const wrong = specs
+    .filter((c) => names.get(c.geoid) !== c.censusName)
+    .map((c) => `${c.id}: GEOID ${c.geoid} is "${names.get(c.geoid) ?? 'missing'}", expected "${c.censusName}"`);
+  if (wrong.length > 0) throw new Error(`city GEOID check failed: ${wrong.join('; ')}`);
+}
+
+/**
+ * A whole city: allZctas = every ZCTA with share >= minShare (same rule as the pilots) and every one of them is
+ * searched (pilotZctas, ZIP order). No expansion ZCTAs and no PO-box ZIPs.
+ */
+export function cityArea(
+  spec: CitySpec,
+  shares: Map<string, number>,
+  gaz: Map<string, { lat: number; lng: number }>,
+  minShare: number,
+): AreaDef {
+  const allZctas = [...shares.entries()]
+    .filter(([, s]) => s >= minShare)
+    .map(([zcta, share]): AreaZcta => {
+      const c = gaz.get(zcta);
+      if (!c) throw new Error(`ZCTA ${zcta} is missing from the Gazetteer`);
+      return { zcta, share: Math.round(share * 10_000) / 10_000, lat: c.lat, lng: c.lng };
+    })
+    .sort(byShareThenZip);
+  if (allZctas.length === 0) throw new Error(`no ZCTA of ${spec.id} (${spec.geoid}) reaches share ${minShare}`);
+  return {
+    id: spec.id,
+    kind: 'city',
+    label: `${spec.censusName}, ${spec.state}`,
+    state: spec.state,
+    city: spec.city,
+    censusKind: 'place',
+    geoid: spec.geoid,
+    allZctas,
+    pilotZctas: allZctas.map((z) => z.zcta).sort(),
+    expansionZctas: [],
+    poBoxZips: [],
+  };
+}
+
+/** ZCTAs that touch the city but stay under minShare: their polygons are kept as the city's neighbour ring. */
+export function cityRingZctas(shares: Map<string, number>, minShare: number): string[] {
+  return [...shares.entries()]
+    .filter(([, s]) => s > 0 && s < minShare)
+    .map(([z]) => z)
+    .sort();
+}
+
 export function parseGazetteer(buf: Buffer): Map<string, { lat: number; lng: number }> {
   const text = buf.toString('utf8');
   const rows = parse(text, {
@@ -190,8 +305,6 @@ export function haversineKm(a: { lat: number; lng: number }, b: { lat: number; l
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
   return 2 * 6371 * Math.asin(Math.sqrt(h));
 }
-
-const byShareThenZip = (a: AreaZcta, b: AreaZcta): number => b.share - a.share || a.zcta.localeCompare(b.zcta);
 
 /**
  * Deterministic spread (D-09 amendment): seed with `seedZip` (or the candidate nearest it), then
@@ -268,7 +381,7 @@ export function renderProvenance(entries: ProvenanceEntry[], areas: AreaDef[], g
   const counts = areas
     .map(
       (a) =>
-        `- ${a.id}: ${a.allZctas.length} ZCTAs at share >= zctaMinShare; pilot ${a.pilotZctas.length}; expansion ${a.expansionZctas.length}`,
+        `- ${a.id}${a.kind === 'city' ? ` (place ${a.geoid}, whole city)` : ''}: ${a.allZctas.length} ZCTAs at share >= zctaMinShare; searched ${a.pilotZctas.length}; expansion ${a.expansionZctas.length}`,
     )
     .join('\n');
   return `## Geo data (generated by \`pp geo build\`)
@@ -293,14 +406,21 @@ Committed outputs: \`data/geo/pilot-areas.json\` (area definitions) and \`data/g
   Kept in full for Phase 2.
 - pilotZctas: Edison = 08817, 08820, 08837 (08854 is a ~0.01 sliver). Austin and San Diego = exactly 12 each from
   ZCTAs with share >= 0.50: seed 78701 / 92101 (or the candidate nearest it), then repeatedly the candidate whose
-  minimum great-circle distance to the chosen set is largest (ties: higher share, then lower ZIP).
+  minimum great-circle distance to the chosen set is largest (ties: higher share, then lower ZIP). Owner ruling:
+  La Jolla 92037 replaces the campus ZIP 92092 in the San Diego list (same position).
 - expansionZctas: Edison = Metuchen borough (3402345690) ZCTAs with share >= 0.50 plus Woodbridge township
   (3402382000) ZCTAs with share >= 0.98; Austin and San Diego = none.
 - poBoxZips: Edison 08818 and 08899, NOT verified against USPS (research A3); used only to keep an address that
   shows one of these ZIPs in-area.
 - Polygons: TIGERweb layer 7 (2020 Census ZIP Code Tabulation Areas), outSR 4326, maxAllowableOffset 0.0005,
-  geometryPrecision 5, for every area ZCTA (all + expansion) plus every ZCTA intersecting each area's bounding
-  envelope (neighbour ring).
+  geometryPrecision 5, for every area ZCTA (all + expansion) plus a neighbour ring: for the three pilot areas every
+  ZCTA intersecting the area's bounding envelope; for the whole cities every ZCTA that touches the city with share
+  below zctaMinShare.
+- Whole cities (\`kind: "city"\`), in the owner's order, biggest first by 2020 population: each is a Census place
+  (NJ cities too) whose GEOID is checked against NAMELSAD_PLACE_20 ("<Name> city") at build time. allZctas uses the
+  same share rule; pilotZctas (the ZIPs searched) = every allZctas ZIP, in ZIP order; no expansion, no PO-box ZIPs.
+  Austin and San Diego keep their 12-ZIP pilot areas (austin_tx, san_diego_ca); their whole-city areas are
+  austin_tx_city and san_diego_ca_city.
 
 ### Result
 
@@ -344,11 +464,13 @@ export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
   const gazBuf = gazRaw.subarray(0, 4).toString('latin1') === 'PK\u0003\u0004' ? readSingleZipEntry(gazRaw).data : gazRaw;
   const gaz = parseGazetteer(gazBuf);
 
-  const placeShares = sharesByGeoid(
-    parsePipe(placeBuf),
-    'GEOID_PLACE_20',
-    new Set(AREA_SPECS.filter((a) => a.censusKind === 'place').map((a) => a.geoid)),
-  );
+  const placeRows = parsePipe(placeBuf);
+  const placeGeoids = new Set([
+    ...AREA_SPECS.filter((a) => a.censusKind === 'place').map((a) => a.geoid),
+    ...CITY_SPECS.map((c) => c.geoid),
+  ]);
+  checkCityGeoids(CITY_SPECS, namesByGeoid(placeRows, 'GEOID_PLACE_20', 'NAMELSAD_PLACE_20', placeGeoids));
+  const placeShares = sharesByGeoid(placeRows, 'GEOID_PLACE_20', placeGeoids);
   const cousubShares = sharesByGeoid(
     parsePipe(cousubBuf),
     'GEOID_COUSUB_20',
@@ -386,7 +508,11 @@ export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
         .sort();
     } else {
       const candidates = allZctas.filter((z) => z.share >= PILOT_CANDIDATE_MIN_SHARE);
-      pilotZctas = pickSpread(candidates, spec.seedZip as string, gaz.get(spec.seedZip as string) ?? null, PILOT_ZIPS_PER_BIG_CITY);
+      const swap = PILOT_REPLACEMENTS[spec.id] ?? {};
+      pilotZctas = pickSpread(candidates, spec.seedZip as string, gaz.get(spec.seedZip as string) ?? null, PILOT_ZIPS_PER_BIG_CITY).map(
+        (z) => swap[z] ?? z,
+      );
+      for (const z of pilotZctas) if (!allZctas.some((a) => a.zcta === z)) throw new Error(`${spec.id} pilot ZCTA ${z} is not an area ZCTA`);
     }
 
     areas.push({
@@ -405,7 +531,18 @@ export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
     say(`${spec.id}: ${allZctas.length} ZCTAs, pilot ${pilotZctas.length}, expansion ${expansionZctas.length}`);
   }
 
-  // Polygons: area ZCTAs first, then every ZCTA intersecting each area's bounding envelope.
+  const cityRing = new Set<string>();
+  for (const spec of CITY_SPECS) {
+    const shares = placeShares.get(spec.geoid);
+    if (!shares || shares.size === 0) throw new Error(`no ZCTA rows for ${spec.id} (${spec.geoid})`);
+    const area = cityArea(spec, shares, gaz, minShare);
+    areas.push(area);
+    for (const z of cityRingZctas(shares, minShare)) cityRing.add(z);
+    say(`${spec.id}: ${area.allZctas.length} ZCTAs searched in full`);
+  }
+
+  // Polygons: area ZCTAs first, then the neighbour ring: for the pilots every ZCTA intersecting the area's
+  // bounding envelope, for the whole cities every ZCTA that touches the city below zctaMinShare (keeps the file small).
   const features = new Map<string, GeoFeature>();
   const localPolygons = inputDir ? INPUT_NAMES.polygons.map((n) => path.join(inputDir, n)).find((p) => existsSync(p)) : undefined;
   if (localPolygons) {
@@ -443,11 +580,18 @@ export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
     };
 
     const wanted = [...new Set(areas.flatMap((a) => [...a.allZctas.map((z) => z.zcta), ...a.expansionZctas]))].sort();
+    const ringOnly = [...cityRing].filter((z) => !wanted.includes(z));
     const inList = `ZCTA5 IN (${wanted.map((z) => `'${z}'`).join(',')})`;
     say(`TIGERweb: ${wanted.length} area ZCTAs`);
     for (const f of await queryTiger({ where: inList }, 'area ZCTAs')) features.set(f.properties.ZCTA5, f);
 
-    for (const area of areas) {
+    if (ringOnly.length > 0) {
+      say(`TIGERweb: ${ringOnly.length} ZCTAs touching the whole cities`);
+      const ringIn = `ZCTA5 IN (${ringOnly.map((z) => `'${z}'`).join(',')})`;
+      for (const f of await queryTiger({ where: ringIn }, 'ZCTAs touching the whole cities')) features.set(f.properties.ZCTA5, f);
+    }
+
+    for (const area of areas.filter((a) => a.kind !== 'city')) {
       const box: [number, number, number, number] = [Infinity, Infinity, -Infinity, -Infinity];
       for (const z of [...area.allZctas.map((a) => a.zcta), ...area.expansionZctas]) {
         const f = features.get(z);

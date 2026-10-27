@@ -10,16 +10,25 @@ use already-downloaded copies of the three text files). Raw downloads stay outsi
 
 | File | Source URL | Obtained | Bytes | sha256 | Note |
 | --- | --- | --- | --- | --- | --- |
-| tab20_zcta520_place20_natl.txt | https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_place20_natl.txt | 2026-10-25 | 9811563 | `698a5dad71ed419411677d0ffd8ecd9331067f59c472cdd239b92c12f698285d` | downloaded by pp geo build through the core fetcher (source census) |
-| tab20_zcta520_cousub20_natl.txt | https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_cousub20_natl.txt | 2026-10-25 | 16262349 | `406d2f1b11692a185e930e53f63a68951e5b64dbb7b0cf201a934a8e54aee27b` | downloaded by pp geo build through the core fetcher (source census) |
-| 2025_Gaz_zcta_national.zip | https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_zcta_national.zip | 2026-10-25 | 952026 | `51516a4283bab5cd2376eec75609ddc4b363a18297e8adeeaac7b03cf7c84dbe` | downloaded by pp geo build through the core fetcher (source census) |
-| TIGERweb query: area ZCTAs (offset 0) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-25 | 120693 | `94b9fd4ad3481056e4958217970a58f72b8d4278888986bb6fd51387221c01bc` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
-| TIGERweb query: ZCTAs intersecting the edison_nj envelope (offset 0) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-25 | 32964 | `8bbdaf0d1d0980019e8d6a3725e34842012fb35ef5734c127127a2ac23ef6ecc` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
-| TIGERweb query: ZCTAs intersecting the austin_tx envelope (offset 0) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-25 | 127575 | `9f11a8e6bb098090cba4fc28324734658b323820b74d44e7b7ec4e08238f1f68` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
-| TIGERweb query: ZCTAs intersecting the san_diego_ca envelope (offset 0) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-25 | 146586 | `4d9467d739d6ad8718e9030785f3151886be27d79df635a94ba6144c929d9508` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| tab20_zcta520_place20_natl.txt | https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_place20_natl.txt | 2026-10-27 | 9811563 | `698a5dad71ed419411677d0ffd8ecd9331067f59c472cdd239b92c12f698285d` | local copy of the official file (tab20_zcta520_place20_natl.txt) given with --input-dir |
+| tab20_zcta520_cousub20_natl.txt | https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_cousub20_natl.txt | 2026-10-27 | 16262349 | `406d2f1b11692a185e930e53f63a68951e5b64dbb7b0cf201a934a8e54aee27b` | local copy of the official file (tab20_zcta520_cousub20_natl.txt) given with --input-dir |
+| 2025_Gaz_zcta_national.zip | https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_zcta_national.zip | 2026-10-27 | 952026 | `51516a4283bab5cd2376eec75609ddc4b363a18297e8adeeaac7b03cf7c84dbe` | local copy of the official file (2025_Gaz_zcta_national.zip) given with --input-dir |
+| TIGERweb query: area ZCTAs (offset 0) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 94388 | `42736b9ef050887ecdd5f40735a8a0b2322983e3597297394861a69407c1f192` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: area ZCTAs (offset 100) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 118505 | `ef7bfb63586f0095984a142be284e8a3b03e4cddb5b206f383497bd7cc0d9685` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: area ZCTAs (offset 200) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 143739 | `0f8634b2f6ff220865808986d7c3a164ca5a57a90f2c199e8b4571eafc70bee8` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: area ZCTAs (offset 300) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 119317 | `7753f621312aa16f107f6da1f95d3b54969c437ec5074e5ddfb0b663d412c1eb` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: area ZCTAs (offset 400) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 108154 | `b43e36f9f20c2684110b37432e6f3977b05560051c3bae5f81f7144f9f840ce1` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: area ZCTAs (offset 500) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 123032 | `fef4873fdbc531c91acd1f54a3196d3681672f63e8353702cb72283832e9b02d` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: area ZCTAs (offset 600) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 93758 | `22e243a80cc6442f756c4b31da9a3b509f7562fdfaac1644ba6485fc10df922f` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: ZCTAs touching the whole cities (offset 0) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 192599 | `9e55023e57605ffc9ac36c85cb232719636b1ee5bdbc44f61ec362c22003203c` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: ZCTAs touching the whole cities (offset 100) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 233173 | `e07029d13df169d7d544f63c051b962665cc531e85da759831d3eee071408bd2` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: ZCTAs touching the whole cities (offset 200) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 68644 | `45c734efea7dfeb4c341efe94d43076de6fea03d972a2756321665edad6a6f77` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: ZCTAs intersecting the edison_nj envelope (offset 0) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 32964 | `8bbdaf0d1d0980019e8d6a3725e34842012fb35ef5734c127127a2ac23ef6ecc` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: ZCTAs intersecting the austin_tx envelope (offset 0) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 127575 | `9f11a8e6bb098090cba4fc28324734658b323820b74d44e7b7ec4e08238f1f68` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
+| TIGERweb query: ZCTAs intersecting the san_diego_ca envelope (offset 0) | https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query | 2026-10-27 | 146586 | `4d9467d739d6ad8718e9030785f3151886be27d79df635a94ba6144c929d9508` | POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5 |
 
 Committed outputs: `data/geo/pilot-areas.json` (area definitions) and `data/geo/pilot-zcta.geojson`
-(177 ZCTA polygons, 307039 bytes, sha256 `a534a3dc59927baef1eb07634913486b4ad6d7575094cb69a264d0efad93116e`).
+(955 ZCTA polygons, 1396011 bytes, sha256 `1608d1afed6756c3a3951f67d277bb400deec6696c70805afc3481dd4406bc5c`).
 
 ### Derivation rules
 
@@ -31,18 +40,49 @@ Committed outputs: `data/geo/pilot-areas.json` (area definitions) and `data/geo/
   Kept in full for Phase 2.
 - pilotZctas: Edison = 08817, 08820, 08837 (08854 is a ~0.01 sliver). Austin and San Diego = exactly 12 each from
   ZCTAs with share >= 0.50: seed 78701 / 92101 (or the candidate nearest it), then repeatedly the candidate whose
-  minimum great-circle distance to the chosen set is largest (ties: higher share, then lower ZIP).
+  minimum great-circle distance to the chosen set is largest (ties: higher share, then lower ZIP). Owner ruling:
+  La Jolla 92037 replaces the campus ZIP 92092 in the San Diego list (same position).
 - expansionZctas: Edison = Metuchen borough (3402345690) ZCTAs with share >= 0.50 plus Woodbridge township
   (3402382000) ZCTAs with share >= 0.98; Austin and San Diego = none.
 - poBoxZips: Edison 08818 and 08899, NOT verified against USPS (research A3); used only to keep an address that
   shows one of these ZIPs in-area.
 - Polygons: TIGERweb layer 7 (2020 Census ZIP Code Tabulation Areas), outSR 4326, maxAllowableOffset 0.0005,
-  geometryPrecision 5, for every area ZCTA (all + expansion) plus every ZCTA intersecting each area's bounding
-  envelope (neighbour ring).
+  geometryPrecision 5, for every area ZCTA (all + expansion) plus a neighbour ring: for the three pilot areas every
+  ZCTA intersecting the area's bounding envelope; for the whole cities every ZCTA that touches the city with share
+  below zctaMinShare.
+- Whole cities (`kind: "city"`), in the owner's order, biggest first by 2020 population: each is a Census place
+  (NJ cities too) whose GEOID is checked against NAMELSAD_PLACE_20 ("<Name> city") at build time. allZctas uses the
+  same share rule; pilotZctas (the ZIPs searched) = every allZctas ZIP, in ZIP order; no expansion, no PO-box ZIPs.
+  Austin and San Diego keep their 12-ZIP pilot areas (austin_tx, san_diego_ca); their whole-city areas are
+  austin_tx_city and san_diego_ca_city.
 
 ### Result
 
-- edison_nj: 3 ZCTAs at share >= zctaMinShare; pilot 3; expansion 9
-- austin_tx: 38 ZCTAs at share >= zctaMinShare; pilot 12; expansion 0
-- san_diego_ca: 45 ZCTAs at share >= zctaMinShare; pilot 12; expansion 0
+- edison_nj: 3 ZCTAs at share >= zctaMinShare; searched 3; expansion 9
+- austin_tx: 38 ZCTAs at share >= zctaMinShare; searched 12; expansion 0
+- san_diego_ca: 45 ZCTAs at share >= zctaMinShare; searched 12; expansion 0
+- los_angeles_ca (place 0644000, whole city): 116 ZCTAs at share >= zctaMinShare; searched 116; expansion 0
+- houston_tx (place 4835000, whole city): 92 ZCTAs at share >= zctaMinShare; searched 92; expansion 0
+- san_antonio_tx (place 4865000, whole city): 51 ZCTAs at share >= zctaMinShare; searched 51; expansion 0
+- san_diego_ca_city (place 0666000, whole city): 45 ZCTAs at share >= zctaMinShare; searched 45; expansion 0
+- dallas_tx (place 4819000, whole city): 49 ZCTAs at share >= zctaMinShare; searched 49; expansion 0
+- san_jose_ca (place 0668000, whole city): 29 ZCTAs at share >= zctaMinShare; searched 29; expansion 0
+- austin_tx_city (place 4805000, whole city): 38 ZCTAs at share >= zctaMinShare; searched 38; expansion 0
+- fort_worth_tx (place 4827000, whole city): 35 ZCTAs at share >= zctaMinShare; searched 35; expansion 0
+- san_francisco_ca (place 0667000, whole city): 28 ZCTAs at share >= zctaMinShare; searched 28; expansion 0
+- el_paso_tx (place 4824000, whole city): 20 ZCTAs at share >= zctaMinShare; searched 20; expansion 0
+- fresno_ca (place 0627000, whole city): 17 ZCTAs at share >= zctaMinShare; searched 17; expansion 0
+- sacramento_ca (place 0664000, whole city): 19 ZCTAs at share >= zctaMinShare; searched 19; expansion 0
+- long_beach_ca (place 0643000, whole city): 14 ZCTAs at share >= zctaMinShare; searched 14; expansion 0
+- oakland_ca (place 0653000, whole city): 16 ZCTAs at share >= zctaMinShare; searched 16; expansion 0
+- bakersfield_ca (place 0603526, whole city): 6 ZCTAs at share >= zctaMinShare; searched 6; expansion 0
+- arlington_tx (place 4804000, whole city): 13 ZCTAs at share >= zctaMinShare; searched 13; expansion 0
+- anaheim_ca (place 0602000, whole city): 7 ZCTAs at share >= zctaMinShare; searched 7; expansion 0
+- corpus_christi_tx (place 4817000, whole city): 18 ZCTAs at share >= zctaMinShare; searched 18; expansion 0
+- newark_nj (place 3451000, whole city): 9 ZCTAs at share >= zctaMinShare; searched 9; expansion 0
+- plano_tx (place 4858016, whole city): 6 ZCTAs at share >= zctaMinShare; searched 6; expansion 0
+- jersey_city_nj (place 3436000, whole city): 7 ZCTAs at share >= zctaMinShare; searched 7; expansion 0
+- lubbock_tx (place 4845000, whole city): 12 ZCTAs at share >= zctaMinShare; searched 12; expansion 0
+- paterson_nj (place 3457000, whole city): 9 ZCTAs at share >= zctaMinShare; searched 9; expansion 0
+- elizabeth_nj (place 3421000, whole city): 4 ZCTAs at share >= zctaMinShare; searched 4; expansion 0
 <!-- geo:end -->
