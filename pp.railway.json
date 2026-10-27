@@ -43,8 +43,8 @@
     "placeConcurrency": 4,
     "searchConcurrency": 3,
     "dailyCap": {
-      "searches": 3000,
-      "placePages": 30000
+      "searches": 8000,
+      "placePages": 60000
     },
     "limitedViewStreakStop": 5,
     "maxScrolls": 30,
