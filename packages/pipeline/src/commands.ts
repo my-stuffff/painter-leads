@@ -42,7 +42,7 @@ async function latestRun(ctx: CommandContext, areaId: string, onlyUnfinished: bo
 const planCommand: CommandSpec = {
   name: 'pilot plan',
   description: 'Plan the searches of an area (terms x ZIPs, term-major); re-planning the same run adds nothing',
-  args: [{ name: 'area', required: true, description: 'edison_nj | austin_tx | san_diego_ca' }],
+  args: [{ name: 'area', required: true, description: 'area id from data/geo/pilot-areas.json (pilots, or whole cities like los_angeles_ca)' }],
   async run(ctx, args) {
     const area = args[0] as string;
     const db = await ctx.db();

@@ -16,7 +16,7 @@ export const geoBuildCommand: CommandSpec = {
     const fetcher = await ctx.fetcher();
     const result = await buildGeo({ config: ctx.config(), fetcher, inputDir, outDir, log: ctx.out });
     for (const a of result.areas) {
-      ctx.out(`${a.id}: pilot ${a.pilotZctas.join(',')}`);
+      ctx.out(a.kind === 'city' ? `${a.id}: whole city, ${a.pilotZctas.length} ZIPs searched` : `${a.id}: pilot ${a.pilotZctas.join(',')}`);
     }
     ctx.out(`polygons: ${result.featureCount} ZCTAs, ${result.geojsonBytes} bytes`);
     ctx.out(`wrote ${outDir}`);

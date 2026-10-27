@@ -13,7 +13,13 @@ export interface AreaZcta {
 }
 
 export interface AreaDef {
-  id: 'edison_nj' | 'austin_tx' | 'san_diego_ca';
+  /** Pilot areas: edison_nj, austin_tx, san_diego_ca. Whole-city areas: e.g. los_angeles_ca (see `kind`). */
+  id: string;
+  /**
+   * 'city' = a whole Census place searched in full (pilotZctas = every ZCTA in allZctas). Absent on the three
+   * pilot areas, whose pilotZctas are a fixed subset.
+   */
+  kind?: 'city';
   label: string;
   state: StateCode;
   city: string;

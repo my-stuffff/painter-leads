@@ -60,12 +60,25 @@ const OFFLINE_RESOLVER: DnsResolver = {
   },
 };
 
-function areaCities(ctx: StageContext): string[] {
+/**
+ * Town names an owner candidate must not be: the pilot areas' towns plus the run's own area town. The whole-city
+ * areas are not all added (names like Houston, Dallas or Elizabeth would reject real owners on every run).
+ */
+async function areaCities(ctx: StageContext): Promise<string[]> {
+  let areas;
   try {
-    return loadAreas(ctx.config).map((a) => a.city);
+    areas = loadAreas(ctx.config);
   } catch {
     return [];
   }
+  let runArea: string | undefined;
+  try {
+    const res = await ctx.db.$client.query('SELECT area_id FROM runs WHERE id = $1', [ctx.runId]);
+    runArea = res.rows[0]?.area_id as string | undefined;
+  } catch {
+    // no database / run: the pilot towns are enough
+  }
+  return [...new Set(areas.filter((a) => a.kind !== 'city' || a.id === runArea).map((a) => a.city))];
 }
 
 const SITE_EXTRACTORS = [EMAIL_EXTRACTOR, OWNER_EXTRACTOR, LICENCE_EXTRACTOR, RESIDENTIAL_EXTRACTOR];
@@ -89,7 +102,7 @@ export function createSiteEnrichStage(opts: SiteStageOptions = {}): Stage<Compan
       const owners = extractOwners(crawl.pages, {
         companyName: company.name,
         city: company.city,
-        cities: areaCities(ctx),
+        cities: await areaCities(ctx),
         confidence: ctx.config.confidence.websiteOwner,
       });
       const ownerNames = acceptedOwners(owners).map((o) => o.name);
