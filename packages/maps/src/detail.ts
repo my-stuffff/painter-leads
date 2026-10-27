@@ -88,115 +88,130 @@ export function createDetailStage(deps: DetailDeps = {}): Stage<DetailInput, Det
 
       await resumeRun(db, runId, ctx.now());
       const pctx: PersistCtx = { db, evidence: ctx.evidence, now: () => ctx.now() };
-      let driver: PageDriver | null = null;
+      // config.maps.placeConcurrency workers, each with its own page driver, take listings from one shared queue.
+      // The streaks and the stop are shared, so "in a row" counts across workers, and one stop halts them all.
+      let next = 0;
       let streak = 0;
       let transientStreak = 0;
-      try {
-        for (let i = 0; i < queue.length; i++) {
-          const listing = queue[i];
-          if (!listing) break;
+      let crashed = false;
+      const halt = async (...args: Parameters<typeof stopRun>): Promise<void> => {
+        const stopped = await stopRun(...args);
+        result.stopped ??= stopped;
+      };
 
-          if ((await remainingToday(db, 'place', config.maps.dailyCap.placePages, ctx.now())) <= 0) {
-            result.stopped = await stopRun(
-              db,
-              runId,
-              'daily_cap',
-              `${config.maps.dailyCap.placePages} place pages already logged today`,
-              ctx.now(),
-              { listingId: listing.id },
-            );
-            break;
-          }
+      const worker = async (): Promise<void> => {
+        let driver: PageDriver | null = null;
+        try {
+          while (result.stopped === null && !crashed) {
+            const i = next++;
+            const listing = queue[i];
+            if (!listing) break;
 
-          const url = withLocale(listing.profileUrl);
-          driver ??= await (deps.driverFactory ?? defaultDriverFactory)(ctx);
-          const attempt = await openWithRetry(driver, url, {
-            db,
-            runId,
-            kind: 'place',
-            now: () => ctx.now(),
-            sleep: ctx.sleep,
-            rng: deps.rng,
-            log: ctx.log,
-          });
-          if (!attempt.ok) {
-            // Slow page, not a block: the listing keeps its status (still wanted by the next run) and its card data.
-            transientStreak++;
-            if (transientStreak >= MAX_TRANSIENT_STREAK) {
-              result.stopped = await stopRun(
-                db,
-                runId,
-                'daily_cap',
-                `network looks down: ${transientStreak} place pages in a row did not load (listing ${listing.id} last: ${attempt.error.message.split('\n')[0]})`,
-                ctx.now(),
-                { listingId: listing.id },
-              );
+            if ((await remainingToday(db, 'place', config.maps.dailyCap.placePages, ctx.now())) <= 0) {
+              await halt(db, runId, 'daily_cap', `${config.maps.dailyCap.placePages} place pages already logged today`, ctx.now(), {
+                listingId: listing.id,
+              });
               break;
             }
-            if (i < queue.length - 1) await ctx.sleep(randomPause(config.maps.placePauseMs, deps.rng));
-            continue;
-          }
-          transientStreak = 0;
-          const { opened, started } = attempt;
-          const signals = await driver.pageSignals();
-          const block = detectBlock(signals, opened.status);
-          if (block) {
+
+            const url = withLocale(listing.profileUrl);
+            driver ??= await (deps.driverFactory ?? defaultDriverFactory)(ctx);
+            const attempt = await openWithRetry(driver, url, {
+              db,
+              runId,
+              kind: 'place',
+              now: () => ctx.now(),
+              sleep: ctx.sleep,
+              rng: deps.rng,
+              log: ctx.log,
+            });
+            if (!attempt.ok) {
+              // Slow page, not a block: the listing keeps its status (still wanted by the next run) and its card data.
+              transientStreak++;
+              if (transientStreak >= MAX_TRANSIENT_STREAK) {
+                await halt(
+                  db,
+                  runId,
+                  'daily_cap',
+                  `network looks down: ${transientStreak} place pages in a row did not load (listing ${listing.id} last: ${attempt.error.message.split('\n')[0]})`,
+                  ctx.now(),
+                  { listingId: listing.id },
+                );
+                break;
+              }
+              if (next < queue.length) await ctx.sleep(randomPause(config.maps.placePauseMs, deps.rng));
+              continue;
+            }
+            transientStreak = 0;
+            const { opened, started } = attempt;
+            const signals = await driver.pageSignals();
+            const block = detectBlock(signals, opened.status);
+            if (block) {
+              await logRequest(db, {
+                runId,
+                url,
+                status: opened.status,
+                ms: Date.now() - started,
+                outcome: requestOutcomeFor(block),
+                note: 'place',
+                at: ctx.now(),
+              });
+              await db.update(listings).set({ detailStatus: 'blocked' }).where(eq(listings.id, listing.id));
+              await halt(db, runId, block, `place page of listing ${listing.id} landed on ${opened.landedUrl}`, ctx.now(), {
+                listingId: listing.id,
+              });
+              break;
+            }
+
+            const snapshot = await driver.snapshotPlace();
+            const parsed = parsePlace(snapshot);
+            const saved = await persistPlace(pctx, runId, listing, snapshot, parsed);
             await logRequest(db, {
               runId,
               url,
               status: opened.status,
               ms: Date.now() - started,
-              outcome: requestOutcomeFor(block),
+              outcome: saved.outcome === 'done' ? 'ok' : saved.outcome === 'limited_view' ? 'limited_view' : 'http_error',
               note: 'place',
               at: ctx.now(),
             });
-            await db.update(listings).set({ detailStatus: 'blocked' }).where(eq(listings.id, listing.id));
-            result.stopped = await stopRun(db, runId, block, `place page of listing ${listing.id} landed on ${opened.landedUrl}`, ctx.now(), {
-              listingId: listing.id,
-            });
-            break;
-          }
 
-          const snapshot = await driver.snapshotPlace();
-          const parsed = parsePlace(snapshot);
-          const saved = await persistPlace(pctx, runId, listing, snapshot, parsed);
-          await logRequest(db, {
-            runId,
-            url,
-            status: opened.status,
-            ms: Date.now() - started,
-            outcome: saved.outcome === 'done' ? 'ok' : saved.outcome === 'limited_view' ? 'limited_view' : 'http_error',
-            note: 'place',
-            at: ctx.now(),
-          });
-
-          if (saved.outcome === 'done') {
-            result.done++;
-            streak = 0;
-          } else if (saved.outcome === 'limited_view') {
-            result.limitedView++;
-            streak++;
-            if (streak >= config.maps.limitedViewStreakStop) {
-              result.stopped = await stopRun(
-                db,
-                runId,
-                'limited_view_streak',
-                `${streak} place pages in a row showed no review count (listing ${listing.id} last)`,
-                ctx.now(),
-                { listingId: listing.id },
-              );
-              break;
+            if (saved.outcome === 'done') {
+              result.done++;
+              streak = 0;
+            } else if (saved.outcome === 'limited_view') {
+              result.limitedView++;
+              streak++;
+              if (streak >= config.maps.limitedViewStreakStop) {
+                await halt(
+                  db,
+                  runId,
+                  'limited_view_streak',
+                  `${streak} place pages in a row showed no review count (listing ${listing.id} last)`,
+                  ctx.now(),
+                  { listingId: listing.id },
+                );
+                break;
+              }
+            } else {
+              result.failed++;
+              streak = 0;
             }
-          } else {
-            result.failed++;
-            streak = 0;
-          }
 
-          if (i < queue.length - 1) await ctx.sleep(randomPause(config.maps.placePauseMs, deps.rng));
+            if (next < queue.length) await ctx.sleep(randomPause(config.maps.placePauseMs, deps.rng));
+          }
+        } catch (e) {
+          crashed = true; // the other workers finish their current page and stop; the error is rethrown below
+          throw e;
+        } finally {
+          await driver?.close();
         }
-      } finally {
-        await driver?.close();
-      }
+      };
+
+      const workers = Math.min(config.maps.placeConcurrency, queue.length);
+      const settled = await Promise.allSettled(Array.from({ length: workers }, () => worker()));
+      const failure = settled.find((r): r is PromiseRejectedResult => r.status === 'rejected');
+      if (failure) throw failure.reason;
       return result;
     },
   };

@@ -45,6 +45,8 @@ export const PpConfigSchema = z.strictObject({
     timezoneId: z.string().min(1),
     searchPauseMs: pauseRange,
     placePauseMs: pauseRange,
+    /** Place pages open at once in the detail stage, each in its own browser page. */
+    placeConcurrency: z.number().int().min(1).max(16),
     dailyCap: z.strictObject({
       searches: z.number().int().positive(),
       placePages: z.number().int().positive(),

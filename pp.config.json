@@ -22,6 +22,7 @@
     "timezoneId": "America/Chicago",
     "searchPauseMs": [10000, 20000],
     "placePauseMs": [4000, 8000],
+    "placeConcurrency": 1,
     "dailyCap": { "searches": 150, "placePages": 900 },
     "limitedViewStreakStop": 5,
     "maxScrolls": 30,

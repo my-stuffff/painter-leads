@@ -40,6 +40,7 @@
       1000,
       2000
     ],
+    "placeConcurrency": 6,
     "dailyCap": {
       "searches": 3000,
       "placePages": 30000

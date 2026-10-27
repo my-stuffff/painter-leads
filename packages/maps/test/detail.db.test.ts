@@ -3,7 +3,8 @@ import { asc, eq, sql } from 'drizzle-orm';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createDetailStage } from '../src/detail';
 import { createDiscoverStage } from '../src/discover';
-import type { CardSnapshot, FixturePage, PlaceSnapshot } from '../src/driver/types';
+import { FixtureDriver } from '../src/driver/fixture';
+import type { CardSnapshot, FixturePage, PageDriver, PlaceSnapshot } from '../src/driver/types';
 import {
   createRun,
   createSearches,
@@ -326,5 +327,73 @@ describe('detail: blocks, back-off and the daily cap', () => {
     expect(drivers.flatMap((d) => d.opened)).toHaveLength(0);
     const [run] = await db.select().from(schema.runs);
     expect(run?.status).toBe('stopped');
+  });
+});
+
+/** The decimal cid Google Maps puts in `?cid=` for a fake card's place. */
+const cidOf = (n: number): string => BigInt(`0x2452b5fb1a89${n.toString(16).padStart(4, '0')}`).toString();
+
+/** Drivers that serve each page by the cid in the opened URL, so the order workers open pages in does not matter. */
+function byCidFactory(pages: Map<string, FixturePage>) {
+  const drivers: { opened: string[]; closed: boolean }[] = [];
+  const make = async (): Promise<PageDriver> => {
+    const log = { opened: [] as string[], closed: false };
+    drivers.push(log);
+    let current = new FixtureDriver([]);
+    return {
+      async open(url) {
+        log.opened.push(url);
+        const page = pages.get(/cid=(\d+)/.exec(url)?.[1] ?? '');
+        if (!page) throw new Error(`no page for ${url}`);
+        current = new FixtureDriver([page]);
+        return current.open(url);
+      },
+      scrollFeed: () => current.scrollFeed(),
+      snapshotCards: () => current.snapshotCards(),
+      snapshotPlace: () => current.snapshotPlace(),
+      pageSignals: () => current.pageSignals(),
+      async close() {
+        log.closed = true;
+      },
+    };
+  };
+  return { make, drivers };
+}
+
+const placesFor = (ns: number[]) => new Map(ns.map((n) => [cidOf(n), placePage(fakePlace(n))]));
+
+describe('detail: several place pages at once (maps.placeConcurrency)', () => {
+  it('opens every listing exactly once across the workers and closes every driver', async () => {
+    const ns = [1, 2, 3, 4, 5, 6, 7];
+    const runId = await seed(ns.map((n) => fakeCard(n)));
+    const f = byCidFactory(placesFor(ns));
+    const stage = createDetailStage({ driverFactory: f.make, rng: rng() });
+    const result = await stage.run(makeCtx(db, runId, makeClock(), testConfig({ placeConcurrency: 3 })), { runId });
+
+    expect(result).toEqual({ done: 7, limitedView: 0, failed: 0, stopped: null });
+    expect(f.drivers).toHaveLength(3);
+    expect(f.drivers.every((d) => d.closed)).toBe(true);
+    const opened = f.drivers.flatMap((d) => d.opened);
+    expect(opened).toHaveLength(7);
+    expect(new Set(opened).size).toBe(7);
+    const rows = await db.select().from(schema.listings).orderBy(asc(schema.listings.id));
+    expect(rows.map((r) => r.detailStatus)).toEqual(Array(7).fill('done'));
+  });
+
+  it('a block seen by one worker stops them all and leaves the rest pending', async () => {
+    const ns = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const runId = await seed(ns.map((n) => fakeCard(n)));
+    const pages = placesFor(ns);
+    pages.set(cidOf(2), SORRY_PAGE);
+    const f = byCidFactory(pages);
+    const stage = createDetailStage({ driverFactory: f.make, rng: rng() });
+    const result = await stage.run(makeCtx(db, runId, makeClock(), testConfig({ placeConcurrency: 3 })), { runId });
+
+    expect(result.stopped).not.toBeNull();
+    expect(f.drivers.every((d) => d.closed)).toBe(true);
+    expect(f.drivers.flatMap((d) => d.opened).length).toBeLessThan(ns.length);
+    expect((await listingByName('Painter 2')).detailStatus).toBe('blocked');
+    const pending = await db.select().from(schema.listings).where(eq(schema.listings.detailStatus, 'pending'));
+    expect(pending.length).toBeGreaterThan(0);
   });
 });
