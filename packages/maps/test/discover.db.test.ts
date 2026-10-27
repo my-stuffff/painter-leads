@@ -2,8 +2,10 @@ import { getTestDb, schema, truncateAll, type Db } from '@pp/core';
 import { and, eq, isNull, sql } from 'drizzle-orm';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createDiscoverStage } from '../src/discover';
-import type { FixturePage } from '../src/driver/types';
+import { FixtureDriver } from '../src/driver/fixture';
+import type { FixturePage, PageDriver } from '../src/driver/types';
 import { parseCard } from '../src/parse/card';
+import { persistCard, type PersistCtx } from '../src/persist';
 import {
   createRun,
   createSearches,
@@ -17,6 +19,7 @@ import {
   sdCards,
   searchPage,
   SORRY_PAGE,
+  testConfig,
 } from './helpers';
 
 let db: Db;
@@ -287,5 +290,131 @@ describe('discover: block handling', () => {
     const { result } = await runDiscover(runId, [normal]);
     expect(result.stopped).toBeNull();
     expect(result.searchesDone).toBe(1);
+  });
+});
+
+/**
+ * Drivers that serve each search page by the zip in the opened URL, so the order workers take searches in does not
+ * matter. With `meetAt`, snapshotCards waits until that many drivers have reached it, so their cards are stored at
+ * the same moment.
+ */
+function byZipFactory(pages: Map<string, FixturePage>, opts: { meetAt?: number } = {}) {
+  const drivers: { opened: string[]; closed: boolean }[] = [];
+  let arrived = 0;
+  let release: () => void = () => undefined;
+  const allArrived = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const make = async (): Promise<PageDriver> => {
+    const log = { opened: [] as string[], closed: false };
+    drivers.push(log);
+    let current = new FixtureDriver([]);
+    return {
+      async open(url) {
+        log.opened.push(url);
+        const zip = [...pages.keys()].find((z) => url.includes(z));
+        const page = zip ? pages.get(zip) : undefined;
+        if (!page) throw new Error(`no page for ${url}`);
+        current = new FixtureDriver([page]);
+        return current.open(url);
+      },
+      scrollFeed: () => current.scrollFeed(),
+      async snapshotCards() {
+        if (opts.meetAt) {
+          if (++arrived >= opts.meetAt) release();
+          await allArrived;
+        }
+        return current.snapshotCards();
+      },
+      snapshotPlace: () => current.snapshotPlace(),
+      pageSignals: () => current.pageSignals(),
+      async close() {
+        log.closed = true;
+      },
+    };
+  };
+  return { make, drivers };
+}
+
+const zipOf = (i: number): string => `0881${i}`;
+
+describe('discover: several searches at once (maps.searchConcurrency)', () => {
+  it('runs every search exactly once across the workers and closes every driver', async () => {
+    const runId = await createRun(db);
+    const ns = [1, 2, 3, 4, 5, 6, 7];
+    await createSearches(db, runId, ns.map(() => ({})));
+    const f = byZipFactory(new Map(ns.map((n) => [zipOf(n), searchPage([fakeCard(n)])])));
+    const stage = createDiscoverStage({ driverFactory: f.make, rng: rng() });
+    const result = await stage.run(makeCtx(db, runId, makeClock(), testConfig({ searchConcurrency: 3 })), { runId });
+
+    expect(result).toEqual({ searchesDone: 7, searchesRemaining: 0, cardsSeen: 7, newListings: 7, stopped: null });
+    expect(f.drivers).toHaveLength(3);
+    expect(f.drivers.every((d) => d.closed)).toBe(true);
+    const opened = f.drivers.flatMap((d) => d.opened);
+    expect(opened).toHaveLength(7);
+    expect(new Set(opened).size).toBe(7);
+    const rows = await db.select().from(schema.searches);
+    expect(rows.map((r) => r.status)).toEqual(Array(7).fill('done'));
+    expect(rows.every((r) => r.attempts === 1)).toBe(true);
+    expect(await db.select().from(schema.listings)).toHaveLength(7);
+  });
+
+  it('a block seen by one worker stops them all and leaves the rest pending', async () => {
+    const runId = await createRun(db);
+    const ns = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const ids = await createSearches(db, runId, ns.map(() => ({})));
+    const pages = new Map(ns.map((n) => [zipOf(n), searchPage([fakeCard(n)])]));
+    pages.set(zipOf(2), SORRY_PAGE);
+    const f = byZipFactory(pages);
+    const stage = createDiscoverStage({ driverFactory: f.make, rng: rng() });
+    const result = await stage.run(makeCtx(db, runId, makeClock(), testConfig({ searchConcurrency: 3 })), { runId });
+
+    expect(result.stopped?.signal).toBe('sorry');
+    expect(f.drivers.every((d) => d.closed)).toBe(true);
+    expect(f.drivers.flatMap((d) => d.opened).length).toBeLessThan(ns.length);
+    const [blocked] = await db.select().from(schema.searches).where(eq(schema.searches.id, ids[1] as number));
+    expect(blocked?.status).toBe('blocked');
+    const pending = await db.select().from(schema.searches).where(eq(schema.searches.status, 'pending'));
+    expect(pending.length).toBeGreaterThan(0);
+    expect(result.searchesRemaining).toBe(pending.length + 1);
+  });
+
+  it('the same business found by two searches at the same moment is one listing, counted new once', async () => {
+    const runId = await createRun(db);
+    const [a, b] = await createSearches(db, runId, [{}, {}]);
+    const pages = new Map([
+      [zipOf(1), searchPage([fakeCard(1), fakeCard(2)])],
+      [zipOf(2), searchPage([fakeCard(1), fakeCard(3)])],
+    ]);
+    const f = byZipFactory(pages, { meetAt: 2 });
+    const stage = createDiscoverStage({ driverFactory: f.make, rng: rng() });
+    const result = await stage.run(makeCtx(db, runId, makeClock(), testConfig({ searchConcurrency: 2 })), { runId });
+
+    expect(result).toEqual({ searchesDone: 2, searchesRemaining: 0, cardsSeen: 4, newListings: 3, stopped: null });
+    const rows = await db.select().from(schema.listings);
+    expect(rows.map((r) => r.name).sort()).toEqual(['Painter 1', 'Painter 2', 'Painter 3']);
+    const shared = rows.find((r) => r.name === 'Painter 1');
+    const hits = await db.select().from(schema.searchHits).where(eq(schema.searchHits.listingId, shared?.id as number));
+    expect(hits.map((h) => h.searchId).sort()).toEqual([a, b].sort());
+    expect(hits.filter((h) => h.isNew)).toHaveLength(1);
+    const ev = await db.select().from(schema.evidence).where(eq(schema.evidence.listingId, shared?.id as number));
+    expect(ev.length).toBeGreaterThan(0);
+    expect(new Set(ev.map((e) => `${e.field}|${e.extractor}|${e.value}`)).size).toBe(ev.length);
+  });
+
+  it('two writers storing the same card at once make one listing; only one of them inserted it', async () => {
+    const runId = await createRun(db);
+    const [a, b] = await createSearches(db, runId, [{}, {}]);
+    const pctx: PersistCtx = { db, evidence: makeCtx(db, runId, makeClock()).evidence, now: () => new Date() };
+    const card = fakeCard(1);
+    const saved = await Promise.all(
+      [a, b].map((searchId) => persistCard(pctx, runId, searchId as number, 1, card, parseCard(card))),
+    );
+
+    const rows = await db.select().from(schema.listings);
+    expect(rows).toHaveLength(1);
+    expect(saved.map((s) => s?.listingId)).toEqual([rows[0]?.id, rows[0]?.id]);
+    expect(saved.filter((s) => s?.inserted)).toHaveLength(1);
+    expect(await db.select().from(schema.searchHits)).toHaveLength(2);
   });
 });

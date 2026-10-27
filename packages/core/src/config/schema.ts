@@ -47,6 +47,8 @@ export const PpConfigSchema = z.strictObject({
     placePauseMs: pauseRange,
     /** Place pages open at once in the detail stage, each in its own browser page. */
     placeConcurrency: z.number().int().min(1).max(16),
+    /** Searches run at once in the discover stage, each in its own browser page. */
+    searchConcurrency: z.number().int().min(1).max(16),
     dailyCap: z.strictObject({
       searches: z.number().int().positive(),
       placePages: z.number().int().positive(),

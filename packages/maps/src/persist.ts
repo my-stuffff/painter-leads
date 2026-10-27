@@ -163,7 +163,7 @@ interface Incoming {
 
 async function upsertListing(ctx: PersistCtx, runId: number, inc: Incoming): Promise<{ row: ListingRow; inserted: boolean }> {
   const { listings } = schema;
-  const existing = await findListing(ctx.db, inc.placeId, inc.cid);
+  let existing = await findListing(ctx.db, inc.placeId, inc.cid);
   const rawKey = inc.source === 'card' ? 'cardRaw' : 'placeRaw';
   if (!existing) {
     if (!inc.placeId && !inc.cid) throw new Error('listing has neither a place id nor a CID');
@@ -179,12 +179,16 @@ async function upsertListing(ctx: PersistCtx, runId: number, inc: Incoming): Pro
       [rawKey]: inc.raw,
       ...applicableGroups(null, inc.source, inc.groups),
     };
+    // Two searches running at once can both find the same business: whoever inserts second gets no row back
+    // (place_id and cid are unique) and updates the row the first one made instead.
     const [row] = await ctx.db
       .insert(listings)
       .values(values as ListingInsert)
+      .onConflictDoNothing()
       .returning();
-    if (!row) throw new Error('listing insert returned no row');
-    return { row, inserted: true };
+    if (row) return { row, inserted: true };
+    existing = await findListing(ctx.db, inc.placeId, inc.cid);
+    if (!existing) throw new Error('listing insert conflicted but no listing has its place id or CID');
   }
   const set: Record<string, unknown> = {
     lastSeenRunId: runId,
