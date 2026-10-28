@@ -19,7 +19,9 @@ COPY packages/maps/package.json packages/maps/
 COPY packages/pipeline/package.json packages/pipeline/
 COPY packages/registries/package.json packages/registries/
 COPY packages/sites/package.json packages/sites/
+COPY packages/jobs/package.json packages/jobs/
 COPY apps/cli/package.json apps/cli/
+COPY apps/web/package.json apps/web/
 RUN pnpm install --frozen-lockfile
 
 COPY . .
