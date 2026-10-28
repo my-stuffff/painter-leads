@@ -6,3 +6,4 @@ runs
 .env.*
 REPORT.md
 coverage
+apps/web/dist
