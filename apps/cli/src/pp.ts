@@ -1,11 +1,12 @@
 import { createFetcher, packageModule as core } from '@pp/core';
+import { packageModule as jobs } from '@pp/jobs';
 import { packageModule as maps } from '@pp/maps';
 import { packageModule as pipeline } from '@pp/pipeline';
 import { packageModule as registries } from '@pp/registries';
 import { packageModule as sites } from '@pp/sites';
 import { buildProgram } from './program';
 
-const modules = [core, maps, registries, sites, pipeline];
+const modules = [core, maps, registries, sites, pipeline, jobs];
 
 async function main(): Promise<void> {
   const handle = buildProgram(modules, { makeFetcher: (config, db) => createFetcher({ config, db }) });
