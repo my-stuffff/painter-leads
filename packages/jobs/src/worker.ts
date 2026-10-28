@@ -85,20 +85,21 @@ export class Worker {
     }
   }
 
-  /** One pass: sweep cancelled cities, claim and run one city (true), or finish due exports (false). */
+  /**
+   * One pass: sweep cancelled cities, build the exports that are due (finished jobs, rebuild requests: checked
+   * every pass, so a rebuild does not wait for the queue to empty), then claim and run one city (true) or idle (false).
+   */
   async step(): Promise<boolean> {
     try {
       const swept = await sweepCancelled(this.db);
       if (swept > 0) this.log({ swept }, 'cities of cancelled jobs marked cancelled');
+      for (const r of await finishReadyJobs(this.db, this.o.env.config, (l) => this.log({}, l))) {
+        this.log({ ...r }, `job ${r.jobId} finished: ${r.status}, export ${r.exportStatus}`);
+      }
       if (this.stopping) return false;
 
       const area = await claimNext(this.db, this.o.workerId);
-      if (!area) {
-        for (const r of await finishReadyJobs(this.db, this.o.env.config, (l) => this.log({}, l))) {
-          this.log({ ...r }, `job ${r.jobId} finished: ${r.status}, export ${r.exportStatus}`);
-        }
-        return false;
-      }
+      if (!area) return false;
 
       this.current = area;
       this.log(
