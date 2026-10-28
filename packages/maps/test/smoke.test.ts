@@ -103,21 +103,22 @@ describe('smoke budget (D-15: at most 3 live searches and 6 place pages per work
 describe('localityShare on the live smoke searches (query form decision)', () => {
   const cards = (f: string) => readFixture<SearchFixture>(f).cards as CardSnapshot[];
 
-  it('smoke 1 (zip_text, 08817): 116 cards, 55 in area or neighbour ring, 31 in Edison ZCTAs, 16 in 08817', () => {
+  it('smoke 1 (zip_text, 08817): 116 cards, 69 in area or neighbour ring, 31 in Edison ZCTAs, 16 in 08817', () => {
     const l = localityShare(testConfig(), '08817', cards('smoke-1-search.json'));
-    expect(l).toMatchObject({ area: 'edison_nj', cardsWithCoords: 116, inAreaOrNeighbourRing: 55, inAreaZctas: 31, inTargetZip: 16 });
-    expect(l.shareInAreaOrRing).toBeCloseTo(0.4741, 3);
+    expect(l).toMatchObject({ area: 'edison_nj', cardsWithCoords: 116, inAreaOrNeighbourRing: 69, inAreaZctas: 31, inTargetZip: 16 });
+    expect(l.shareInAreaOrRing).toBeCloseTo(0.5948, 3);
   });
 
-  it('smoke 2 (viewport, 08817): 77 cards, 43 / 14 / 4', () => {
+  it('smoke 2 (viewport, 08817): 77 cards, 56 / 14 / 4', () => {
     const l = localityShare(testConfig(), '08817', cards('smoke-2-search.json'));
-    expect(l).toMatchObject({ cardsWithCoords: 77, inAreaOrNeighbourRing: 43, inAreaZctas: 14, inTargetZip: 4 });
-    expect(l.shareInAreaOrRing).toBeCloseTo(0.5584, 3);
+    expect(l).toMatchObject({ cardsWithCoords: 77, inAreaOrNeighbourRing: 56, inAreaZctas: 14, inTargetZip: 4 });
+    expect(l.shareInAreaOrRing).toBeCloseTo(0.7273, 3);
   });
 
-  // 100 in area or ring when measured; 102 since the ZCTA file also holds every ZCTA touching the whole cities.
-  it('smoke 3 (zip_text, Austin 78701): 119 cards with coordinates, 102 / 84 / 14', () => {
+  // 100 in area or ring when measured; 102 once the ZCTA file held every ZCTA touching the 24 whole cities, 105 with the
+  // 292-city catalog ("area or ring" = inside any ZCTA polygon in the file; the Edison counts rose the same way).
+  it('smoke 3 (zip_text, Austin 78701): 119 cards with coordinates, 105 / 84 / 14', () => {
     const l = localityShare(testConfig(), '78701', cards('smoke-3-search.json'));
-    expect(l).toMatchObject({ area: 'austin_tx', cardsWithCoords: 119, inAreaOrNeighbourRing: 102, inAreaZctas: 84, inTargetZip: 14 });
+    expect(l).toMatchObject({ area: 'austin_tx', cardsWithCoords: 119, inAreaOrNeighbourRing: 105, inAreaZctas: 84, inTargetZip: 14 });
   });
 });
