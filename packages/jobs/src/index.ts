@@ -54,3 +54,4 @@ export {
 export { buildExport, summarise, ruleLine, EXPORT_HEADERS, type BuiltExport, type ExportArea, type ExportInput } from './export';
 export { pickList, dedupe, dedupeKey, compareRows, PAINTING_NAME, PAINTING_CATEGORIES, LIKELY_REASON_TEXT, type ListInput, type ListPick } from './lists';
 export { readSettings, pipelineConfig, exportConfig } from './settings';
+export { inAreaForRun, judgeAgainstRunArea } from './run-area';
