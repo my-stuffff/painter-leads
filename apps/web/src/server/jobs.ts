@@ -102,11 +102,13 @@ export async function runProgress(pool: pg.Pool, runId: number, runStatus: strin
   else if (n('companies') === 0) stage = 'reading listings';
   else if (n('unchecked') > 0) stage = 'checking websites';
   else stage = 'finishing';
+  // Listings whose pin is far outside the city keep detail_status 'pending' for good (maps/src/detail.ts), so once
+  // a run is done the listings it read are all it was going to read.
   return {
     searchesDone: n('s_done'),
     searchesTotal: n('s_total'),
     placesDone: n('p_done'),
-    placesTotal: n('p_total'),
+    placesTotal: stage === 'done' ? n('p_done') : n('p_total'),
     companies: n('companies'),
     painters: n('painters'),
     qualified: n('qualified'),
