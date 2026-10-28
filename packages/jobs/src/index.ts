@@ -21,6 +21,7 @@ export {
   nextUtcMidnight,
   MAX_BLOCKED_ATTEMPTS,
   MAX_ERROR_ATTEMPTS,
+  MAX_CLAIMS,
   BLOCK_WAIT_MINUTES,
   ERROR_WAIT_MINUTES,
   type CityDeps,

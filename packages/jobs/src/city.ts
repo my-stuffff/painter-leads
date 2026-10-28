@@ -9,6 +9,8 @@ import { q1 } from './sql';
 export const MAX_BLOCKED_ATTEMPTS = 6;
 /** A city whose run threw this many times is marked failed. */
 export const MAX_ERROR_ATTEMPTS = 3;
+/** A city claimed this many times without ending (its worker kept dying mid-city, e.g. out of memory) is failed. */
+export const MAX_CLAIMS = 10;
 export const BLOCK_WAIT_MINUTES = 30;
 export const ERROR_WAIT_MINUTES = 5;
 
@@ -114,6 +116,10 @@ export async function runCity(base: PilotEnv, workerId: string, area: ClaimedAre
   const stages = deps.stages ?? resolveStages({ fake: deps.fake });
   const runOpts = { stages, outDir: deps.outDir };
   let runId: number | null = null;
+
+  if (area.attempts > MAX_CLAIMS) {
+    return { status: 'failed', runId: area.runId, message: `Stopped after ${MAX_CLAIMS} tries: the worker kept stopping during this city` };
+  }
 
   try {
     // The city's own run may already be done (the worker stopped after the run finished but before recording it).

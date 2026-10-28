@@ -159,6 +159,13 @@ describe('running a city', () => {
     expect(third).toMatchObject({ status: 'failed', message: 'Stopped after 3 tries: browser crashed' });
   });
 
+  it('a city claimed more than 10 times (its worker kept dying) is failed without running', async () => {
+    const area = await claimEdison({ reuseDays: 0, attempts: 11 });
+    const outcome = await runCity(makeEnv(db), 'w1', area, { stages: stoppingStages('captcha') });
+    expect(outcome).toMatchObject({ status: 'failed', message: 'Stopped after 10 tries: the worker kept stopping during this city' });
+    expect(Number((await db.$client.query(`SELECT COUNT(*) AS n FROM runs`)).rows[0].n)).toBe(0);
+  });
+
   it('a blocked city of a cancelled job is cancelled, not put back to wait', async () => {
     const area = await claimEdison({ reuseDays: 0 });
     await db.$client.query(`UPDATE jobs SET status = 'cancelled' WHERE id = $1`, [area.jobId]);
