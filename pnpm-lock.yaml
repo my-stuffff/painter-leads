@@ -38,6 +38,9 @@ importers:
       '@pp/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@pp/jobs':
+        specifier: workspace:*
+        version: link:../../packages/jobs
       '@pp/maps':
         specifier: workspace:*
         version: link:../../packages/maps
