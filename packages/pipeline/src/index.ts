@@ -37,7 +37,9 @@ export { mergeStage, reportStage };
 // Used by @pp/jobs (the web app's workers): the run env, the report rows and the pure qualification step.
 export { envFromCommand, type PilotEnv } from './env';
 export type { RunOptions, RunOutcome } from './run';
-export { loadRun, runCompanyIds } from './data';
+export { evidenceByCompany, listingsByCompany, loadCompanies, loadRun, runCompanyIds, toEvidence } from './data';
+export { decideArea } from './area';
+export { policyFor, selectLatest } from './select/policy';
 export { computeFacts, type QualifyFacts } from './qualify';
 export { buildReportData, type Cell, type ReportCompany, type ReportData } from './report/rows';
 export { BOM, csvText } from './report/csv';

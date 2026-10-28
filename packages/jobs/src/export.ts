@@ -20,6 +20,7 @@ import {
   type StateCode,
 } from './contract';
 import { compareRows, dedupe, dedupeKey, pickList } from './lists';
+import { judgeAgainstRunArea } from './run-area';
 import { exportConfig } from './settings';
 
 /** A city whose run feeds the export (status done or reused). */
@@ -126,15 +127,17 @@ function toLeadRow(
  * the 28 Oct workbook shows it). Qualification is the pure qualify(computeFacts(...)) inside buildReportData, judged
  * with the job's thresholds: buildReportData reads the config only for the confidence floor (report.minConfidence)
  * and for qualification, and exportConfig changes nothing but the thresholds, so this is the base report re-judged
- * with the job's thresholds. Nothing is written back to companies.
+ * with the job's thresholds. In-area is judged against each run's own area (judgeAgainstRunArea), as the run's own
+ * report did when it finished. Nothing is written back to companies.
  */
 async function collectLeads(db: Db, base: PpConfig, input: ExportInput): Promise<Lead[]> {
   const cfg = exportConfig(base, input.settings);
   const found: { lead: Lead; key: string }[] = [];
   for (const area of input.areas) {
     const data = await buildReportData(db, cfg, area.runId);
+    const companies = await judgeAgainstRunArea(db, cfg, area.runId, data.run.areaId, data.companies);
     let kept = 0;
-    for (const c of data.companies) {
+    for (const c of companies) {
       const pick = pickList({ qualified: c.qualified, reasons: c.reasons, name: c.name, category: text(c.cells['Category']) });
       if (!pick) continue;
       kept++;
@@ -143,7 +146,7 @@ async function collectLeads(db: Db, base: PpConfig, input: ExportInput): Promise
         key: dedupeKey(c.profileUrl, c.companyId),
       });
     }
-    input.log?.(`${area.label} (run ${area.runId}): ${data.companies.length} companies, ${kept} in a list`);
+    input.log?.(`${area.label} (run ${area.runId}): ${companies.length} companies, ${kept} in a list`);
   }
   const unique = dedupe(found, (f) => f.key).map((f) => f.lead);
   const sortKey = (l: Lead) => ({
