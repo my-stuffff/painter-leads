@@ -24,5 +24,8 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 RUN pnpm --filter @pp/web build
 
+# Only now: with NODE_ENV=production during install, pnpm would skip vite and tsx (dev dependencies).
+ENV NODE_ENV=production
+
 EXPOSE 8787
 CMD ["pnpm", "--filter", "@pp/web", "start"]

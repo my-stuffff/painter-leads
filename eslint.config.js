@@ -1,7 +1,7 @@
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['**/node_modules/**', 'data/**', 'fixtures/**', 'runs/**', '.planning/**', '**/migrations/**'] },
+  { ignores: ['**/node_modules/**', 'data/**', 'fixtures/**', 'runs/**', '.planning/**', '**/migrations/**', 'apps/web/dist/**'] },
   ...tseslint.configs.recommended,
   {
     files: ['**/*.ts', '**/*.js', '**/*.mjs'],
