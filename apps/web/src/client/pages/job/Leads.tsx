@@ -139,7 +139,8 @@ export function LeadsBrowser({ rows, onOpen }: { rows: LeadRow[]; onOpen: (compa
               )}
             >
               <Swatch list={l} />
-              {LEAD_LIST_LABEL[l]}
+              <span className="sm:hidden">{l === 'painting' ? 'Painting' : LEAD_LIST_LABEL[l]}</span>
+              <span className="hidden sm:inline">{LEAD_LIST_LABEL[l]}</span>
               <span className={clsx('rounded-full px-1.5 py-px text-[12px] tabular-nums', on ? 'bg-tint text-accent-ink' : 'bg-raised text-ink-3')}>
                 {num(counts[l])}
               </span>
@@ -191,6 +192,24 @@ export function LeadsBrowser({ rows, onOpen }: { rows: LeadRow[]; onOpen: (compa
               {c} ({n})
             </option>
           ))}
+        </Select>
+        <Select
+          value={`${sort}:${dir}`}
+          onChange={(e) => {
+            const [k, d] = e.target.value.split(':');
+            set({ sort: k ?? null, dir: d ?? null });
+          }}
+          aria-label="Sort"
+          className="w-auto min-w-[150px] flex-1 md:hidden"
+        >
+          <option value="reviews:desc">Most reviews</option>
+          <option value="rating:desc">Highest rating</option>
+          <option value="company:asc">Company A–Z</option>
+          <option value="city:asc">City A–Z</option>
+          <option value="owner:asc">Owner A–Z</option>
+          {!['reviews:desc', 'rating:desc', 'company:asc', 'city:asc', 'owner:asc'].includes(`${sort}:${dir}`) && (
+            <option value={`${sort}:${dir}`}>Sorted by {COLS.find((c) => c.key === sort)?.label.toLowerCase()}</option>
+          )}
         </Select>
         <div className="flex items-center gap-4 px-1">
           <Checkbox checked={noOwner} onChange={(v) => set({ noOwner: v ? '1' : null })} label="No owner" />

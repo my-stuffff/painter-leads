@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { ArrowLeft } from 'lucide-react';
+import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { useBack } from '../lib/nav';
 
@@ -34,6 +35,10 @@ export function PageHeader({
   meta?: ReactNode;
   pill?: ReactNode;
 }) {
+  const docTitle = typeof title === 'string' ? title : null;
+  useEffect(() => {
+    document.title = docTitle && !back ? 'Lead Finder · Painter Promotions' : `${docTitle ?? 'Lead Finder'} · Lead Finder`;
+  }, [docTitle, back]);
   return (
     <header className="mb-6 sm:mb-8">
       {back && <BackButton fallback={back} className="mb-3" />}

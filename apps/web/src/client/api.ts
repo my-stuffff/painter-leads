@@ -45,7 +45,8 @@ const httpTransport: Transport = async (method, path, body) => {
     try {
       data = JSON.parse(text);
     } catch {
-      data = res.ok ? text : { error: `The server answered ${res.status}.` };
+      // Every /api answer is JSON; anything else (an HTML page from a proxy, a gateway error) is a failure.
+      return { status: res.ok ? 502 : res.status, data: { error: `The server sent an unexpected answer (${res.status}).` } };
     }
   }
   return { status: res.status, data };
