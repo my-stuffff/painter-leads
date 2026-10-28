@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent, ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import type { CatalogCity, JobSettings, StateCode } from '../../shared/api';
-import { DEFAULT_JOB_SETTINGS } from '../../shared/api';
+import { DEFAULT_JOB_SETTINGS, estimateMinutes } from '../../shared/api';
 import { canRun, useCurrentUser } from '../auth';
 import { EmptyState, ErrorState, PageBody, PageHeader } from '../components/Page';
 import { useToast } from '../components/Toasts';
@@ -14,7 +14,6 @@ import { useHotkey } from '../lib/nav';
 import { useCatalog, useCreateJob } from '../queries';
 import { StateMap } from './new-search/StateMap';
 
-const MIN_PER_ZIP = 1.5;
 const REUSE_OPTIONS = [
   { value: 0, label: 'Search again' },
   { value: 7, label: '7 days' },
@@ -128,7 +127,7 @@ function NewSearchForm() {
   const zips = chosen.reduce((n, c) => n + c.zipCount, 0);
   const zipsToScrape = toScrape.reduce((n, c) => n + c.zipCount, 0);
   const searches = zipsToScrape * terms.length;
-  const minutes = zipsToScrape * MIN_PER_ZIP;
+  const minutes = estimateMinutes(toScrape);
   const minR = Number.parseInt(minReviews, 10);
   const maxR = Number.parseInt(maxReviews, 10);
   const reviewsBad = !Number.isFinite(minR) || !Number.isFinite(maxR) || minR < 0 || maxR < minR;

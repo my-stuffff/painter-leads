@@ -90,7 +90,8 @@ describe('jobs', () => {
       ['newark_nj', 'Newark, NJ', 'queued'],
       ['houston_tx', 'Houston, TX', 'queued'],
     ]);
-    expect(job.etaMinutes).toBe(Math.round((9 + 92) * 1.5));
+    // No worker online in the test: one lane, so both cities add up: (5 + 9 × 1.5) + (5 + 92 × 1.5).
+    expect(job.etaMinutes).toBe(162);
     const list = (await (await call(cookie, '/api/jobs')).json()) as JobSummary[];
     expect(list.map((j) => j.id)).toEqual([job.id]);
   });

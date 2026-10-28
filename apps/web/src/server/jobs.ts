@@ -1,23 +1,21 @@
 import type pg from 'pg';
 import { z } from 'zod';
-import type {
-  AreaProgress,
-  CreateJobBody,
-  ExportStatus,
-  JobArea,
-  JobAreaStatus,
-  JobDetail,
-  JobSettings,
-  JobStatus,
-  JobSummary,
-  LeadCounts,
-  StateCode,
+import {
+  estimateMinutes,
+  type AreaProgress,
+  type CreateJobBody,
+  type ExportStatus,
+  type JobArea,
+  type JobAreaStatus,
+  type JobDetail,
+  type JobSettings,
+  type JobStatus,
+  type JobSummary,
+  type LeadCounts,
+  type StateCode,
 } from '../shared/api';
 import type { CatalogFileCity } from './catalog';
 import { iso, q, q1, tx } from './sql';
-
-/** Rough minutes one worker needs per ZIP of a city that has to be scraped (5 terms, observed on Railway). */
-export const MINUTES_PER_ZIP = 1.5;
 
 const TERMINAL: ReadonlySet<JobAreaStatus> = new Set(['done', 'reused', 'failed', 'cancelled']);
 
@@ -205,8 +203,10 @@ export async function getJob(pool: pg.Pool, id: number, cities: CatalogFileCity[
   const areas = (await areasOf(pool, [id])).get(id) ?? [];
   const zips = new Map(cities.map((c) => [c.areaId, c.zipCount]));
   const open = areas.filter((a) => !TERMINAL.has(a.status));
-  const minutes = open.reduce((s, a) => s + (zips.get(a.areaId) ?? 10) * MINUTES_PER_ZIP * (1 - areaFraction(a.status, a.progress)), 0);
-  const lanes = Math.max(1, Math.min(workersOnline || 1, new Set(open.map((a) => a.state)).size));
+  const minutes = estimateMinutes(
+    open.map((a) => ({ state: a.state, zipCount: zips.get(a.areaId) ?? 10, left: 1 - areaFraction(a.status, a.progress) })),
+    Math.max(1, workersOnline),
+  );
   return {
     ...toSummary(j, areas),
     settings: j.settings,
@@ -214,7 +214,7 @@ export async function getJob(pool: pg.Pool, id: number, cities: CatalogFileCity[
     exportError: j.export_error,
     exportBuiltAt: iso(j.export_built_at),
     areas,
-    etaMinutes: open.length ? Math.round(minutes / lanes) : null,
+    etaMinutes: open.length ? Math.round(minutes) : null,
   };
 }
 

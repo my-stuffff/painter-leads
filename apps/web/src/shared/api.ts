@@ -273,3 +273,24 @@ export interface UpdateUserBody {
   password?: string;
 }
 // GET /api/users → UserRow[]
+
+// ---------------------------------------------------------------------------------------------------------------
+// Rough time (shared by the New search summary and the job page)
+
+/** Measured on Railway 28 Oct: a city costs a fixed part (websites, registries, finishing) plus a part per ZIP. */
+export const MINUTES_PER_CITY = 5;
+export const MINUTES_PER_ZIP = 1.5;
+/** Workers on Railway; one state runs one city at a time. */
+export const WORKERS = 2;
+
+/** Rough minutes to scrape these cities: each city's work (times what is left of it), spread over the workers,
+ *  but never less than the busiest state, whose cities run one after another. */
+export function estimateMinutes(cities: { state: string; zipCount: number; left?: number }[], workers = WORKERS): number {
+  const byState = new Map<string, number>();
+  for (const c of cities) {
+    const m = (MINUTES_PER_CITY + c.zipCount * MINUTES_PER_ZIP) * (c.left ?? 1);
+    byState.set(c.state, (byState.get(c.state) ?? 0) + m);
+  }
+  const total = [...byState.values()].reduce((s, m) => s + m, 0);
+  return Math.max(total / Math.max(1, workers), ...byState.values(), 0);
+}
