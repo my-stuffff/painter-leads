@@ -19,12 +19,12 @@ COPY packages/sites/package.json packages/sites/
 COPY packages/jobs/package.json packages/jobs/
 COPY apps/cli/package.json apps/cli/
 COPY apps/web/package.json apps/web/
-RUN pnpm install --frozen-lockfile
+# Railway passes the service variables (NODE_ENV=production) into the build; vite and tsx are dev dependencies.
+RUN NODE_ENV=development pnpm install --frozen-lockfile
 
 COPY . .
 RUN pnpm --filter @pp/web build
 
-# Only now: with NODE_ENV=production during install, pnpm would skip vite and tsx (dev dependencies).
 ENV NODE_ENV=production
 
 EXPOSE 8787
