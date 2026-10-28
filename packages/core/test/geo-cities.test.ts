@@ -89,7 +89,8 @@ describe('committed whole-city areas', () => {
       ['austin_tx', undefined, 12],
       ['san_diego_ca', undefined, 12],
     ]);
-    expect(cities.map((a) => a.id)).toEqual(OWNER_ORDER);
+    // The catalog's new cities (geo-catalog.test.ts) follow the 24 in the owner order.
+    expect(cities.slice(0, OWNER_ORDER.length).map((a) => a.id)).toEqual(OWNER_ORDER);
     // Owner ruling 01-06 survives a rebuild: La Jolla 92037 in place of the campus ZIP 92092.
     expect(getArea(config, 'san_diego_ca').pilotZctas[3]).toBe('92037');
     expect(getArea(config, 'san_diego_ca').pilotZctas).not.toContain('92092');
@@ -99,7 +100,7 @@ describe('committed whole-city areas', () => {
   it('searches every area ZCTA of each city, each with a polygon and a centre inside it', () => {
     for (const a of cities) {
       expect(a.pilotZctas, a.id).toEqual(a.allZctas.map((z) => z.zcta).sort());
-      expect(a.allZctas.every((z) => z.share >= config.search.zctaMinShare), a.id).toBe(true);
+      if (a.zctaRule !== 'city-land') expect(a.allZctas.every((z) => z.share >= config.search.zctaMinShare), a.id).toBe(true);
       for (const z of a.allZctas) {
         expect(polygons.has(z.zcta), `${a.id} ${z.zcta} polygon`).toBe(true);
         expect(zctaForPoint(z.lat, z.lng), `${a.id} ${z.zcta} centre`).toBe(z.zcta);

@@ -16,8 +16,8 @@ export interface AreaDef {
   /** Pilot areas: edison_nj, austin_tx, san_diego_ca. Whole-city areas: e.g. los_angeles_ca (see `kind`). */
   id: string;
   /**
-   * 'city' = a whole Census place searched in full (pilotZctas = every ZCTA in allZctas). Absent on the three
-   * pilot areas, whose pilotZctas are a fixed subset.
+   * 'city' = a whole Census place (or NJ county subdivision) searched in full (pilotZctas = every ZCTA in
+   * allZctas). Absent on the three pilot areas, whose pilotZctas are a fixed subset.
    */
   kind?: 'city';
   label: string;
@@ -31,6 +31,12 @@ export interface AreaDef {
   poBoxZips: string[];
   /** false = the PO-box ZIPs were not checked against USPS (research A3). */
   poBoxZipsVerified?: boolean;
+  /**
+   * 'city-land' = no ZCTA has search.zctaMinShare of its own land inside the city (a small city in large rural
+   * ZIPs, e.g. Davis CA), so allZctas are instead the ZCTAs holding at least that share of the city's land. `share`
+   * keeps its meaning (the ZCTA's land inside the city) and is below zctaMinShare there. Absent = the usual rule.
+   */
+  zctaRule?: 'city-land';
 }
 
 export function areasFilePath(config: PpConfig): string {

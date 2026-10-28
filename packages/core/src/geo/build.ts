@@ -8,6 +8,18 @@ import type { PpConfig } from '../config/schema';
 import type { Fetcher } from '../fetch/types';
 import { dataDir } from '../paths';
 import type { AreaDef, AreaZcta } from './areas';
+import { CATALOG_FILE_NAME, type CatalogCity, type CatalogFile } from './catalog';
+import {
+  CATALOG_COUSUB_STATES,
+  CATALOG_MIN_POPULATION,
+  CATALOG_POP_YEAR,
+  CATALOG_STATES,
+  POPEST_URL,
+  assignAreaIds,
+  parsePopEstimates,
+  selectCatalogCities,
+  weightedCentre,
+} from './popest';
 
 export const CENSUS_URLS = {
   zctaPlace: 'https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_place20_natl.txt',
@@ -15,6 +27,7 @@ export const CENSUS_URLS = {
   gazetteer: 'https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_Gaz_zcta_national.zip',
   tigerweb:
     'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer/7/query',
+  popEst: POPEST_URL,
 } as const;
 
 /** Local file names accepted in --input-dir. */
@@ -23,7 +36,13 @@ export const INPUT_NAMES = {
   zctaCousub: ['cousub.txt', 'tab20_zcta520_cousub20_natl.txt'],
   gazetteer: ['2025_Gaz_zcta_national.txt', 'gaz.zip', '2025_Gaz_zcta_national.zip'],
   polygons: ['pilot-zcta.geojson', 'zcta.geojson'],
+  popEst: ['sub-est2024.csv'],
 } as const;
+
+/** ZCTAs per TIGERweb `ZCTA5 IN (...)` request. */
+export const TIGERWEB_BATCH = 50;
+/** pilot-zcta.geojson is parsed by every process that calls zctaForPoint; keep it small. */
+export const GEOJSON_MAX_BYTES = 25_000_000;
 
 // Derivation constants fixed by the plan (D-08, D-09 amendment).
 export const PILOT_CANDIDATE_MIN_SHARE = 0.5;
@@ -78,15 +97,20 @@ const AREA_SPECS: AreaSpec[] = [
   },
 ];
 
-/** A whole city searched in full: a Census place (NJ cities too), checked against its 2020 Census name. */
+/**
+ * A whole city searched in full: a Census place (NJ cities too) or, for NJ townships, a county subdivision,
+ * checked against its 2020 Census name.
+ */
 export interface CitySpec {
   id: string;
   state: AreaDef['state'];
   city: string;
-  /** Census 2020 place GEOID (state FIPS + place code). */
+  /** Census 2020 GEOID: place = state FIPS + place code; cousub = state + county + cousub code. */
   geoid: string;
-  /** NAMELSAD_PLACE_20 the relationship file must show for the GEOID (guards a wrong code). */
+  /** NAMELSAD_PLACE_20 / NAMELSAD_COUSUB_20 the relationship file must show for the GEOID (guards a wrong code). */
   censusName: string;
+  /** Default 'place'. */
+  censusKind?: AreaDef['censusKind'];
 }
 
 const city = (id: string, state: AreaDef['state'], name: string, geoid: string): CitySpec => ({
@@ -155,6 +179,9 @@ export interface GeoBuildResult {
   featureCount: number;
   geojsonBytes: number;
   provenance: ProvenanceEntry[];
+  catalog: CatalogFile;
+  /** Ids of the whole-city areas added for the catalog (appended after the existing areas). */
+  newAreaIds: string[];
 }
 
 const sha256 = (buf: Buffer): string => createHash('sha256').update(buf).digest('hex');
@@ -217,6 +244,31 @@ export function sharesByGeoid(rows: Row[], geoidCol: string, wanted: Set<string>
   return out;
 }
 
+/**
+ * zcta -> share of each wanted area's own land that lies in the ZCTA (AREALAND_PART / AREALAND_<area>_20). Used for
+ * the city-land fallback and as the centre weight. Rows with a blank ZCTA are skipped.
+ */
+export function areaLandSharesByGeoid(
+  rows: Row[],
+  geoidCol: string,
+  areaLandCol: string,
+  wanted: Set<string>,
+): Map<string, Map<string, number>> {
+  const out = new Map<string, Map<string, number>>();
+  for (const r of rows) {
+    const zcta = (r.GEOID_ZCTA5_20 ?? '').trim();
+    const geoid = (r[geoidCol] ?? '').trim();
+    if (!zcta || !geoid || !wanted.has(geoid)) continue;
+    const part = Number(r.AREALAND_PART);
+    const total = Number(r[areaLandCol]);
+    if (!Number.isFinite(part) || !Number.isFinite(total) || total <= 0) continue;
+    let m = out.get(geoid);
+    if (!m) out.set(geoid, (m = new Map()));
+    m.set(zcta, Math.min(1, (m.get(zcta) ?? 0) + part / total));
+  }
+  return out;
+}
+
 const byShareThenZip = (a: AreaZcta, b: AreaZcta): number => b.share - a.share || a.zcta.localeCompare(b.zcta);
 
 /** geoid -> NAMELSAD of each wanted geoid, as the relationship file names it. */
@@ -240,41 +292,56 @@ export function checkCityGeoids(specs: CitySpec[], names: Map<string, string>): 
 /**
  * A whole city: allZctas = every ZCTA with share >= minShare (same rule as the pilots) and every one of them is
  * searched (pilotZctas, ZIP order). No expansion ZCTAs and no PO-box ZIPs.
+ * When no ZCTA reaches minShare (a small city inside large rural ZIPs) and `cityLand` (ZCTA -> share of the city's
+ * own land) is given, allZctas are instead the ZCTAs holding >= minShare of the city's land (zctaRule 'city-land').
+ * Zero ZCTAs either way fails the build.
  */
 export function cityArea(
   spec: CitySpec,
   shares: Map<string, number>,
   gaz: Map<string, { lat: number; lng: number }>,
   minShare: number,
+  cityLand?: Map<string, number>,
 ): AreaDef {
-  const allZctas = [...shares.entries()]
-    .filter(([, s]) => s >= minShare)
-    .map(([zcta, share]): AreaZcta => {
-      const c = gaz.get(zcta);
-      if (!c) throw new Error(`ZCTA ${zcta} is missing from the Gazetteer`);
-      return { zcta, share: Math.round(share * 10_000) / 10_000, lat: c.lat, lng: c.lng };
-    })
-    .sort(byShareThenZip);
-  if (allZctas.length === 0) throw new Error(`no ZCTA of ${spec.id} (${spec.geoid}) reaches share ${minShare}`);
+  const toZcta = ([zcta, share]: [string, number]): AreaZcta => {
+    const c = gaz.get(zcta);
+    if (!c) throw new Error(`ZCTA ${zcta} is missing from the Gazetteer`);
+    return { zcta, share: Math.round(share * 10_000) / 10_000, lat: c.lat, lng: c.lng };
+  };
+  let allZctas = [...shares.entries()].filter(([, s]) => s >= minShare).map(toZcta).sort(byShareThenZip);
+  let zctaRule: AreaDef['zctaRule'];
+  if (allZctas.length === 0 && cityLand) {
+    allZctas = [...shares.entries()]
+      .filter(([z]) => (cityLand.get(z) ?? 0) >= minShare)
+      .map(toZcta)
+      .sort(byShareThenZip);
+    zctaRule = 'city-land';
+  }
+  if (allZctas.length === 0) {
+    throw new Error(
+      `no ZCTA of ${spec.id} (${spec.geoid}) reaches share ${minShare}${cityLand ? ' of its own land or of the city land' : ''}`,
+    );
+  }
   return {
     id: spec.id,
     kind: 'city',
     label: `${spec.censusName}, ${spec.state}`,
     state: spec.state,
     city: spec.city,
-    censusKind: 'place',
+    censusKind: spec.censusKind ?? 'place',
     geoid: spec.geoid,
     allZctas,
     pilotZctas: allZctas.map((z) => z.zcta).sort(),
     expansionZctas: [],
     poBoxZips: [],
+    ...(zctaRule ? { zctaRule } : {}),
   };
 }
 
 /** ZCTAs that touch the city but stay under minShare: their polygons are kept as the city's neighbour ring. */
-export function cityRingZctas(shares: Map<string, number>, minShare: number): string[] {
+export function cityRingZctas(shares: Map<string, number>, minShare: number, searched: readonly string[] = []): string[] {
   return [...shares.entries()]
-    .filter(([, s]) => s > 0 && s < minShare)
+    .filter(([z, s]) => s > 0 && s < minShare && !searched.includes(z))
     .map(([z]) => z)
     .sort();
 }
@@ -374,11 +441,69 @@ function section(text: string, begin: string, end: string, body: string): string
   return `${text.trimEnd()}${text.trim() ? '\n\n' : ''}${block}\n`;
 }
 
-export function renderProvenance(entries: ProvenanceEntry[], areas: AreaDef[], geojson: { bytes: number; features: number; sha256: string }): string {
+export interface CatalogSummary {
+  file: CatalogFile;
+  newAreaIds: string[];
+}
+
+function renderCatalog(areas: AreaDef[], catalog: CatalogSummary, geojson: { bytes: number; features: number }): string {
+  const byId = new Map(areas.map((a) => [a.id, a] as const));
+  const newIds = new Set(catalog.newAreaIds);
+  const fallback = catalog.file.cities.filter((c) => byId.get(c.areaId)?.zctaRule === 'city-land');
+  const allZips = new Set<string>();
+  const row = (label: string, cities: CatalogCity[]): string => {
+    const zips = new Set(cities.flatMap((c) => byId.get(c.areaId)?.pilotZctas ?? []));
+    for (const z of zips) allZips.add(z);
+    const places = cities.filter((c) => c.kind === 'place').length;
+    const sum = cities.reduce((s, c) => s + c.zipCount, 0);
+    return `| ${label} | ${places} | ${cities.length - places} | ${cities.length} | ${cities.filter((c) => newIds.has(c.areaId)).length} | ${sum} | ${zips.size} |`;
+  };
+  const states = [...new Set(catalog.file.cities.map((c) => c.state))];
+  const stateRows = states.map((s) => row(s, catalog.file.cities.filter((c) => c.state === s)));
+  const total = row('Total', catalog.file.cities);
+  return `### City catalog (\`data/geo/${CATALOG_FILE_NAME}\`)
+
+- Source: Census Vintage ${catalog.file.popYear} sub-county population estimates (sub-est${catalog.file.popYear}.csv in
+  the table above; columns SUMLEV, STATE, COUNTY, PLACE, COUSUB, NAME, POPESTIMATE${catalog.file.popYear}; Latin-1 text).
+- Cities (population >= ${catalog.file.minPopulation} in POPESTIMATE${catalog.file.popYear}): every incorporated place
+  (SUMLEV 162) in ${states.join(', ')}, plus every NJ county subdivision (SUMLEV 061, kind "cousub") that is not
+  itself a place (a NJ city is both a place and a county subdivision under the same 5-digit code, e.g. Newark city
+  PLACE 51000 / COUSUB 51000; the place row is kept). Biggest first (ties by name).
+- Guards: each city's GEOID must carry the same name in the 2020 ZCTA relationship file (NAMELSAD_PLACE_20 /
+  NAMELSAD_COUSUB_20) and each city must get at least one ZCTA, or the build fails.
+- Areas: each city points at a whole-city area (kind "city") built by the rule above (every ZCTA with share >=
+  zctaMinShare searched; neighbour ring = ZCTAs touching the city below it). The 24 whole cities keep their ids
+  (Austin -> austin_tx_city, San Diego -> san_diego_ca_city); new ids are \`<name>_<state>\`, with \`_city\` added
+  when taken (Edison -> edison_nj_city, as edison_nj is the pilot). New areas are appended after the existing ones,
+  biggest first.
+- City-land fallback: when no ZCTA has zctaMinShare of its own land inside the city (a small city inside large
+  rural ZIPs), the area's ZCTAs are those holding >= zctaMinShare of the city's own land (AREALAND_PART /
+  AREALAND_PLACE_20), marked \`zctaRule: "city-land"\` (${fallback.length}): ${fallback.map((c) => `${c.name} ${c.state}`).join(', ') || 'none'}.
+- lat/lng: centre of the city's searched ZCTAs' Gazetteer internal points (INTPTLAT/INTPTLONG), each weighted by
+  its share of the city's land (AREALAND_PART / AREALAND_PLACE_20 or AREALAND_COUSUB_20), 5 decimals.
+
+| State | Places | County subdivisions | Cities | New areas | ZIPs searched (sum) | Distinct ZIPs |
+| --- | --- | --- | --- | --- | --- | --- |
+${stateRows.join('\n')}
+${total}
+
+The catalog's cities search ${allZips.size} distinct ZCTAs; pilot-zcta.geojson holds ${geojson.features} polygons
+(${geojson.bytes} bytes, coordinates at 5 decimals).
+`;
+}
+
+export function renderProvenance(
+  entries: ProvenanceEntry[],
+  areas: AreaDef[],
+  geojson: { bytes: number; features: number; sha256: string },
+  catalog?: CatalogSummary,
+): string {
   const rows = entries
     .map((e) => `| ${e.name} | ${e.url} | ${e.obtained} | ${e.bytes} | \`${e.sha256}\` | ${e.note} |`)
     .join('\n');
+  const newIds = new Set(catalog?.newAreaIds ?? []);
   const counts = areas
+    .filter((a) => !newIds.has(a.id))
     .map(
       (a) =>
         `- ${a.id}${a.kind === 'city' ? ` (place ${a.geoid}, whole city)` : ''}: ${a.allZctas.length} ZCTAs at share >= zctaMinShare; searched ${a.pilotZctas.length}; expansion ${a.expansionZctas.length}`,
@@ -387,14 +512,14 @@ export function renderProvenance(entries: ProvenanceEntry[], areas: AreaDef[], g
   return `## Geo data (generated by \`pp geo build\`)
 
 Public, free US Census Bureau files. Regenerate with \`corepack pnpm pp geo build\` (add \`--input-dir DIR\` to
-use already-downloaded copies of the three text files). Raw downloads stay outside the repo (PP_DATA_DIR).
+use already-downloaded copies of the Census files). Raw downloads stay outside the repo (PP_DATA_DIR).
 
 | File | Source URL | Obtained | Bytes | sha256 | Note |
 | --- | --- | --- | --- | --- | --- |
 ${rows}
 
-Committed outputs: \`data/geo/pilot-areas.json\` (area definitions) and \`data/geo/pilot-zcta.geojson\`
-(${geojson.features} ZCTA polygons, ${geojson.bytes} bytes, sha256 \`${geojson.sha256}\`).
+Committed outputs: \`data/geo/pilot-areas.json\` (area definitions), \`data/geo/pilot-zcta.geojson\`
+(${geojson.features} ZCTA polygons, ${geojson.bytes} bytes, sha256 \`${geojson.sha256}\`)${catalog ? ` and \`data/geo/${CATALOG_FILE_NAME}\` (${catalog.file.cities.length} cities)` : ''}.
 
 ### Derivation rules
 
@@ -415,7 +540,8 @@ Committed outputs: \`data/geo/pilot-areas.json\` (area definitions) and \`data/g
 - Polygons: TIGERweb layer 7 (2020 Census ZIP Code Tabulation Areas), outSR 4326, maxAllowableOffset 0.0005,
   geometryPrecision 5, for every area ZCTA (all + expansion) plus a neighbour ring: for the three pilot areas every
   ZCTA intersecting the area's bounding envelope; for the whole cities every ZCTA that touches the city with share
-  below zctaMinShare.
+  below zctaMinShare. ZCTA lists are asked ${TIGERWEB_BATCH} per request (\`ZCTA5 IN (...)\`); the table gives one row per
+  query kind with the summed bytes and the sha256 of the response bodies concatenated in request order.
 - Whole cities (\`kind: "city"\`), in the owner's order, biggest first by 2020 population: each is a Census place
   (NJ cities too) whose GEOID is checked against NAMELSAD_PLACE_20 ("<Name> city") at build time. allZctas uses the
   same share rule; pilotZctas (the ZIPs searched) = every allZctas ZIP, in ZIP order; no expansion, no PO-box ZIPs.
@@ -425,7 +551,7 @@ Committed outputs: \`data/geo/pilot-areas.json\` (area definitions) and \`data/g
 ### Result
 
 ${counts}
-`;
+${catalog ? `\n${renderCatalog(areas, catalog, geojson)}` : ''}`;
 }
 
 export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
@@ -436,7 +562,7 @@ export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
   const obtained = now().toISOString().slice(0, 10);
 
   async function acquire(
-    key: 'zctaPlace' | 'zctaCousub' | 'gazetteer',
+    key: 'zctaPlace' | 'zctaCousub' | 'gazetteer' | 'popEst',
     localName: string,
     url: string,
   ): Promise<Buffer> {
@@ -461,21 +587,65 @@ export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
   const placeBuf = await acquire('zctaPlace', 'tab20_zcta520_place20_natl.txt', CENSUS_URLS.zctaPlace);
   const cousubBuf = await acquire('zctaCousub', 'tab20_zcta520_cousub20_natl.txt', CENSUS_URLS.zctaCousub);
   const gazRaw = await acquire('gazetteer', '2025_Gaz_zcta_national.zip', CENSUS_URLS.gazetteer);
+  const popBuf = await acquire('popEst', 'sub-est2024.csv', CENSUS_URLS.popEst);
   const gazBuf = gazRaw.subarray(0, 4).toString('latin1') === 'PK\u0003\u0004' ? readSingleZipEntry(gazRaw).data : gazRaw;
   const gaz = parseGazetteer(gazBuf);
+
+  // City catalog: places (and NJ county subdivisions) >= 50,000, biggest first, each mapped to an area id.
+  const catalogCands = assignAreaIds(
+    selectCatalogCities(parsePopEstimates(popBuf, CATALOG_POP_YEAR), {
+      minPopulation: CATALOG_MIN_POPULATION,
+      states: CATALOG_STATES,
+      cousubStates: CATALOG_COUSUB_STATES,
+    }),
+    CITY_SPECS.map((c) => ({ id: c.id, geoid: c.geoid, kind: c.censusKind ?? 'place' })),
+    AREA_SPECS.map((a) => a.id),
+  );
+  for (const c of CITY_SPECS) {
+    const hit = catalogCands.find((x) => x.areaId === c.id);
+    if (!hit) throw new Error(`whole city ${c.id} (${c.geoid}) is missing from the ${CATALOG_POP_YEAR} catalog`);
+    if (hit.censusName !== c.censusName) throw new Error(`${c.id}: estimates name "${hit.censusName}", expected "${c.censusName}"`);
+  }
+  const existingCityIds = new Set(CITY_SPECS.map((c) => c.id));
+  const catalogSpecs: CitySpec[] = catalogCands.map((c) => ({
+    id: c.areaId,
+    state: c.state,
+    city: c.name,
+    geoid: c.geoid,
+    censusName: c.censusName,
+    censusKind: c.kind,
+  }));
+  const newSpecs = catalogSpecs.filter((s) => !existingCityIds.has(s.id));
+  const catalogPlaceGeoids = new Set(catalogSpecs.filter((s) => s.censusKind === 'place').map((s) => s.geoid));
+  const catalogCousubGeoids = new Set(catalogSpecs.filter((s) => s.censusKind === 'cousub').map((s) => s.geoid));
+  say(`catalog: ${catalogSpecs.length} cities (${catalogPlaceGeoids.size} places, ${catalogCousubGeoids.size} county subdivisions), ${newSpecs.length} new areas`);
 
   const placeRows = parsePipe(placeBuf);
   const placeGeoids = new Set([
     ...AREA_SPECS.filter((a) => a.censusKind === 'place').map((a) => a.geoid),
     ...CITY_SPECS.map((c) => c.geoid),
+    ...catalogPlaceGeoids,
   ]);
-  checkCityGeoids(CITY_SPECS, namesByGeoid(placeRows, 'GEOID_PLACE_20', 'NAMELSAD_PLACE_20', placeGeoids));
+  const placeNames = namesByGeoid(placeRows, 'GEOID_PLACE_20', 'NAMELSAD_PLACE_20', placeGeoids);
+  checkCityGeoids(CITY_SPECS, placeNames);
+  checkCityGeoids(catalogSpecs.filter((s) => s.censusKind === 'place'), placeNames);
   const placeShares = sharesByGeoid(placeRows, 'GEOID_PLACE_20', placeGeoids);
-  const cousubShares = sharesByGeoid(
-    parsePipe(cousubBuf),
-    'GEOID_COUSUB_20',
-    new Set([...AREA_SPECS.filter((a) => a.censusKind === 'cousub').map((a) => a.geoid), METUCHEN_GEOID, WOODBRIDGE_GEOID]),
+  const placeLand = areaLandSharesByGeoid(placeRows, 'GEOID_PLACE_20', 'AREALAND_PLACE_20', placeGeoids);
+  const cousubRows = parsePipe(cousubBuf);
+  const cousubGeoids = new Set([
+    ...AREA_SPECS.filter((a) => a.censusKind === 'cousub').map((a) => a.geoid),
+    METUCHEN_GEOID,
+    WOODBRIDGE_GEOID,
+    ...catalogCousubGeoids,
+  ]);
+  checkCityGeoids(
+    catalogSpecs.filter((s) => s.censusKind === 'cousub'),
+    namesByGeoid(cousubRows, 'GEOID_COUSUB_20', 'NAMELSAD_COUSUB_20', catalogCousubGeoids),
   );
+  const cousubShares = sharesByGeoid(cousubRows, 'GEOID_COUSUB_20', cousubGeoids);
+  const cousubLand = areaLandSharesByGeoid(cousubRows, 'GEOID_COUSUB_20', 'AREALAND_COUSUB_20', catalogCousubGeoids);
+  const sharesOf = (s: CitySpec) => ((s.censusKind ?? 'place') === 'place' ? placeShares : cousubShares).get(s.geoid);
+  const landOf = (s: CitySpec) => ((s.censusKind ?? 'place') === 'place' ? placeLand : cousubLand).get(s.geoid);
 
   const minShare = config.search.zctaMinShare;
   const areas: AreaDef[] = [];
@@ -531,15 +701,41 @@ export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
     say(`${spec.id}: ${allZctas.length} ZCTAs, pilot ${pilotZctas.length}, expansion ${expansionZctas.length}`);
   }
 
+  // The 24 whole cities keep their order; the catalog's new cities follow, biggest first.
   const cityRing = new Set<string>();
-  for (const spec of CITY_SPECS) {
-    const shares = placeShares.get(spec.geoid);
+  for (const spec of [...CITY_SPECS, ...newSpecs]) {
+    const shares = sharesOf(spec);
     if (!shares || shares.size === 0) throw new Error(`no ZCTA rows for ${spec.id} (${spec.geoid})`);
-    const area = cityArea(spec, shares, gaz, minShare);
+    const area = cityArea(spec, shares, gaz, minShare, landOf(spec));
     areas.push(area);
-    for (const z of cityRingZctas(shares, minShare)) cityRing.add(z);
-    say(`${spec.id}: ${area.allZctas.length} ZCTAs searched in full`);
+    for (const z of cityRingZctas(shares, minShare, area.pilotZctas)) cityRing.add(z);
+    say(`${spec.id}: ${area.allZctas.length} ZCTAs searched in full${area.zctaRule ? ` (${area.zctaRule} rule)` : ''}`);
   }
+  const ids = areas.map((a) => a.id);
+  const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
+  if (dupes.length > 0) throw new Error(`duplicate area id(s): ${[...new Set(dupes)].join(', ')}`);
+
+  const areaById = new Map(areas.map((a) => [a.id, a] as const));
+  const catalogCities: CatalogCity[] = catalogCands.map((c, i) => {
+    const area = areaById.get(c.areaId);
+    const spec = catalogSpecs[i] as CitySpec;
+    if (!area || area.kind !== 'city' || area.geoid !== c.geoid) throw new Error(`catalog city ${c.censusName} has no whole-city area ${c.areaId}`);
+    if (area.pilotZctas.length === 0) throw new Error(`catalog city ${c.areaId} has no ZCTA`);
+    const centre = weightedCentre(area.allZctas, landOf(spec));
+    return {
+      areaId: c.areaId,
+      state: c.state,
+      name: c.name,
+      censusName: c.censusName,
+      kind: c.kind,
+      geoid: c.geoid,
+      population: c.population,
+      popYear: CATALOG_POP_YEAR,
+      lat: centre.lat,
+      lng: centre.lng,
+      zipCount: area.pilotZctas.length,
+    };
+  });
 
   // Polygons: area ZCTAs first, then the neighbour ring: for the pilots every ZCTA intersecting the area's
   // bounding envelope, for the whole cities every ZCTA that touches the city below zctaMinShare (keeps the file small).
@@ -552,9 +748,13 @@ export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
     provenance.push({ name: 'TIGERweb ZCTA polygons', url: CENSUS_URLS.tigerweb, obtained, bytes: buf.length, sha256: sha256(buf), note: `local copy given with --input-dir (${path.basename(localPolygons)})` });
   } else {
     if (!fetcher) throw new Error('no fetcher available for TIGERweb polygons');
+    const tigerNote = 'POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5';
+    const tigerLog = new Map<string, { bytes: number; requests: number; hash: ReturnType<typeof createHash> }>();
     const queryTiger = async (extra: Record<string, string>, label: string): Promise<GeoFeature[]> => {
       const collected: GeoFeature[] = [];
       const pageSize = 100;
+      let log = tigerLog.get(label);
+      if (!log) tigerLog.set(label, (log = { bytes: 0, requests: 0, hash: createHash('sha256') }));
       for (let offset = 0; ; offset += pageSize) {
         const form: Record<string, string> = {
           outFields: 'ZCTA5',
@@ -572,24 +772,28 @@ export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
         if (res.status !== 200) throw new Error(`TIGERweb ${label} returned HTTP ${res.status}`);
         const fc = JSON.parse(res.text()) as { features?: GeoFeature[]; error?: unknown };
         if (!fc.features) throw new Error(`TIGERweb ${label} returned no features: ${JSON.stringify(fc.error ?? fc).slice(0, 300)}`);
-        provenance.push({ name: `TIGERweb query: ${label} (offset ${offset})`, url: CENSUS_URLS.tigerweb, obtained, bytes: res.body.length, sha256: sha256(res.body), note: 'POST form, layer 7 (2020 ZCTAs), outSR 4326, maxAllowableOffset 0.0005, geometryPrecision 5' });
+        log.bytes += res.body.length;
+        log.requests += 1;
+        log.hash.update(res.body);
         collected.push(...fc.features);
         if (fc.features.length < pageSize) break;
       }
       return collected;
     };
+    const queryList = async (zctas: string[], label: string): Promise<void> => {
+      for (let i = 0; i < zctas.length; i += TIGERWEB_BATCH) {
+        const chunk = zctas.slice(i, i + TIGERWEB_BATCH);
+        say(`TIGERweb: ${label} ${i + chunk.length}/${zctas.length}`);
+        const where = `ZCTA5 IN (${chunk.map((z) => `'${z}'`).join(',')})`;
+        for (const f of await queryTiger({ where }, label)) features.set(f.properties.ZCTA5, f);
+      }
+    };
 
     const wanted = [...new Set(areas.flatMap((a) => [...a.allZctas.map((z) => z.zcta), ...a.expansionZctas]))].sort();
-    const ringOnly = [...cityRing].filter((z) => !wanted.includes(z));
-    const inList = `ZCTA5 IN (${wanted.map((z) => `'${z}'`).join(',')})`;
-    say(`TIGERweb: ${wanted.length} area ZCTAs`);
-    for (const f of await queryTiger({ where: inList }, 'area ZCTAs')) features.set(f.properties.ZCTA5, f);
-
-    if (ringOnly.length > 0) {
-      say(`TIGERweb: ${ringOnly.length} ZCTAs touching the whole cities`);
-      const ringIn = `ZCTA5 IN (${ringOnly.map((z) => `'${z}'`).join(',')})`;
-      for (const f of await queryTiger({ where: ringIn }, 'ZCTAs touching the whole cities')) features.set(f.properties.ZCTA5, f);
-    }
+    const wantedSet = new Set(wanted);
+    const ringOnly = [...cityRing].filter((z) => !wantedSet.has(z)).sort();
+    await queryList(wanted, 'area ZCTAs');
+    if (ringOnly.length > 0) await queryList(ringOnly, 'ZCTAs touching the whole cities');
 
     for (const area of areas.filter((a) => a.kind !== 'city')) {
       const box: [number, number, number, number] = [Infinity, Infinity, -Infinity, -Infinity];
@@ -612,25 +816,45 @@ export async function buildGeo(deps: GeoBuildDeps): Promise<GeoBuildResult> {
       for (const f of ring) features.set(f.properties.ZCTA5, f);
     }
     for (const z of wanted) if (!features.has(z)) throw new Error(`TIGERweb returned no polygon for ZCTA ${z}`);
+    for (const [label, log] of tigerLog) {
+      provenance.push({
+        name: `TIGERweb query: ${label} (${log.requests} request${log.requests === 1 ? '' : 's'})`,
+        url: CENSUS_URLS.tigerweb,
+        obtained,
+        bytes: log.bytes,
+        sha256: log.hash.digest('hex'),
+        note: tigerNote,
+      });
+    }
   }
 
   const sorted = [...features.values()]
     .map((f) => ({ type: 'Feature' as const, properties: { ZCTA5: f.properties.ZCTA5 }, geometry: f.geometry }))
     .sort((a, b) => a.properties.ZCTA5.localeCompare(b.properties.ZCTA5));
   const geojson = JSON.stringify({ type: 'FeatureCollection', features: sorted });
-  if (Buffer.byteLength(geojson) > 5_000_000) {
-    throw new Error(`pilot-zcta.geojson is ${Buffer.byteLength(geojson)} bytes, over the 5 MB limit; raise maxAllowableOffset`);
+  if (Buffer.byteLength(geojson) > GEOJSON_MAX_BYTES) {
+    throw new Error(`pilot-zcta.geojson is ${Buffer.byteLength(geojson)} bytes, over the ${GEOJSON_MAX_BYTES} byte limit; raise maxAllowableOffset`);
   }
+
+  const catalog: CatalogFile = {
+    builtAt: now().toISOString(),
+    sources: [CENSUS_URLS.popEst, CENSUS_URLS.zctaPlace, CENSUS_URLS.zctaCousub, CENSUS_URLS.gazetteer, CENSUS_URLS.tigerweb],
+    minPopulation: CATALOG_MIN_POPULATION,
+    popYear: CATALOG_POP_YEAR,
+    cities: catalogCities,
+  };
+  const newAreaIds = newSpecs.map((s) => s.id);
 
   await mkdir(outDir, { recursive: true });
   await writeFile(path.join(outDir, 'pilot-areas.json'), `${JSON.stringify(areas, null, 2)}\n`);
   await writeFile(path.join(outDir, 'pilot-zcta.geojson'), geojson);
+  await writeFile(path.join(outDir, CATALOG_FILE_NAME), `${JSON.stringify(catalog, null, 2)}\n`);
 
   const provPath = path.join(path.dirname(outDir), 'PROVENANCE.md');
   const existing = existsSync(provPath) ? readFileSync(provPath, 'utf8') : '# Data provenance\n\nEvery committed reference data file: where it came from, when, its size and sha256, and how it was derived.\n';
   const gj = Buffer.from(geojson);
-  const body = renderProvenance(provenance, areas, { bytes: gj.length, features: sorted.length, sha256: sha256(gj) });
+  const body = renderProvenance(provenance, areas, { bytes: gj.length, features: sorted.length, sha256: sha256(gj) }, { file: catalog, newAreaIds });
   await writeFile(provPath, section(existing, '<!-- geo:begin -->', '<!-- geo:end -->', body));
 
-  return { areas, featureCount: sorted.length, geojsonBytes: gj.length, provenance };
+  return { areas, featureCount: sorted.length, geojsonBytes: gj.length, provenance, catalog, newAreaIds };
 }

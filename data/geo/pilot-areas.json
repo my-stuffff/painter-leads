@@ -5577,5 +5577,9208 @@
     ],
     "expansionZctas": [],
     "poBoxZips": []
+  },
+  {
+    "id": "stockton_ca",
+    "kind": "city",
+    "label": "Stockton city, CA",
+    "state": "CA",
+    "city": "Stockton",
+    "censusKind": "place",
+    "geoid": "0675000",
+    "allZctas": [
+      {
+        "zcta": "95202",
+        "share": 1,
+        "lat": 37.959736,
+        "lng": -121.288287
+      },
+      {
+        "zcta": "95211",
+        "share": 1,
+        "lat": 37.980264,
+        "lng": -121.311149
+      },
+      {
+        "zcta": "95203",
+        "share": 0.9748,
+        "lat": 37.954302,
+        "lng": -121.32932
+      },
+      {
+        "zcta": "95207",
+        "share": 0.8759,
+        "lat": 38.002125,
+        "lng": -121.324979
+      },
+      {
+        "zcta": "95209",
+        "share": 0.6157,
+        "lat": 38.046863,
+        "lng": -121.352802
+      },
+      {
+        "zcta": "95204",
+        "share": 0.615,
+        "lat": 37.973736,
+        "lng": -121.319246
+      },
+      {
+        "zcta": "95210",
+        "share": 0.5899,
+        "lat": 38.031786,
+        "lng": -121.297886
+      },
+      {
+        "zcta": "95205",
+        "share": 0.538,
+        "lat": 37.964578,
+        "lng": -121.259841
+      }
+    ],
+    "pilotZctas": [
+      "95202",
+      "95203",
+      "95204",
+      "95205",
+      "95207",
+      "95209",
+      "95210",
+      "95211"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "riverside_ca",
+    "kind": "city",
+    "label": "Riverside city, CA",
+    "state": "CA",
+    "city": "Riverside",
+    "censusKind": "place",
+    "geoid": "0662000",
+    "allZctas": [
+      {
+        "zcta": "92505",
+        "share": 1,
+        "lat": 33.926666,
+        "lng": -117.492804
+      },
+      {
+        "zcta": "92521",
+        "share": 1,
+        "lat": 33.965424,
+        "lng": -117.322212
+      },
+      {
+        "zcta": "92501",
+        "share": 0.9619,
+        "lat": 33.996523,
+        "lng": -117.374179
+      },
+      {
+        "zcta": "92506",
+        "share": 0.923,
+        "lat": 33.934761,
+        "lng": -117.366882
+      },
+      {
+        "zcta": "92507",
+        "share": 0.7099,
+        "lat": 33.991122,
+        "lng": -117.306821
+      },
+      {
+        "zcta": "92508",
+        "share": 0.6421,
+        "lat": 33.890389,
+        "lng": -117.328257
+      },
+      {
+        "zcta": "92504",
+        "share": 0.6183,
+        "lat": 33.908353,
+        "lng": -117.401342
+      },
+      {
+        "zcta": "92503",
+        "share": 0.392,
+        "lat": 33.882884,
+        "lng": -117.451725
+      }
+    ],
+    "pilotZctas": [
+      "92501",
+      "92503",
+      "92504",
+      "92505",
+      "92506",
+      "92507",
+      "92508",
+      "92521"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "irvine_ca",
+    "kind": "city",
+    "label": "Irvine city, CA",
+    "state": "CA",
+    "city": "Irvine",
+    "censusKind": "place",
+    "geoid": "0636770",
+    "allZctas": [
+      {
+        "zcta": "92603",
+        "share": 1,
+        "lat": 33.629259,
+        "lng": -117.79408
+      },
+      {
+        "zcta": "92604",
+        "share": 1,
+        "lat": 33.690689,
+        "lng": -117.789137
+      },
+      {
+        "zcta": "92620",
+        "share": 1,
+        "lat": 33.706601,
+        "lng": -117.756948
+      },
+      {
+        "zcta": "92606",
+        "share": 0.9981,
+        "lat": 33.692523,
+        "lng": -117.831206
+      },
+      {
+        "zcta": "92612",
+        "share": 0.9945,
+        "lat": 33.660018,
+        "lng": -117.824428
+      },
+      {
+        "zcta": "92617",
+        "share": 0.9913,
+        "lat": 33.641973,
+        "lng": -117.841046
+      },
+      {
+        "zcta": "92618",
+        "share": 0.9804,
+        "lat": 33.667307,
+        "lng": -117.73358
+      },
+      {
+        "zcta": "92614",
+        "share": 0.9783,
+        "lat": 33.677951,
+        "lng": -117.83457
+      },
+      {
+        "zcta": "92697",
+        "share": 0.9566,
+        "lat": 33.649727,
+        "lng": -117.849085
+      },
+      {
+        "zcta": "92602",
+        "share": 0.5895,
+        "lat": 33.736498,
+        "lng": -117.734933
+      }
+    ],
+    "pilotZctas": [
+      "92602",
+      "92603",
+      "92604",
+      "92606",
+      "92612",
+      "92614",
+      "92617",
+      "92618",
+      "92620",
+      "92697"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "santa_ana_ca",
+    "kind": "city",
+    "label": "Santa Ana city, CA",
+    "state": "CA",
+    "city": "Santa Ana",
+    "censusKind": "place",
+    "geoid": "0669000",
+    "allZctas": [
+      {
+        "zcta": "92701",
+        "share": 1,
+        "lat": 33.748622,
+        "lng": -117.858714
+      },
+      {
+        "zcta": "92703",
+        "share": 0.992,
+        "lat": 33.74852,
+        "lng": -117.906162
+      },
+      {
+        "zcta": "92706",
+        "share": 0.991,
+        "lat": 33.766002,
+        "lng": -117.881693
+      },
+      {
+        "zcta": "92704",
+        "share": 0.9756,
+        "lat": 33.721131,
+        "lng": -117.90511
+      },
+      {
+        "zcta": "92707",
+        "share": 0.862,
+        "lat": 33.709935,
+        "lng": -117.870431
+      },
+      {
+        "zcta": "92705",
+        "share": 0.3891,
+        "lat": 33.766007,
+        "lng": -117.786763
+      }
+    ],
+    "pilotZctas": [
+      "92701",
+      "92703",
+      "92704",
+      "92705",
+      "92706",
+      "92707"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "chula_vista_ca",
+    "kind": "city",
+    "label": "Chula Vista city, CA",
+    "state": "CA",
+    "city": "Chula Vista",
+    "censusKind": "place",
+    "geoid": "0613392",
+    "allZctas": [
+      {
+        "zcta": "91913",
+        "share": 0.9797,
+        "lat": 32.622895,
+        "lng": -116.986892
+      },
+      {
+        "zcta": "91915",
+        "share": 0.9792,
+        "lat": 32.623602,
+        "lng": -116.949804
+      },
+      {
+        "zcta": "91910",
+        "share": 0.9447,
+        "lat": 32.637096,
+        "lng": -117.061758
+      },
+      {
+        "zcta": "91914",
+        "share": 0.9167,
+        "lat": 32.66604,
+        "lng": -116.95424
+      },
+      {
+        "zcta": "91911",
+        "share": 0.8771,
+        "lat": 32.607352,
+        "lng": -117.05036
+      }
+    ],
+    "pilotZctas": [
+      "91910",
+      "91911",
+      "91913",
+      "91914",
+      "91915"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "laredo_tx",
+    "kind": "city",
+    "label": "Laredo city, TX",
+    "state": "TX",
+    "city": "Laredo",
+    "censusKind": "place",
+    "geoid": "4841464",
+    "allZctas": [
+      {
+        "zcta": "78040",
+        "share": 1,
+        "lat": 27.513375,
+        "lng": -99.50214
+      },
+      {
+        "zcta": "78041",
+        "share": 0.9669,
+        "lat": 27.559571,
+        "lng": -99.462957
+      }
+    ],
+    "pilotZctas": [
+      "78040",
+      "78041"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "irving_tx",
+    "kind": "city",
+    "label": "Irving city, TX",
+    "state": "TX",
+    "city": "Irving",
+    "censusKind": "place",
+    "geoid": "4837000",
+    "allZctas": [
+      {
+        "zcta": "75038",
+        "share": 1,
+        "lat": 32.87226,
+        "lng": -96.97881
+      },
+      {
+        "zcta": "75061",
+        "share": 0.9972,
+        "lat": 32.825907,
+        "lng": -96.966915
+      },
+      {
+        "zcta": "75039",
+        "share": 0.9946,
+        "lat": 32.884959,
+        "lng": -96.937297
+      },
+      {
+        "zcta": "75062",
+        "share": 0.9901,
+        "lat": 32.84737,
+        "lng": -96.957871
+      },
+      {
+        "zcta": "75060",
+        "share": 0.989,
+        "lat": 32.798049,
+        "lng": -96.952563
+      },
+      {
+        "zcta": "75063",
+        "share": 0.9708,
+        "lat": 32.910627,
+        "lng": -97.000481
+      }
+    ],
+    "pilotZctas": [
+      "75038",
+      "75039",
+      "75060",
+      "75061",
+      "75062",
+      "75063"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "garland_tx",
+    "kind": "city",
+    "label": "Garland city, TX",
+    "state": "TX",
+    "city": "Garland",
+    "censusKind": "place",
+    "geoid": "4829000",
+    "allZctas": [
+      {
+        "zcta": "75042",
+        "share": 1,
+        "lat": 32.914495,
+        "lng": -96.674995
+      },
+      {
+        "zcta": "75040",
+        "share": 0.9998,
+        "lat": 32.928902,
+        "lng": -96.619782
+      },
+      {
+        "zcta": "75044",
+        "share": 0.9957,
+        "lat": 32.964609,
+        "lng": -96.649688
+      },
+      {
+        "zcta": "75041",
+        "share": 0.9937,
+        "lat": 32.880196,
+        "lng": -96.651555
+      },
+      {
+        "zcta": "75043",
+        "share": 0.9308,
+        "lat": 32.855772,
+        "lng": -96.578214
+      }
+    ],
+    "pilotZctas": [
+      "75040",
+      "75041",
+      "75042",
+      "75043",
+      "75044"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "frisco_tx",
+    "kind": "city",
+    "label": "Frisco city, TX",
+    "state": "TX",
+    "city": "Frisco",
+    "censusKind": "place",
+    "geoid": "4827684",
+    "allZctas": [
+      {
+        "zcta": "75034",
+        "share": 0.9989,
+        "lat": 33.121286,
+        "lng": -96.838536
+      },
+      {
+        "zcta": "75033",
+        "share": 0.9811,
+        "lat": 33.184818,
+        "lng": -96.844308
+      },
+      {
+        "zcta": "75035",
+        "share": 0.9664,
+        "lat": 33.163588,
+        "lng": -96.776622
+      },
+      {
+        "zcta": "75036",
+        "share": 0.5685,
+        "lat": 33.133351,
+        "lng": -96.914663
+      }
+    ],
+    "pilotZctas": [
+      "75033",
+      "75034",
+      "75035",
+      "75036"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "santa_clarita_ca",
+    "kind": "city",
+    "label": "Santa Clarita city, CA",
+    "state": "CA",
+    "city": "Santa Clarita",
+    "censusKind": "place",
+    "geoid": "0669088",
+    "allZctas": [
+      {
+        "zcta": "91350",
+        "share": 0.9999,
+        "lat": 34.430599,
+        "lng": -118.502774
+      },
+      {
+        "zcta": "91351",
+        "share": 0.7567,
+        "lat": 34.433727,
+        "lng": -118.458061
+      },
+      {
+        "zcta": "91355",
+        "share": 0.75,
+        "lat": 34.40185,
+        "lng": -118.570014
+      },
+      {
+        "zcta": "91354",
+        "share": 0.6455,
+        "lat": 34.458422,
+        "lng": -118.55414
+      },
+      {
+        "zcta": "91321",
+        "share": 0.5058,
+        "lat": 34.363715,
+        "lng": -118.487039
+      },
+      {
+        "zcta": "91387",
+        "share": 0.2775,
+        "lat": 34.402519,
+        "lng": -118.363463
+      }
+    ],
+    "pilotZctas": [
+      "91321",
+      "91350",
+      "91351",
+      "91354",
+      "91355",
+      "91387"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "fremont_ca",
+    "kind": "city",
+    "label": "Fremont city, CA",
+    "state": "CA",
+    "city": "Fremont",
+    "censusKind": "place",
+    "geoid": "0626000",
+    "allZctas": [
+      {
+        "zcta": "94538",
+        "share": 1,
+        "lat": 37.501368,
+        "lng": -121.956753
+      },
+      {
+        "zcta": "94555",
+        "share": 0.9999,
+        "lat": 37.547594,
+        "lng": -122.09822
+      },
+      {
+        "zcta": "94536",
+        "share": 0.9993,
+        "lat": 37.570508,
+        "lng": -121.98125
+      },
+      {
+        "zcta": "94539",
+        "share": 0.9226,
+        "lat": 37.516292,
+        "lng": -121.911891
+      },
+      {
+        "zcta": "94560",
+        "share": 0.3067,
+        "lat": 37.504253,
+        "lng": -122.03191
+      }
+    ],
+    "pilotZctas": [
+      "94536",
+      "94538",
+      "94539",
+      "94555",
+      "94560"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "mckinney_tx",
+    "kind": "city",
+    "label": "McKinney city, TX",
+    "state": "TX",
+    "city": "McKinney",
+    "censusKind": "place",
+    "geoid": "4845744",
+    "allZctas": [
+      {
+        "zcta": "75070",
+        "share": 0.9992,
+        "lat": 33.154678,
+        "lng": -96.696669
+      },
+      {
+        "zcta": "75072",
+        "share": 0.9794,
+        "lat": 33.187899,
+        "lng": -96.699951
+      },
+      {
+        "zcta": "75069",
+        "share": 0.4684,
+        "lat": 33.164077,
+        "lng": -96.595421
+      },
+      {
+        "zcta": "75071",
+        "share": 0.3688,
+        "lat": 33.245816,
+        "lng": -96.63072
+      }
+    ],
+    "pilotZctas": [
+      "75069",
+      "75070",
+      "75071",
+      "75072"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_bernardino_ca",
+    "kind": "city",
+    "label": "San Bernardino city, CA",
+    "state": "CA",
+    "city": "San Bernardino",
+    "censusKind": "place",
+    "geoid": "0665000",
+    "allZctas": [
+      {
+        "zcta": "92369",
+        "share": 1,
+        "lat": 34.139411,
+        "lng": -117.219664
+      },
+      {
+        "zcta": "92401",
+        "share": 1,
+        "lat": 34.105906,
+        "lng": -117.291814
+      },
+      {
+        "zcta": "92405",
+        "share": 1,
+        "lat": 34.145781,
+        "lng": -117.302217
+      },
+      {
+        "zcta": "92415",
+        "share": 1,
+        "lat": 34.105054,
+        "lng": -117.286848
+      },
+      {
+        "zcta": "92411",
+        "share": 0.9999,
+        "lat": 34.122809,
+        "lng": -117.325808
+      },
+      {
+        "zcta": "92408",
+        "share": 0.9943,
+        "lat": 34.083619,
+        "lng": -117.26846
+      },
+      {
+        "zcta": "92410",
+        "share": 0.8004,
+        "lat": 34.111575,
+        "lng": -117.263691
+      },
+      {
+        "zcta": "92404",
+        "share": 0.3534,
+        "lat": 34.178631,
+        "lng": -117.238926
+      },
+      {
+        "zcta": "92407",
+        "share": 0.2036,
+        "lat": 34.225162,
+        "lng": -117.388487
+      }
+    ],
+    "pilotZctas": [
+      "92369",
+      "92401",
+      "92404",
+      "92405",
+      "92407",
+      "92408",
+      "92410",
+      "92411",
+      "92415"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "modesto_ca",
+    "kind": "city",
+    "label": "Modesto city, CA",
+    "state": "CA",
+    "city": "Modesto",
+    "censusKind": "place",
+    "geoid": "0648354",
+    "allZctas": [
+      {
+        "zcta": "95350",
+        "share": 1,
+        "lat": 37.67173,
+        "lng": -121.007285
+      },
+      {
+        "zcta": "95355",
+        "share": 0.9459,
+        "lat": 37.672906,
+        "lng": -120.946594
+      },
+      {
+        "zcta": "95354",
+        "share": 0.7087,
+        "lat": 37.639029,
+        "lng": -120.964772
+      },
+      {
+        "zcta": "95351",
+        "share": 0.4814,
+        "lat": 37.624124,
+        "lng": -120.997319
+      },
+      {
+        "zcta": "95356",
+        "share": 0.2237,
+        "lat": 37.718573,
+        "lng": -121.032309
+      }
+    ],
+    "pilotZctas": [
+      "95350",
+      "95351",
+      "95354",
+      "95355",
+      "95356"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "fontana_ca",
+    "kind": "city",
+    "label": "Fontana city, CA",
+    "state": "CA",
+    "city": "Fontana",
+    "censusKind": "place",
+    "geoid": "0624680",
+    "allZctas": [
+      {
+        "zcta": "92337",
+        "share": 0.9992,
+        "lat": 34.049665,
+        "lng": -117.471472
+      },
+      {
+        "zcta": "92336",
+        "share": 0.9596,
+        "lat": 34.136862,
+        "lng": -117.460336
+      },
+      {
+        "zcta": "92335",
+        "share": 0.5292,
+        "lat": 34.087333,
+        "lng": -117.465158
+      }
+    ],
+    "pilotZctas": [
+      "92335",
+      "92336",
+      "92337"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "moreno_valley_ca",
+    "kind": "city",
+    "label": "Moreno Valley city, CA",
+    "state": "CA",
+    "city": "Moreno Valley",
+    "censusKind": "place",
+    "geoid": "0649270",
+    "allZctas": [
+      {
+        "zcta": "92551",
+        "share": 0.9985,
+        "lat": 33.88274,
+        "lng": -117.224878
+      },
+      {
+        "zcta": "92553",
+        "share": 0.9807,
+        "lat": 33.92335,
+        "lng": -117.245333
+      },
+      {
+        "zcta": "92557",
+        "share": 0.5688,
+        "lat": 33.972548,
+        "lng": -117.258259
+      },
+      {
+        "zcta": "92555",
+        "share": 0.3797,
+        "lat": 33.910996,
+        "lng": -117.113765
+      }
+    ],
+    "pilotZctas": [
+      "92551",
+      "92553",
+      "92555",
+      "92557"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "grand_prairie_tx",
+    "kind": "city",
+    "label": "Grand Prairie city, TX",
+    "state": "TX",
+    "city": "Grand Prairie",
+    "censusKind": "place",
+    "geoid": "4830464",
+    "allZctas": [
+      {
+        "zcta": "75054",
+        "share": 0.9999,
+        "lat": 32.613848,
+        "lng": -97.025353
+      },
+      {
+        "zcta": "75050",
+        "share": 0.9953,
+        "lat": 32.773069,
+        "lng": -97.005227
+      },
+      {
+        "zcta": "75052",
+        "share": 0.9227,
+        "lat": 32.664684,
+        "lng": -97.029478
+      },
+      {
+        "zcta": "75051",
+        "share": 0.7811,
+        "lat": 32.725591,
+        "lng": -96.992072
+      }
+    ],
+    "pilotZctas": [
+      "75050",
+      "75051",
+      "75052",
+      "75054"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "amarillo_tx",
+    "kind": "city",
+    "label": "Amarillo city, TX",
+    "state": "TX",
+    "city": "Amarillo",
+    "censusKind": "place",
+    "geoid": "4803000",
+    "allZctas": [
+      {
+        "zcta": "79101",
+        "share": 1,
+        "lat": 35.206114,
+        "lng": -101.839403
+      },
+      {
+        "zcta": "79102",
+        "share": 1,
+        "lat": 35.201263,
+        "lng": -101.849182
+      },
+      {
+        "zcta": "79103",
+        "share": 1,
+        "lat": 35.18215,
+        "lng": -101.800373
+      },
+      {
+        "zcta": "79104",
+        "share": 1,
+        "lat": 35.201147,
+        "lng": -101.789954
+      },
+      {
+        "zcta": "79106",
+        "share": 1,
+        "lat": 35.203051,
+        "lng": -101.891662
+      },
+      {
+        "zcta": "79109",
+        "share": 1,
+        "lat": 35.166416,
+        "lng": -101.886423
+      },
+      {
+        "zcta": "79121",
+        "share": 1,
+        "lat": 35.174461,
+        "lng": -101.929219
+      },
+      {
+        "zcta": "79110",
+        "share": 0.9861,
+        "lat": 35.150993,
+        "lng": -101.869766
+      },
+      {
+        "zcta": "79107",
+        "share": 0.8845,
+        "lat": 35.231518,
+        "lng": -101.794258
+      },
+      {
+        "zcta": "79111",
+        "share": 0.8755,
+        "lat": 35.220436,
+        "lng": -101.708088
+      }
+    ],
+    "pilotZctas": [
+      "79101",
+      "79102",
+      "79103",
+      "79104",
+      "79106",
+      "79107",
+      "79109",
+      "79110",
+      "79111",
+      "79121"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "oxnard_ca",
+    "kind": "city",
+    "label": "Oxnard city, CA",
+    "state": "CA",
+    "city": "Oxnard",
+    "censusKind": "place",
+    "geoid": "0654652",
+    "allZctas": [
+      {
+        "zcta": "93035",
+        "share": 0.8023,
+        "lat": 34.186287,
+        "lng": -119.228885
+      },
+      {
+        "zcta": "93030",
+        "share": 0.6103,
+        "lat": 34.205097,
+        "lng": -119.17532
+      },
+      {
+        "zcta": "93036",
+        "share": 0.3301,
+        "lat": 34.248141,
+        "lng": -119.153454
+      },
+      {
+        "zcta": "93033",
+        "share": 0.2365,
+        "lat": 34.160093,
+        "lng": -119.135801
+      }
+    ],
+    "pilotZctas": [
+      "93030",
+      "93033",
+      "93035",
+      "93036"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "huntington_beach_ca",
+    "kind": "city",
+    "label": "Huntington Beach city, CA",
+    "state": "CA",
+    "city": "Huntington Beach",
+    "censusKind": "place",
+    "geoid": "0636000",
+    "allZctas": [
+      {
+        "zcta": "90742",
+        "share": 1,
+        "lat": 33.72105,
+        "lng": -118.076234
+      },
+      {
+        "zcta": "92647",
+        "share": 0.9967,
+        "lat": 33.723228,
+        "lng": -118.008692
+      },
+      {
+        "zcta": "92646",
+        "share": 0.9893,
+        "lat": 33.661029,
+        "lng": -117.967948
+      },
+      {
+        "zcta": "92649",
+        "share": 0.8637,
+        "lat": 33.720242,
+        "lng": -118.045383
+      },
+      {
+        "zcta": "92648",
+        "share": 0.8016,
+        "lat": 33.679045,
+        "lng": -118.013011
+      }
+    ],
+    "pilotZctas": [
+      "90742",
+      "92646",
+      "92647",
+      "92648",
+      "92649"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "brownsville_tx",
+    "kind": "city",
+    "label": "Brownsville city, TX",
+    "state": "TX",
+    "city": "Brownsville",
+    "censusKind": "place",
+    "geoid": "4810768",
+    "allZctas": [
+      {
+        "zcta": "78526",
+        "share": 0.6872,
+        "lat": 25.995689,
+        "lng": -97.450848
+      },
+      {
+        "zcta": "78520",
+        "share": 0.6489,
+        "lat": 25.960875,
+        "lng": -97.548607
+      },
+      {
+        "zcta": "78575",
+        "share": 0.3236,
+        "lat": 26.033306,
+        "lng": -97.550231
+      },
+      {
+        "zcta": "78578",
+        "share": 0.316,
+        "lat": 26.043955,
+        "lng": -97.306593
+      },
+      {
+        "zcta": "78521",
+        "share": 0.2798,
+        "lat": 25.943923,
+        "lng": -97.317944
+      }
+    ],
+    "pilotZctas": [
+      "78520",
+      "78521",
+      "78526",
+      "78575",
+      "78578"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "glendale_ca",
+    "kind": "city",
+    "label": "Glendale city, CA",
+    "state": "CA",
+    "city": "Glendale",
+    "censusKind": "place",
+    "geoid": "0630000",
+    "allZctas": [
+      {
+        "zcta": "91046",
+        "share": 1,
+        "lat": 34.211677,
+        "lng": -118.240922
+      },
+      {
+        "zcta": "91202",
+        "share": 1,
+        "lat": 34.183302,
+        "lng": -118.264478
+      },
+      {
+        "zcta": "91203",
+        "share": 1,
+        "lat": 34.153338,
+        "lng": -118.262974
+      },
+      {
+        "zcta": "91204",
+        "share": 1,
+        "lat": 34.135557,
+        "lng": -118.26094
+      },
+      {
+        "zcta": "91205",
+        "share": 1,
+        "lat": 34.13658,
+        "lng": -118.245839
+      },
+      {
+        "zcta": "91207",
+        "share": 1,
+        "lat": 34.167939,
+        "lng": -118.244241
+      },
+      {
+        "zcta": "91208",
+        "share": 1,
+        "lat": 34.185665,
+        "lng": -118.239497
+      },
+      {
+        "zcta": "91210",
+        "share": 1,
+        "lat": 34.144653,
+        "lng": -118.258061
+      },
+      {
+        "zcta": "91201",
+        "share": 0.9993,
+        "lat": 34.17051,
+        "lng": -118.289463
+      },
+      {
+        "zcta": "91206",
+        "share": 0.9981,
+        "lat": 34.160359,
+        "lng": -118.213769
+      },
+      {
+        "zcta": "91214",
+        "share": 0.587,
+        "lat": 34.235728,
+        "lng": -118.246655
+      },
+      {
+        "zcta": "91020",
+        "share": 0.2763,
+        "lat": 34.21137,
+        "lng": -118.230688
+      }
+    ],
+    "pilotZctas": [
+      "91020",
+      "91046",
+      "91201",
+      "91202",
+      "91203",
+      "91204",
+      "91205",
+      "91206",
+      "91207",
+      "91208",
+      "91210",
+      "91214"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "ontario_ca",
+    "kind": "city",
+    "label": "Ontario city, CA",
+    "state": "CA",
+    "city": "Ontario",
+    "censusKind": "place",
+    "geoid": "0653896",
+    "allZctas": [
+      {
+        "zcta": "91761",
+        "share": 1,
+        "lat": 34.035602,
+        "lng": -117.591528
+      },
+      {
+        "zcta": "91764",
+        "share": 1,
+        "lat": 34.074087,
+        "lng": -117.605618
+      },
+      {
+        "zcta": "91762",
+        "share": 0.9486,
+        "lat": 34.059409,
+        "lng": -117.669298
+      }
+    ],
+    "pilotZctas": [
+      "91761",
+      "91762",
+      "91764"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "elk_grove_ca",
+    "kind": "city",
+    "label": "Elk Grove city, CA",
+    "state": "CA",
+    "city": "Elk Grove",
+    "censusKind": "place",
+    "geoid": "0622020",
+    "allZctas": [
+      {
+        "zcta": "95758",
+        "share": 0.6681,
+        "lat": 38.429667,
+        "lng": -121.445213
+      },
+      {
+        "zcta": "95624",
+        "share": 0.482,
+        "lat": 38.43415,
+        "lng": -121.305874
+      }
+    ],
+    "pilotZctas": [
+      "95624",
+      "95758"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "santa_rosa_ca",
+    "kind": "city",
+    "label": "Santa Rosa city, CA",
+    "state": "CA",
+    "city": "Santa Rosa",
+    "censusKind": "place",
+    "geoid": "0670098",
+    "allZctas": [
+      {
+        "zcta": "95405",
+        "share": 0.9972,
+        "lat": 38.438136,
+        "lng": -122.669057
+      },
+      {
+        "zcta": "95407",
+        "share": 0.3373,
+        "lat": 38.394656,
+        "lng": -122.745932
+      },
+      {
+        "zcta": "95403",
+        "share": 0.3344,
+        "lat": 38.503685,
+        "lng": -122.754057
+      },
+      {
+        "zcta": "95401",
+        "share": 0.2697,
+        "lat": 38.449137,
+        "lng": -122.793752
+      },
+      {
+        "zcta": "95409",
+        "share": 0.2409,
+        "lat": 38.468485,
+        "lng": -122.582138
+      }
+    ],
+    "pilotZctas": [
+      "95401",
+      "95403",
+      "95405",
+      "95407",
+      "95409"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "rancho_cucamonga_ca",
+    "kind": "city",
+    "label": "Rancho Cucamonga city, CA",
+    "state": "CA",
+    "city": "Rancho Cucamonga",
+    "censusKind": "place",
+    "geoid": "0659451",
+    "allZctas": [
+      {
+        "zcta": "91701",
+        "share": 1,
+        "lat": 34.137833,
+        "lng": -117.600347
+      },
+      {
+        "zcta": "91730",
+        "share": 1,
+        "lat": 34.100966,
+        "lng": -117.578815
+      },
+      {
+        "zcta": "91737",
+        "share": 0.6327,
+        "lat": 34.155238,
+        "lng": -117.578098
+      },
+      {
+        "zcta": "91739",
+        "share": 0.4306,
+        "lat": 34.156386,
+        "lng": -117.516936
+      }
+    ],
+    "pilotZctas": [
+      "91701",
+      "91730",
+      "91737",
+      "91739"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "garden_grove_ca",
+    "kind": "city",
+    "label": "Garden Grove city, CA",
+    "state": "CA",
+    "city": "Garden Grove",
+    "censusKind": "place",
+    "geoid": "0629000",
+    "allZctas": [
+      {
+        "zcta": "92840",
+        "share": 1,
+        "lat": 33.787165,
+        "lng": -117.931889
+      },
+      {
+        "zcta": "92843",
+        "share": 1,
+        "lat": 33.763963,
+        "lng": -117.931538
+      },
+      {
+        "zcta": "92845",
+        "share": 1,
+        "lat": 33.782907,
+        "lng": -118.026373
+      },
+      {
+        "zcta": "92844",
+        "share": 0.9997,
+        "lat": 33.765599,
+        "lng": -117.969506
+      },
+      {
+        "zcta": "92841",
+        "share": 0.9363,
+        "lat": 33.786833,
+        "lng": -117.982041
+      }
+    ],
+    "pilotZctas": [
+      "92840",
+      "92841",
+      "92843",
+      "92844",
+      "92845"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "oceanside_ca",
+    "kind": "city",
+    "label": "Oceanside city, CA",
+    "state": "CA",
+    "city": "Oceanside",
+    "censusKind": "place",
+    "geoid": "0653322",
+    "allZctas": [
+      {
+        "zcta": "92056",
+        "share": 1,
+        "lat": 33.199582,
+        "lng": -117.298764
+      },
+      {
+        "zcta": "92057",
+        "share": 0.9978,
+        "lat": 33.25462,
+        "lng": -117.283311
+      },
+      {
+        "zcta": "92054",
+        "share": 0.9925,
+        "lat": 33.193069,
+        "lng": -117.359676
+      }
+    ],
+    "pilotZctas": [
+      "92054",
+      "92056",
+      "92057"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "lancaster_ca",
+    "kind": "city",
+    "label": "Lancaster city, CA",
+    "state": "CA",
+    "city": "Lancaster",
+    "censusKind": "place",
+    "geoid": "0640130",
+    "allZctas": [
+      {
+        "zcta": "93534",
+        "share": 0.5998,
+        "lat": 34.71766,
+        "lng": -118.15232
+      },
+      {
+        "zcta": "93536",
+        "share": 0.2153,
+        "lat": 34.73767,
+        "lng": -118.387424
+      }
+    ],
+    "pilotZctas": [
+      "93534",
+      "93536"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "denton_tx",
+    "kind": "city",
+    "label": "Denton city, TX",
+    "state": "TX",
+    "city": "Denton",
+    "censusKind": "place",
+    "geoid": "4819972",
+    "allZctas": [
+      {
+        "zcta": "76201",
+        "share": 1,
+        "lat": 33.220974,
+        "lng": -97.146038
+      },
+      {
+        "zcta": "76203",
+        "share": 1,
+        "lat": 33.212131,
+        "lng": -97.151813
+      },
+      {
+        "zcta": "76205",
+        "share": 1,
+        "lat": 33.192632,
+        "lng": -97.129266
+      },
+      {
+        "zcta": "76209",
+        "share": 1,
+        "lat": 33.2315,
+        "lng": -97.109986
+      },
+      {
+        "zcta": "76207",
+        "share": 0.8234,
+        "lat": 33.222016,
+        "lng": -97.176122
+      },
+      {
+        "zcta": "76208",
+        "share": 0.5489,
+        "lat": 33.208706,
+        "lng": -97.05541
+      },
+      {
+        "zcta": "76210",
+        "share": 0.4714,
+        "lat": 33.149467,
+        "lng": -97.096016
+      }
+    ],
+    "pilotZctas": [
+      "76201",
+      "76203",
+      "76205",
+      "76207",
+      "76208",
+      "76209",
+      "76210"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "roseville_ca",
+    "kind": "city",
+    "label": "Roseville city, CA",
+    "state": "CA",
+    "city": "Roseville",
+    "censusKind": "place",
+    "geoid": "0662938",
+    "allZctas": [
+      {
+        "zcta": "95678",
+        "share": 0.9958,
+        "lat": 38.765353,
+        "lng": -121.288473
+      },
+      {
+        "zcta": "95661",
+        "share": 0.9149,
+        "lat": 38.741274,
+        "lng": -121.249266
+      },
+      {
+        "zcta": "95747",
+        "share": 0.5463,
+        "lat": 38.778421,
+        "lng": -121.368829
+      }
+    ],
+    "pilotZctas": [
+      "95661",
+      "95678",
+      "95747"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "palmdale_ca",
+    "kind": "city",
+    "label": "Palmdale city, CA",
+    "state": "CA",
+    "city": "Palmdale",
+    "censusKind": "place",
+    "geoid": "0655156",
+    "allZctas": [
+      {
+        "zcta": "93551",
+        "share": 0.4934,
+        "lat": 34.589618,
+        "lng": -118.227381
+      },
+      {
+        "zcta": "93552",
+        "share": 0.4389,
+        "lat": 34.583523,
+        "lng": -118.027343
+      }
+    ],
+    "pilotZctas": [
+      "93551",
+      "93552"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "corona_ca",
+    "kind": "city",
+    "label": "Corona city, CA",
+    "state": "CA",
+    "city": "Corona",
+    "censusKind": "place",
+    "geoid": "0616350",
+    "allZctas": [
+      {
+        "zcta": "92882",
+        "share": 0.9474,
+        "lat": 33.862874,
+        "lng": -117.600092
+      },
+      {
+        "zcta": "92879",
+        "share": 0.9161,
+        "lat": 33.882614,
+        "lng": -117.528205
+      },
+      {
+        "zcta": "92880",
+        "share": 0.233,
+        "lat": 33.92539,
+        "lng": -117.607254
+      },
+      {
+        "zcta": "92881",
+        "share": 0.2328,
+        "lat": 33.82388,
+        "lng": -117.570026
+      }
+    ],
+    "pilotZctas": [
+      "92879",
+      "92880",
+      "92881",
+      "92882"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "salinas_ca",
+    "kind": "city",
+    "label": "Salinas city, CA",
+    "state": "CA",
+    "city": "Salinas",
+    "censusKind": "place",
+    "geoid": "0664224",
+    "allZctas": [
+      {
+        "zcta": "93905",
+        "share": 0.8629,
+        "lat": 36.685068,
+        "lng": -121.605992
+      },
+      {
+        "zcta": "93901",
+        "share": 0.6283,
+        "lat": 36.647856,
+        "lng": -121.630305
+      },
+      {
+        "zcta": "93906",
+        "share": 0.6145,
+        "lat": 36.722676,
+        "lng": -121.633667
+      }
+    ],
+    "pilotZctas": [
+      "93901",
+      "93905",
+      "93906"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "killeen_tx",
+    "kind": "city",
+    "label": "Killeen city, TX",
+    "state": "TX",
+    "city": "Killeen",
+    "censusKind": "place",
+    "geoid": "4839148",
+    "allZctas": [
+      {
+        "zcta": "76541",
+        "share": 0.9717,
+        "lat": 31.114384,
+        "lng": -97.729347
+      },
+      {
+        "zcta": "76542",
+        "share": 0.3493,
+        "lat": 30.989388,
+        "lng": -97.702738
+      },
+      {
+        "zcta": "76543",
+        "share": 0.3241,
+        "lat": 31.124743,
+        "lng": -97.643542
+      }
+    ],
+    "pilotZctas": [
+      "76541",
+      "76542",
+      "76543"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "hayward_ca",
+    "kind": "city",
+    "label": "Hayward city, CA",
+    "state": "CA",
+    "city": "Hayward",
+    "censusKind": "place",
+    "geoid": "0633000",
+    "allZctas": [
+      {
+        "zcta": "94545",
+        "share": 0.9996,
+        "lat": 37.629761,
+        "lng": -122.124238
+      },
+      {
+        "zcta": "94544",
+        "share": 0.865,
+        "lat": 37.633507,
+        "lng": -122.056772
+      },
+      {
+        "zcta": "94542",
+        "share": 0.7139,
+        "lat": 37.65532,
+        "lng": -122.025826
+      },
+      {
+        "zcta": "94541",
+        "share": 0.4812,
+        "lat": 37.673757,
+        "lng": -122.087823
+      },
+      {
+        "zcta": "94587",
+        "share": 0.3735,
+        "lat": 37.590008,
+        "lng": -122.075187
+      }
+    ],
+    "pilotZctas": [
+      "94541",
+      "94542",
+      "94544",
+      "94545",
+      "94587"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "sunnyvale_ca",
+    "kind": "city",
+    "label": "Sunnyvale city, CA",
+    "state": "CA",
+    "city": "Sunnyvale",
+    "censusKind": "place",
+    "geoid": "0677000",
+    "allZctas": [
+      {
+        "zcta": "94086",
+        "share": 1,
+        "lat": 37.371634,
+        "lng": -122.023202
+      },
+      {
+        "zcta": "94089",
+        "share": 1,
+        "lat": 37.412402,
+        "lng": -122.015605
+      },
+      {
+        "zcta": "94087",
+        "share": 0.9976,
+        "lat": 37.351615,
+        "lng": -122.03668
+      },
+      {
+        "zcta": "94085",
+        "share": 0.9832,
+        "lat": 37.388617,
+        "lng": -122.017933
+      }
+    ],
+    "pilotZctas": [
+      "94085",
+      "94086",
+      "94087",
+      "94089"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "mesquite_tx",
+    "kind": "city",
+    "label": "Mesquite city, TX",
+    "state": "TX",
+    "city": "Mesquite",
+    "censusKind": "place",
+    "geoid": "4847892",
+    "allZctas": [
+      {
+        "zcta": "75150",
+        "share": 0.9963,
+        "lat": 32.813863,
+        "lng": -96.63098
+      },
+      {
+        "zcta": "75149",
+        "share": 0.9594,
+        "lat": 32.773369,
+        "lng": -96.618809
+      },
+      {
+        "zcta": "75181",
+        "share": 0.8839,
+        "lat": 32.723894,
+        "lng": -96.555946
+      }
+    ],
+    "pilotZctas": [
+      "75149",
+      "75150",
+      "75181"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "pasadena_tx",
+    "kind": "city",
+    "label": "Pasadena city, TX",
+    "state": "TX",
+    "city": "Pasadena",
+    "censusKind": "place",
+    "geoid": "4856000",
+    "allZctas": [
+      {
+        "zcta": "77502",
+        "share": 1,
+        "lat": 29.679854,
+        "lng": -95.199591
+      },
+      {
+        "zcta": "77505",
+        "share": 0.9837,
+        "lat": 29.648337,
+        "lng": -95.141499
+      },
+      {
+        "zcta": "77503",
+        "share": 0.9672,
+        "lat": 29.690596,
+        "lng": -95.157031
+      },
+      {
+        "zcta": "77504",
+        "share": 0.8414,
+        "lat": 29.647916,
+        "lng": -95.18978
+      },
+      {
+        "zcta": "77506",
+        "share": 0.6645,
+        "lat": 29.718387,
+        "lng": -95.191126
+      },
+      {
+        "zcta": "77058",
+        "share": 0.2891,
+        "lat": 29.561579,
+        "lng": -95.099626
+      },
+      {
+        "zcta": "77586",
+        "share": 0.2601,
+        "lat": 29.581848,
+        "lng": -95.038739
+      },
+      {
+        "zcta": "77059",
+        "share": 0.238,
+        "lat": 29.613686,
+        "lng": -95.118117
+      },
+      {
+        "zcta": "77507",
+        "share": 0.2127,
+        "lat": 29.624371,
+        "lng": -95.063465
+      }
+    ],
+    "pilotZctas": [
+      "77058",
+      "77059",
+      "77502",
+      "77503",
+      "77504",
+      "77505",
+      "77506",
+      "77507",
+      "77586"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "escondido_ca",
+    "kind": "city",
+    "label": "Escondido city, CA",
+    "state": "CA",
+    "city": "Escondido",
+    "censusKind": "place",
+    "geoid": "0622804",
+    "allZctas": [
+      {
+        "zcta": "92025",
+        "share": 0.3543,
+        "lat": 33.077814,
+        "lng": -117.033131
+      },
+      {
+        "zcta": "92029",
+        "share": 0.2824,
+        "lat": 33.08553,
+        "lng": -117.123967
+      },
+      {
+        "zcta": "92026",
+        "share": 0.2292,
+        "lat": 33.210965,
+        "lng": -117.124788
+      },
+      {
+        "zcta": "92027",
+        "share": 0.2044,
+        "lat": 33.131601,
+        "lng": -116.976937
+      }
+    ],
+    "pilotZctas": [
+      "92025",
+      "92026",
+      "92027",
+      "92029"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "mcallen_tx",
+    "kind": "city",
+    "label": "McAllen city, TX",
+    "state": "TX",
+    "city": "McAllen",
+    "censusKind": "place",
+    "geoid": "4845384",
+    "allZctas": [
+      {
+        "zcta": "78501",
+        "share": 0.9958,
+        "lat": 26.215817,
+        "lng": -98.239572
+      },
+      {
+        "zcta": "78503",
+        "share": 0.9229,
+        "lat": 26.162332,
+        "lng": -98.248702
+      },
+      {
+        "zcta": "78504",
+        "share": 0.8935,
+        "lat": 26.277591,
+        "lng": -98.237279
+      },
+      {
+        "zcta": "78557",
+        "share": 0.2175,
+        "lat": 26.109464,
+        "lng": -98.253463
+      }
+    ],
+    "pilotZctas": [
+      "78501",
+      "78503",
+      "78504",
+      "78557"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "pomona_ca",
+    "kind": "city",
+    "label": "Pomona city, CA",
+    "state": "CA",
+    "city": "Pomona",
+    "censusKind": "place",
+    "geoid": "0658072",
+    "allZctas": [
+      {
+        "zcta": "91767",
+        "share": 0.9961,
+        "lat": 34.083086,
+        "lng": -117.737997
+      },
+      {
+        "zcta": "91766",
+        "share": 0.9588,
+        "lat": 34.042286,
+        "lng": -117.756106
+      },
+      {
+        "zcta": "91768",
+        "share": 0.863,
+        "lat": 34.064363,
+        "lng": -117.79093
+      }
+    ],
+    "pilotZctas": [
+      "91766",
+      "91767",
+      "91768"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "waco_tx",
+    "kind": "city",
+    "label": "Waco city, TX",
+    "state": "TX",
+    "city": "Waco",
+    "censusKind": "place",
+    "geoid": "4876000",
+    "allZctas": [
+      {
+        "zcta": "76701",
+        "share": 1,
+        "lat": 31.552011,
+        "lng": -97.1382
+      },
+      {
+        "zcta": "76704",
+        "share": 1,
+        "lat": 31.575445,
+        "lng": -97.124247
+      },
+      {
+        "zcta": "76707",
+        "share": 1,
+        "lat": 31.553876,
+        "lng": -97.159082
+      },
+      {
+        "zcta": "76710",
+        "share": 1,
+        "lat": 31.539723,
+        "lng": -97.195009
+      },
+      {
+        "zcta": "76798",
+        "share": 1,
+        "lat": 31.546107,
+        "lng": -97.120959
+      },
+      {
+        "zcta": "76711",
+        "share": 0.8262,
+        "lat": 31.513756,
+        "lng": -97.152983
+      },
+      {
+        "zcta": "76708",
+        "share": 0.506,
+        "lat": 31.627123,
+        "lng": -97.215893
+      },
+      {
+        "zcta": "76712",
+        "share": 0.3103,
+        "lat": 31.526506,
+        "lng": -97.260888
+      }
+    ],
+    "pilotZctas": [
+      "76701",
+      "76704",
+      "76707",
+      "76708",
+      "76710",
+      "76711",
+      "76712",
+      "76798"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "visalia_ca",
+    "kind": "city",
+    "label": "Visalia city, CA",
+    "state": "CA",
+    "city": "Visalia",
+    "censusKind": "place",
+    "geoid": "0682954",
+    "allZctas": [
+      {
+        "zcta": "93277",
+        "share": 0.3574,
+        "lat": 36.301334,
+        "lng": -119.372586
+      }
+    ],
+    "pilotZctas": [
+      "93277"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "midland_tx",
+    "kind": "city",
+    "label": "Midland city, TX",
+    "state": "TX",
+    "city": "Midland",
+    "censusKind": "place",
+    "geoid": "4848072",
+    "allZctas": [
+      {
+        "zcta": "79701",
+        "share": 0.9176,
+        "lat": 31.992446,
+        "lng": -102.080985
+      },
+      {
+        "zcta": "79703",
+        "share": 0.8549,
+        "lat": 31.98001,
+        "lng": -102.131551
+      },
+      {
+        "zcta": "79705",
+        "share": 0.3962,
+        "lat": 32.096064,
+        "lng": -102.050039
+      },
+      {
+        "zcta": "79707",
+        "share": 0.2411,
+        "lat": 32.037441,
+        "lng": -102.195196
+      }
+    ],
+    "pilotZctas": [
+      "79701",
+      "79703",
+      "79705",
+      "79707"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "lakewood_nj",
+    "kind": "city",
+    "label": "Lakewood township, NJ",
+    "state": "NJ",
+    "city": "Lakewood",
+    "censusKind": "cousub",
+    "geoid": "3402938550",
+    "allZctas": [
+      {
+        "zcta": "08701",
+        "share": 0.9978,
+        "lat": 40.077069,
+        "lng": -74.19851
+      }
+    ],
+    "pilotZctas": [
+      "08701"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "victorville_ca",
+    "kind": "city",
+    "label": "Victorville city, CA",
+    "state": "CA",
+    "city": "Victorville",
+    "censusKind": "place",
+    "geoid": "0682590",
+    "allZctas": [
+      {
+        "zcta": "92394",
+        "share": 0.9247,
+        "lat": 34.563464,
+        "lng": -117.353579
+      },
+      {
+        "zcta": "92395",
+        "share": 0.8209,
+        "lat": 34.504828,
+        "lng": -117.298985
+      },
+      {
+        "zcta": "92392",
+        "share": 0.6438,
+        "lat": 34.479009,
+        "lng": -117.408831
+      }
+    ],
+    "pilotZctas": [
+      "92392",
+      "92394",
+      "92395"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "fullerton_ca",
+    "kind": "city",
+    "label": "Fullerton city, CA",
+    "state": "CA",
+    "city": "Fullerton",
+    "censusKind": "place",
+    "geoid": "0628000",
+    "allZctas": [
+      {
+        "zcta": "92831",
+        "share": 1,
+        "lat": 33.87951,
+        "lng": -117.896036
+      },
+      {
+        "zcta": "92832",
+        "share": 1,
+        "lat": 33.868772,
+        "lng": -117.929093
+      },
+      {
+        "zcta": "92833",
+        "share": 0.9956,
+        "lat": 33.880509,
+        "lng": -117.961132
+      },
+      {
+        "zcta": "92835",
+        "share": 0.9942,
+        "lat": 33.900573,
+        "lng": -117.914667
+      }
+    ],
+    "pilotZctas": [
+      "92831",
+      "92832",
+      "92833",
+      "92835"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "torrance_ca",
+    "kind": "city",
+    "label": "Torrance city, CA",
+    "state": "CA",
+    "city": "Torrance",
+    "censusKind": "place",
+    "geoid": "0680000",
+    "allZctas": [
+      {
+        "zcta": "90503",
+        "share": 1,
+        "lat": 33.839463,
+        "lng": -118.353699
+      },
+      {
+        "zcta": "90505",
+        "share": 0.9986,
+        "lat": 33.807882,
+        "lng": -118.347957
+      },
+      {
+        "zcta": "90504",
+        "share": 0.9964,
+        "lat": 33.86728,
+        "lng": -118.331642
+      },
+      {
+        "zcta": "90501",
+        "share": 0.697,
+        "lat": 33.833744,
+        "lng": -118.314022
+      },
+      {
+        "zcta": "90277",
+        "share": 0.2458,
+        "lat": 33.830006,
+        "lng": -118.387124
+      }
+    ],
+    "pilotZctas": [
+      "90277",
+      "90501",
+      "90503",
+      "90504",
+      "90505"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "orange_ca",
+    "kind": "city",
+    "label": "Orange city, CA",
+    "state": "CA",
+    "city": "Orange",
+    "censusKind": "place",
+    "geoid": "0653980",
+    "allZctas": [
+      {
+        "zcta": "92866",
+        "share": 0.9917,
+        "lat": 33.784537,
+        "lng": -117.844791
+      },
+      {
+        "zcta": "92868",
+        "share": 0.9778,
+        "lat": 33.787967,
+        "lng": -117.876343
+      },
+      {
+        "zcta": "92865",
+        "share": 0.9626,
+        "lat": 33.826393,
+        "lng": -117.851307
+      },
+      {
+        "zcta": "92867",
+        "share": 0.6762,
+        "lat": 33.815667,
+        "lng": -117.799162
+      },
+      {
+        "zcta": "92869",
+        "share": 0.5288,
+        "lat": 33.795479,
+        "lng": -117.764943
+      }
+    ],
+    "pilotZctas": [
+      "92865",
+      "92866",
+      "92867",
+      "92868",
+      "92869"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "pasadena_ca",
+    "kind": "city",
+    "label": "Pasadena city, CA",
+    "state": "CA",
+    "city": "Pasadena",
+    "censusKind": "place",
+    "geoid": "0656000",
+    "allZctas": [
+      {
+        "zcta": "91101",
+        "share": 1,
+        "lat": 34.146771,
+        "lng": -118.138922
+      },
+      {
+        "zcta": "91103",
+        "share": 1,
+        "lat": 34.167361,
+        "lng": -118.164144
+      },
+      {
+        "zcta": "91106",
+        "share": 1,
+        "lat": 34.139402,
+        "lng": -118.128658
+      },
+      {
+        "zcta": "91125",
+        "share": 1,
+        "lat": 34.137644,
+        "lng": -118.124952
+      },
+      {
+        "zcta": "91105",
+        "share": 0.9917,
+        "lat": 34.13946,
+        "lng": -118.166649
+      },
+      {
+        "zcta": "91104",
+        "share": 0.8222,
+        "lat": 34.165356,
+        "lng": -118.123751
+      },
+      {
+        "zcta": "91107",
+        "share": 0.5701,
+        "lat": 34.159007,
+        "lng": -118.087353
+      }
+    ],
+    "pilotZctas": [
+      "91101",
+      "91103",
+      "91104",
+      "91105",
+      "91106",
+      "91107",
+      "91125"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "lewisville_tx",
+    "kind": "city",
+    "label": "Lewisville city, TX",
+    "state": "TX",
+    "city": "Lewisville",
+    "censusKind": "place",
+    "geoid": "4842508",
+    "allZctas": [
+      {
+        "zcta": "75057",
+        "share": 0.9825,
+        "lat": 33.050725,
+        "lng": -96.974623
+      },
+      {
+        "zcta": "75067",
+        "share": 0.9342,
+        "lat": 33.016102,
+        "lng": -96.998962
+      },
+      {
+        "zcta": "75056",
+        "share": 0.2942,
+        "lat": 33.075699,
+        "lng": -96.908088
+      },
+      {
+        "zcta": "75077",
+        "share": 0.2903,
+        "lat": 33.081178,
+        "lng": -97.060925
+      }
+    ],
+    "pilotZctas": [
+      "75056",
+      "75057",
+      "75067",
+      "75077"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "carrollton_tx",
+    "kind": "city",
+    "label": "Carrollton city, TX",
+    "state": "TX",
+    "city": "Carrollton",
+    "censusKind": "place",
+    "geoid": "4813024",
+    "allZctas": [
+      {
+        "zcta": "75007",
+        "share": 0.9853,
+        "lat": 33.005262,
+        "lng": -96.896742
+      },
+      {
+        "zcta": "75006",
+        "share": 0.9784,
+        "lat": 32.962141,
+        "lng": -96.898585
+      },
+      {
+        "zcta": "75010",
+        "share": 0.9532,
+        "lat": 33.039081,
+        "lng": -96.872596
+      }
+    ],
+    "pilotZctas": [
+      "75006",
+      "75007",
+      "75010"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "round_rock_tx",
+    "kind": "city",
+    "label": "Round Rock city, TX",
+    "state": "TX",
+    "city": "Round Rock",
+    "censusKind": "place",
+    "geoid": "4863500",
+    "allZctas": [
+      {
+        "zcta": "78664",
+        "share": 0.7159,
+        "lat": 30.505414,
+        "lng": -97.647284
+      },
+      {
+        "zcta": "78665",
+        "share": 0.605,
+        "lat": 30.548874,
+        "lng": -97.636201
+      },
+      {
+        "zcta": "78681",
+        "share": 0.4471,
+        "lat": 30.541758,
+        "lng": -97.716638
+      }
+    ],
+    "pilotZctas": [
+      "78664",
+      "78665",
+      "78681"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "santa_clara_ca",
+    "kind": "city",
+    "label": "Santa Clara city, CA",
+    "state": "CA",
+    "city": "Santa Clara",
+    "censusKind": "place",
+    "geoid": "0669084",
+    "allZctas": [
+      {
+        "zcta": "95053",
+        "share": 1,
+        "lat": 37.348462,
+        "lng": -121.937271
+      },
+      {
+        "zcta": "95054",
+        "share": 0.9856,
+        "lat": 37.393099,
+        "lng": -121.964796
+      },
+      {
+        "zcta": "95051",
+        "share": 0.9788,
+        "lat": 37.348311,
+        "lng": -121.984435
+      },
+      {
+        "zcta": "95050",
+        "share": 0.9615,
+        "lat": 37.350431,
+        "lng": -121.952405
+      }
+    ],
+    "pilotZctas": [
+      "95050",
+      "95051",
+      "95053",
+      "95054"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "abilene_tx",
+    "kind": "city",
+    "label": "Abilene city, TX",
+    "state": "TX",
+    "city": "Abilene",
+    "censusKind": "place",
+    "geoid": "4801000",
+    "allZctas": [
+      {
+        "zcta": "79605",
+        "share": 1,
+        "lat": 32.434599,
+        "lng": -99.781827
+      },
+      {
+        "zcta": "79699",
+        "share": 1,
+        "lat": 32.46219,
+        "lng": -99.714942
+      },
+      {
+        "zcta": "79607",
+        "share": 0.975,
+        "lat": 32.423188,
+        "lng": -99.838681
+      },
+      {
+        "zcta": "79606",
+        "share": 0.2155,
+        "lat": 32.362767,
+        "lng": -99.817334
+      }
+    ],
+    "pilotZctas": [
+      "79605",
+      "79606",
+      "79607",
+      "79699"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "pearland_tx",
+    "kind": "city",
+    "label": "Pearland city, TX",
+    "state": "TX",
+    "city": "Pearland",
+    "censusKind": "place",
+    "geoid": "4856348",
+    "allZctas": [
+      {
+        "zcta": "77581",
+        "share": 0.8254,
+        "lat": 29.561597,
+        "lng": -95.279759
+      },
+      {
+        "zcta": "77584",
+        "share": 0.7313,
+        "lat": 29.544448,
+        "lng": -95.351965
+      }
+    ],
+    "pilotZctas": [
+      "77581",
+      "77584"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "college_station_tx",
+    "kind": "city",
+    "label": "College Station city, TX",
+    "state": "TX",
+    "city": "College Station",
+    "censusKind": "place",
+    "geoid": "4815976",
+    "allZctas": [
+      {
+        "zcta": "77843",
+        "share": 1,
+        "lat": 30.615329,
+        "lng": -96.340234
+      },
+      {
+        "zcta": "77840",
+        "share": 0.9907,
+        "lat": 30.611527,
+        "lng": -96.323267
+      },
+      {
+        "zcta": "77845",
+        "share": 0.2859,
+        "lat": 30.5611,
+        "lng": -96.275139
+      }
+    ],
+    "pilotZctas": [
+      "77840",
+      "77843",
+      "77845"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "clovis_ca",
+    "kind": "city",
+    "label": "Clovis city, CA",
+    "state": "CA",
+    "city": "Clovis",
+    "censusKind": "place",
+    "geoid": "0614218",
+    "allZctas": [
+      {
+        "zcta": "93612",
+        "share": 0.9978,
+        "lat": 36.814849,
+        "lng": -119.711909
+      },
+      {
+        "zcta": "93611",
+        "share": 0.981,
+        "lat": 36.826668,
+        "lng": -119.680572
+      }
+    ],
+    "pilotZctas": [
+      "93611",
+      "93612"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "simi_valley_ca",
+    "kind": "city",
+    "label": "Simi Valley city, CA",
+    "state": "CA",
+    "city": "Simi Valley",
+    "censusKind": "place",
+    "geoid": "0672016",
+    "allZctas": [
+      {
+        "zcta": "93065",
+        "share": 0.9589,
+        "lat": 34.262388,
+        "lng": -118.772219
+      },
+      {
+        "zcta": "93063",
+        "share": 0.3115,
+        "lat": 34.308048,
+        "lng": -118.686969
+      }
+    ],
+    "pilotZctas": [
+      "93063",
+      "93065"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "thousand_oaks_ca",
+    "kind": "city",
+    "label": "Thousand Oaks city, CA",
+    "state": "CA",
+    "city": "Thousand Oaks",
+    "censusKind": "place",
+    "geoid": "0678582",
+    "allZctas": [
+      {
+        "zcta": "91362",
+        "share": 0.9454,
+        "lat": 34.192431,
+        "lng": -118.819486
+      },
+      {
+        "zcta": "91360",
+        "share": 0.8885,
+        "lat": 34.213305,
+        "lng": -118.874135
+      },
+      {
+        "zcta": "91320",
+        "share": 0.7494,
+        "lat": 34.173377,
+        "lng": -118.947977
+      },
+      {
+        "zcta": "91361",
+        "share": 0.2428,
+        "lat": 34.137283,
+        "lng": -118.882044
+      }
+    ],
+    "pilotZctas": [
+      "91320",
+      "91360",
+      "91361",
+      "91362"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "concord_ca",
+    "kind": "city",
+    "label": "Concord city, CA",
+    "state": "CA",
+    "city": "Concord",
+    "censusKind": "place",
+    "geoid": "0616000",
+    "allZctas": [
+      {
+        "zcta": "94519",
+        "share": 1,
+        "lat": 37.988804,
+        "lng": -122.012764
+      },
+      {
+        "zcta": "94518",
+        "share": 0.9286,
+        "lat": 37.950521,
+        "lng": -122.022078
+      },
+      {
+        "zcta": "94521",
+        "share": 0.8632,
+        "lat": 37.95291,
+        "lng": -121.969696
+      },
+      {
+        "zcta": "94520",
+        "share": 0.7793,
+        "lat": 37.993028,
+        "lng": -122.035251
+      }
+    ],
+    "pilotZctas": [
+      "94518",
+      "94519",
+      "94520",
+      "94521"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "vallejo_ca",
+    "kind": "city",
+    "label": "Vallejo city, CA",
+    "state": "CA",
+    "city": "Vallejo",
+    "censusKind": "place",
+    "geoid": "0681666",
+    "allZctas": [
+      {
+        "zcta": "94590",
+        "share": 0.9577,
+        "lat": 38.095789,
+        "lng": -122.249689
+      },
+      {
+        "zcta": "94589",
+        "share": 0.9454,
+        "lat": 38.141467,
+        "lng": -122.24687
+      },
+      {
+        "zcta": "94591",
+        "share": 0.6928,
+        "lat": 38.127191,
+        "lng": -122.196855
+      },
+      {
+        "zcta": "94592",
+        "share": 0.4693,
+        "lat": 38.090998,
+        "lng": -122.285418
+      }
+    ],
+    "pilotZctas": [
+      "94589",
+      "94590",
+      "94591",
+      "94592"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "fairfield_ca",
+    "kind": "city",
+    "label": "Fairfield city, CA",
+    "state": "CA",
+    "city": "Fairfield",
+    "censusKind": "place",
+    "geoid": "0623182",
+    "allZctas": [
+      {
+        "zcta": "94535",
+        "share": 0.7911,
+        "lat": 38.270937,
+        "lng": -121.937017
+      },
+      {
+        "zcta": "94533",
+        "share": 0.7428,
+        "lat": 38.280745,
+        "lng": -122.00638
+      },
+      {
+        "zcta": "94534",
+        "share": 0.2106,
+        "lat": 38.241946,
+        "lng": -122.118272
+      }
+    ],
+    "pilotZctas": [
+      "94533",
+      "94534",
+      "94535"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "berkeley_ca",
+    "kind": "city",
+    "label": "Berkeley city, CA",
+    "state": "CA",
+    "city": "Berkeley",
+    "censusKind": "place",
+    "geoid": "0606000",
+    "allZctas": [
+      {
+        "zcta": "94702",
+        "share": 1,
+        "lat": 37.866321,
+        "lng": -122.286348
+      },
+      {
+        "zcta": "94703",
+        "share": 1,
+        "lat": 37.863715,
+        "lng": -122.275684
+      },
+      {
+        "zcta": "94709",
+        "share": 1,
+        "lat": 37.878291,
+        "lng": -122.266252
+      },
+      {
+        "zcta": "94710",
+        "share": 0.9568,
+        "lat": 37.863914,
+        "lng": -122.306465
+      },
+      {
+        "zcta": "94704",
+        "share": 0.946,
+        "lat": 37.866417,
+        "lng": -122.260922
+      },
+      {
+        "zcta": "94720",
+        "share": 0.9028,
+        "lat": 37.871957,
+        "lng": -122.252198
+      },
+      {
+        "zcta": "94707",
+        "share": 0.6301,
+        "lat": 37.89836,
+        "lng": -122.27909
+      },
+      {
+        "zcta": "94708",
+        "share": 0.4164,
+        "lat": 37.903067,
+        "lng": -122.26194
+      },
+      {
+        "zcta": "94705",
+        "share": 0.3151,
+        "lat": 37.865205,
+        "lng": -122.238384
+      }
+    ],
+    "pilotZctas": [
+      "94702",
+      "94703",
+      "94704",
+      "94705",
+      "94707",
+      "94708",
+      "94709",
+      "94710",
+      "94720"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "odessa_tx",
+    "kind": "city",
+    "label": "Odessa city, TX",
+    "state": "TX",
+    "city": "Odessa",
+    "censusKind": "place",
+    "geoid": "4853388",
+    "allZctas": [
+      {
+        "zcta": "79761",
+        "share": 0.948,
+        "lat": 31.855583,
+        "lng": -102.348437
+      },
+      {
+        "zcta": "79765",
+        "share": 0.5356,
+        "lat": 31.896597,
+        "lng": -102.262897
+      },
+      {
+        "zcta": "79762",
+        "share": 0.4523,
+        "lat": 31.925286,
+        "lng": -102.357886
+      }
+    ],
+    "pilotZctas": [
+      "79761",
+      "79762",
+      "79765"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "league_city_tx",
+    "kind": "city",
+    "label": "League City city, TX",
+    "state": "TX",
+    "city": "League City",
+    "censusKind": "place",
+    "geoid": "4841980",
+    "allZctas": [
+      {
+        "zcta": "77573",
+        "share": 0.9961,
+        "lat": 29.503785,
+        "lng": -95.0873
+      },
+      {
+        "zcta": "77565",
+        "share": 0.2622,
+        "lat": 29.538069,
+        "lng": -95.03292
+      }
+    ],
+    "pilotZctas": [
+      "77565",
+      "77573"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "antioch_ca",
+    "kind": "city",
+    "label": "Antioch city, CA",
+    "state": "CA",
+    "city": "Antioch",
+    "censusKind": "place",
+    "geoid": "0602252",
+    "allZctas": [
+      {
+        "zcta": "94531",
+        "share": 0.8872,
+        "lat": 37.956648,
+        "lng": -121.77779
+      },
+      {
+        "zcta": "94509",
+        "share": 0.8558,
+        "lat": 37.992003,
+        "lng": -121.812566
+      }
+    ],
+    "pilotZctas": [
+      "94509",
+      "94531"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "richardson_tx",
+    "kind": "city",
+    "label": "Richardson city, TX",
+    "state": "TX",
+    "city": "Richardson",
+    "censusKind": "place",
+    "geoid": "4861796",
+    "allZctas": [
+      {
+        "zcta": "75080",
+        "share": 0.9995,
+        "lat": 32.976063,
+        "lng": -96.74208
+      },
+      {
+        "zcta": "75082",
+        "share": 0.9958,
+        "lat": 32.994599,
+        "lng": -96.666758
+      },
+      {
+        "zcta": "75081",
+        "share": 0.9945,
+        "lat": 32.949566,
+        "lng": -96.70742
+      }
+    ],
+    "pilotZctas": [
+      "75080",
+      "75081",
+      "75082"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "menifee_ca",
+    "kind": "city",
+    "label": "Menifee city, CA",
+    "state": "CA",
+    "city": "Menifee",
+    "censusKind": "place",
+    "geoid": "0646842",
+    "allZctas": [
+      {
+        "zcta": "92586",
+        "share": 0.9825,
+        "lat": 33.707681,
+        "lng": -117.200428
+      },
+      {
+        "zcta": "92584",
+        "share": 0.8337,
+        "lat": 33.661431,
+        "lng": -117.182284
+      },
+      {
+        "zcta": "92585",
+        "share": 0.7126,
+        "lat": 33.742167,
+        "lng": -117.167238
+      },
+      {
+        "zcta": "92587",
+        "share": 0.4851,
+        "lat": 33.693929,
+        "lng": -117.250504
+      }
+    ],
+    "pilotZctas": [
+      "92584",
+      "92585",
+      "92586",
+      "92587"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "new_braunfels_tx",
+    "kind": "city",
+    "label": "New Braunfels city, TX",
+    "state": "TX",
+    "city": "New Braunfels",
+    "censusKind": "place",
+    "geoid": "4850820",
+    "allZctas": [
+      {
+        "zcta": "78130",
+        "share": 0.3921,
+        "lat": 29.693649,
+        "lng": -98.068676
+      }
+    ],
+    "pilotZctas": [
+      "78130"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "richmond_ca",
+    "kind": "city",
+    "label": "Richmond city, CA",
+    "state": "CA",
+    "city": "Richmond",
+    "censusKind": "place",
+    "geoid": "0660620",
+    "allZctas": [
+      {
+        "zcta": "94804",
+        "share": 0.9997,
+        "lat": 37.915463,
+        "lng": -122.337815
+      },
+      {
+        "zcta": "94801",
+        "share": 0.88,
+        "lat": 37.949245,
+        "lng": -122.397198
+      },
+      {
+        "zcta": "94805",
+        "share": 0.6531,
+        "lat": 37.942209,
+        "lng": -122.323545
+      },
+      {
+        "zcta": "94803",
+        "share": 0.6049,
+        "lat": 37.95684,
+        "lng": -122.282358
+      },
+      {
+        "zcta": "94806",
+        "share": 0.4838,
+        "lat": 37.978427,
+        "lng": -122.336418
+      }
+    ],
+    "pilotZctas": [
+      "94801",
+      "94803",
+      "94804",
+      "94805",
+      "94806"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "conroe_tx",
+    "kind": "city",
+    "label": "Conroe city, TX",
+    "state": "TX",
+    "city": "Conroe",
+    "censusKind": "place",
+    "geoid": "4816432",
+    "allZctas": [
+      {
+        "zcta": "77301",
+        "share": 0.9414,
+        "lat": 30.308155,
+        "lng": -95.430221
+      },
+      {
+        "zcta": "77304",
+        "share": 0.6596,
+        "lat": 30.32776,
+        "lng": -95.516045
+      },
+      {
+        "zcta": "77384",
+        "share": 0.2648,
+        "lat": 30.233846,
+        "lng": -95.49577
+      }
+    ],
+    "pilotZctas": [
+      "77301",
+      "77304",
+      "77384"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "allen_tx",
+    "kind": "city",
+    "label": "Allen city, TX",
+    "state": "TX",
+    "city": "Allen",
+    "censusKind": "place",
+    "geoid": "4801924",
+    "allZctas": [
+      {
+        "zcta": "75013",
+        "share": 0.998,
+        "lat": 33.114327,
+        "lng": -96.693964
+      },
+      {
+        "zcta": "75002",
+        "share": 0.3028,
+        "lat": 33.089854,
+        "lng": -96.6086
+      }
+    ],
+    "pilotZctas": [
+      "75002",
+      "75013"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "carlsbad_ca",
+    "kind": "city",
+    "label": "Carlsbad city, CA",
+    "state": "CA",
+    "city": "Carlsbad",
+    "censusKind": "place",
+    "geoid": "0611194",
+    "allZctas": [
+      {
+        "zcta": "92011",
+        "share": 1,
+        "lat": 33.106764,
+        "lng": -117.296327
+      },
+      {
+        "zcta": "92008",
+        "share": 0.9993,
+        "lat": 33.14248,
+        "lng": -117.313444
+      },
+      {
+        "zcta": "92009",
+        "share": 0.9955,
+        "lat": 33.095339,
+        "lng": -117.245769
+      },
+      {
+        "zcta": "92010",
+        "share": 0.9947,
+        "lat": 33.165392,
+        "lng": -117.281425
+      }
+    ],
+    "pilotZctas": [
+      "92008",
+      "92009",
+      "92010",
+      "92011"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "beaumont_tx",
+    "kind": "city",
+    "label": "Beaumont city, TX",
+    "state": "TX",
+    "city": "Beaumont",
+    "censusKind": "place",
+    "geoid": "4807000",
+    "allZctas": [
+      {
+        "zcta": "77702",
+        "share": 1,
+        "lat": 30.086285,
+        "lng": -94.128289
+      },
+      {
+        "zcta": "77703",
+        "share": 1,
+        "lat": 30.114058,
+        "lng": -94.109271
+      },
+      {
+        "zcta": "77706",
+        "share": 1,
+        "lat": 30.100359,
+        "lng": -94.166937
+      },
+      {
+        "zcta": "77708",
+        "share": 1,
+        "lat": 30.150453,
+        "lng": -94.153426
+      },
+      {
+        "zcta": "77701",
+        "share": 0.9592,
+        "lat": 30.073053,
+        "lng": -94.105486
+      },
+      {
+        "zcta": "77707",
+        "share": 0.8951,
+        "lat": 30.053142,
+        "lng": -94.166056
+      }
+    ],
+    "pilotZctas": [
+      "77701",
+      "77702",
+      "77703",
+      "77706",
+      "77707",
+      "77708"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "murrieta_ca",
+    "kind": "city",
+    "label": "Murrieta city, CA",
+    "state": "CA",
+    "city": "Murrieta",
+    "censusKind": "place",
+    "geoid": "0650076",
+    "allZctas": [
+      {
+        "zcta": "92563",
+        "share": 0.557,
+        "lat": 33.580016,
+        "lng": -117.14736
+      }
+    ],
+    "pilotZctas": [
+      "92563"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "temecula_ca",
+    "kind": "city",
+    "label": "Temecula city, CA",
+    "state": "CA",
+    "city": "Temecula",
+    "censusKind": "place",
+    "geoid": "0678120",
+    "allZctas": [
+      {
+        "zcta": "92591",
+        "share": 0.6384,
+        "lat": 33.534332,
+        "lng": -117.109211
+      }
+    ],
+    "pilotZctas": [
+      "92591"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "tyler_tx",
+    "kind": "city",
+    "label": "Tyler city, TX",
+    "state": "TX",
+    "city": "Tyler",
+    "censusKind": "place",
+    "geoid": "4874144",
+    "allZctas": [
+      {
+        "zcta": "75711",
+        "share": 1,
+        "lat": 32.336975,
+        "lng": -95.283818
+      },
+      {
+        "zcta": "75701",
+        "share": 0.999,
+        "lat": 32.322885,
+        "lng": -95.296265
+      },
+      {
+        "zcta": "75702",
+        "share": 0.9339,
+        "lat": 32.363991,
+        "lng": -95.311744
+      },
+      {
+        "zcta": "75703",
+        "share": 0.3309,
+        "lat": 32.235111,
+        "lng": -95.320764
+      }
+    ],
+    "pilotZctas": [
+      "75701",
+      "75702",
+      "75703",
+      "75711"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "santa_maria_ca",
+    "kind": "city",
+    "label": "Santa Maria city, CA",
+    "state": "CA",
+    "city": "Santa Maria",
+    "censusKind": "place",
+    "geoid": "0669196",
+    "allZctas": [
+      {
+        "zcta": "93458",
+        "share": 0.2373,
+        "lat": 34.953245,
+        "lng": -120.492119
+      }
+    ],
+    "pilotZctas": [
+      "93458"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "edison_nj_city",
+    "kind": "city",
+    "label": "Edison township, NJ",
+    "state": "NJ",
+    "city": "Edison",
+    "censusKind": "cousub",
+    "geoid": "3402320230",
+    "allZctas": [
+      {
+        "zcta": "08820",
+        "share": 0.9931,
+        "lat": 40.576806,
+        "lng": -74.36575
+      },
+      {
+        "zcta": "08817",
+        "share": 0.9925,
+        "lat": 40.514655,
+        "lng": -74.393104
+      },
+      {
+        "zcta": "08837",
+        "share": 0.9805,
+        "lat": 40.514281,
+        "lng": -74.343859
+      }
+    ],
+    "pilotZctas": [
+      "08817",
+      "08820",
+      "08837"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "sugar_land_tx",
+    "kind": "city",
+    "label": "Sugar Land city, TX",
+    "state": "TX",
+    "city": "Sugar Land",
+    "censusKind": "place",
+    "geoid": "4870808",
+    "allZctas": [
+      {
+        "zcta": "77478",
+        "share": 0.9873,
+        "lat": 29.617523,
+        "lng": -95.60829
+      },
+      {
+        "zcta": "77479",
+        "share": 0.7016,
+        "lat": 29.56504,
+        "lng": -95.635059
+      },
+      {
+        "zcta": "77498",
+        "share": 0.4361,
+        "lat": 29.640973,
+        "lng": -95.655782
+      }
+    ],
+    "pilotZctas": [
+      "77478",
+      "77479",
+      "77498"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_buenaventura_ventura_ca",
+    "kind": "city",
+    "label": "San Buenaventura (Ventura) city, CA",
+    "state": "CA",
+    "city": "San Buenaventura (Ventura)",
+    "censusKind": "place",
+    "geoid": "0665042",
+    "allZctas": [
+      {
+        "zcta": "93004",
+        "share": 0.6007,
+        "lat": 34.278191,
+        "lng": -119.164558
+      },
+      {
+        "zcta": "93003",
+        "share": 0.5172,
+        "lat": 34.283668,
+        "lng": -119.223196
+      }
+    ],
+    "pilotZctas": [
+      "93003",
+      "93004"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "downey_ca",
+    "kind": "city",
+    "label": "Downey city, CA",
+    "state": "CA",
+    "city": "Downey",
+    "censusKind": "place",
+    "geoid": "0619766",
+    "allZctas": [
+      {
+        "zcta": "90240",
+        "share": 1,
+        "lat": 33.955729,
+        "lng": -118.118346
+      },
+      {
+        "zcta": "90241",
+        "share": 1,
+        "lat": 33.940582,
+        "lng": -118.129472
+      },
+      {
+        "zcta": "90242",
+        "share": 1,
+        "lat": 33.921793,
+        "lng": -118.140588
+      }
+    ],
+    "pilotZctas": [
+      "90240",
+      "90241",
+      "90242"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "costa_mesa_ca",
+    "kind": "city",
+    "label": "Costa Mesa city, CA",
+    "state": "CA",
+    "city": "Costa Mesa",
+    "censusKind": "place",
+    "geoid": "0616532",
+    "allZctas": [
+      {
+        "zcta": "92626",
+        "share": 0.9954,
+        "lat": 33.679591,
+        "lng": -117.908531
+      },
+      {
+        "zcta": "92627",
+        "share": 0.9499,
+        "lat": 33.648112,
+        "lng": -117.921203
+      }
+    ],
+    "pilotZctas": [
+      "92626",
+      "92627"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "edinburg_tx",
+    "kind": "city",
+    "label": "Edinburg city, TX",
+    "state": "TX",
+    "city": "Edinburg",
+    "censusKind": "place",
+    "geoid": "4822660",
+    "allZctas": [
+      {
+        "zcta": "78539",
+        "share": 0.9985,
+        "lat": 26.280689,
+        "lng": -98.183295
+      }
+    ],
+    "pilotZctas": [
+      "78539"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "jurupa_valley_ca",
+    "kind": "city",
+    "label": "Jurupa Valley city, CA",
+    "state": "CA",
+    "city": "Jurupa Valley",
+    "censusKind": "place",
+    "geoid": "0637692",
+    "allZctas": [
+      {
+        "zcta": "92509",
+        "share": 0.9861,
+        "lat": 34.003266,
+        "lng": -117.442004
+      },
+      {
+        "zcta": "91752",
+        "share": 0.8034,
+        "lat": 33.996484,
+        "lng": -117.531335
+      }
+    ],
+    "pilotZctas": [
+      "91752",
+      "92509"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "west_covina_ca",
+    "kind": "city",
+    "label": "West Covina city, CA",
+    "state": "CA",
+    "city": "West Covina",
+    "censusKind": "place",
+    "geoid": "0684200",
+    "allZctas": [
+      {
+        "zcta": "91790",
+        "share": 0.9972,
+        "lat": 34.066964,
+        "lng": -117.937007
+      },
+      {
+        "zcta": "91791",
+        "share": 0.993,
+        "lat": 34.061624,
+        "lng": -117.892235
+      },
+      {
+        "zcta": "91792",
+        "share": 0.9582,
+        "lat": 34.022581,
+        "lng": -117.902359
+      }
+    ],
+    "pilotZctas": [
+      "91790",
+      "91791",
+      "91792"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "woodbridge_nj",
+    "kind": "city",
+    "label": "Woodbridge township, NJ",
+    "state": "NJ",
+    "city": "Woodbridge",
+    "censusKind": "cousub",
+    "geoid": "3402382000",
+    "allZctas": [
+      {
+        "zcta": "07001",
+        "share": 1,
+        "lat": 40.583961,
+        "lng": -74.269704
+      },
+      {
+        "zcta": "07064",
+        "share": 1,
+        "lat": 40.567422,
+        "lng": -74.244933
+      },
+      {
+        "zcta": "07067",
+        "share": 1,
+        "lat": 40.589328,
+        "lng": -74.311417
+      },
+      {
+        "zcta": "07077",
+        "share": 1,
+        "lat": 40.554147,
+        "lng": -74.25306
+      },
+      {
+        "zcta": "07095",
+        "share": 1,
+        "lat": 40.552857,
+        "lng": -74.286939
+      },
+      {
+        "zcta": "08830",
+        "share": 1,
+        "lat": 40.570142,
+        "lng": -74.316371
+      },
+      {
+        "zcta": "08832",
+        "share": 1,
+        "lat": 40.511399,
+        "lng": -74.318496
+      },
+      {
+        "zcta": "08863",
+        "share": 1,
+        "lat": 40.537238,
+        "lng": -74.312222
+      }
+    ],
+    "pilotZctas": [
+      "07001",
+      "07064",
+      "07067",
+      "07077",
+      "07095",
+      "08830",
+      "08832",
+      "08863"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "rialto_ca",
+    "kind": "city",
+    "label": "Rialto city, CA",
+    "state": "CA",
+    "city": "Rialto",
+    "censusKind": "place",
+    "geoid": "0660466",
+    "allZctas": [
+      {
+        "zcta": "92376",
+        "share": 0.9217,
+        "lat": 34.110537,
+        "lng": -117.380021
+      },
+      {
+        "zcta": "92377",
+        "share": 0.8839,
+        "lat": 34.152367,
+        "lng": -117.404063
+      },
+      {
+        "zcta": "92316",
+        "share": 0.3241,
+        "lat": 34.057066,
+        "lng": -117.391179
+      }
+    ],
+    "pilotZctas": [
+      "92316",
+      "92376",
+      "92377"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "el_monte_ca",
+    "kind": "city",
+    "label": "El Monte city, CA",
+    "state": "CA",
+    "city": "El Monte",
+    "censusKind": "place",
+    "geoid": "0622230",
+    "allZctas": [
+      {
+        "zcta": "91731",
+        "share": 0.9972,
+        "lat": 34.078573,
+        "lng": -118.043456
+      },
+      {
+        "zcta": "91732",
+        "share": 0.9818,
+        "lat": 34.072407,
+        "lng": -118.014524
+      }
+    ],
+    "pilotZctas": [
+      "91731",
+      "91732"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "vacaville_ca",
+    "kind": "city",
+    "label": "Vacaville city, CA",
+    "state": "CA",
+    "city": "Vacaville",
+    "censusKind": "place",
+    "geoid": "0681554",
+    "allZctas": [
+      {
+        "zcta": "95687",
+        "share": 0.3527,
+        "lat": 38.333133,
+        "lng": -121.920151
+      }
+    ],
+    "pilotZctas": [
+      "95687"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "burbank_ca",
+    "kind": "city",
+    "label": "Burbank city, CA",
+    "state": "CA",
+    "city": "Burbank",
+    "censusKind": "place",
+    "geoid": "0608954",
+    "allZctas": [
+      {
+        "zcta": "91501",
+        "share": 1,
+        "lat": 34.193527,
+        "lng": -118.294006
+      },
+      {
+        "zcta": "91502",
+        "share": 1,
+        "lat": 34.176817,
+        "lng": -118.309323
+      },
+      {
+        "zcta": "91506",
+        "share": 0.9862,
+        "lat": 34.169706,
+        "lng": -118.323548
+      },
+      {
+        "zcta": "91505",
+        "share": 0.9655,
+        "lat": 34.175833,
+        "lng": -118.347536
+      },
+      {
+        "zcta": "91504",
+        "share": 0.6098,
+        "lat": 34.213006,
+        "lng": -118.317736
+      }
+    ],
+    "pilotZctas": [
+      "91501",
+      "91502",
+      "91504",
+      "91505",
+      "91506"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "el_cajon_ca",
+    "kind": "city",
+    "label": "El Cajon city, CA",
+    "state": "CA",
+    "city": "El Cajon",
+    "censusKind": "place",
+    "geoid": "0621712",
+    "allZctas": [
+      {
+        "zcta": "92020",
+        "share": 0.7916,
+        "lat": 32.795605,
+        "lng": -116.969754
+      }
+    ],
+    "pilotZctas": [
+      "92020"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_mateo_ca",
+    "kind": "city",
+    "label": "San Mateo city, CA",
+    "state": "CA",
+    "city": "San Mateo",
+    "censusKind": "place",
+    "geoid": "0668252",
+    "allZctas": [
+      {
+        "zcta": "94401",
+        "share": 1,
+        "lat": 37.575172,
+        "lng": -122.319881
+      },
+      {
+        "zcta": "94403",
+        "share": 0.9652,
+        "lat": 37.538449,
+        "lng": -122.305447
+      },
+      {
+        "zcta": "94402",
+        "share": 0.5983,
+        "lat": 37.540103,
+        "lng": -122.330103
+      }
+    ],
+    "pilotZctas": [
+      "94401",
+      "94402",
+      "94403"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "chico_ca",
+    "kind": "city",
+    "label": "Chico city, CA",
+    "state": "CA",
+    "city": "Chico",
+    "censusKind": "place",
+    "geoid": "0613014",
+    "allZctas": [
+      {
+        "zcta": "95929",
+        "share": 1,
+        "lat": 39.725787,
+        "lng": -121.850213
+      },
+      {
+        "zcta": "95926",
+        "share": 0.9247,
+        "lat": 39.74577,
+        "lng": -121.843938
+      }
+    ],
+    "pilotZctas": [
+      "95926",
+      "95929"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "inglewood_ca",
+    "kind": "city",
+    "label": "Inglewood city, CA",
+    "state": "CA",
+    "city": "Inglewood",
+    "censusKind": "place",
+    "geoid": "0636546",
+    "allZctas": [
+      {
+        "zcta": "90301",
+        "share": 1,
+        "lat": 33.956464,
+        "lng": -118.358681
+      },
+      {
+        "zcta": "90305",
+        "share": 1,
+        "lat": 33.958134,
+        "lng": -118.330905
+      },
+      {
+        "zcta": "90302",
+        "share": 0.9933,
+        "lat": 33.97535,
+        "lng": -118.35609
+      },
+      {
+        "zcta": "90303",
+        "share": 0.9351,
+        "lat": 33.936291,
+        "lng": -118.332639
+      }
+    ],
+    "pilotZctas": [
+      "90301",
+      "90302",
+      "90303",
+      "90305"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "wichita_falls_tx",
+    "kind": "city",
+    "label": "Wichita Falls city, TX",
+    "state": "TX",
+    "city": "Wichita Falls",
+    "censusKind": "place",
+    "geoid": "4879000",
+    "allZctas": [
+      {
+        "zcta": "76309",
+        "share": 1,
+        "lat": 33.895515,
+        "lng": -98.543994
+      },
+      {
+        "zcta": "76301",
+        "share": 0.9863,
+        "lat": 33.905071,
+        "lng": -98.480418
+      },
+      {
+        "zcta": "76302",
+        "share": 0.9646,
+        "lat": 33.866113,
+        "lng": -98.484849
+      },
+      {
+        "zcta": "76308",
+        "share": 0.8667,
+        "lat": 33.854833,
+        "lng": -98.5373
+      },
+      {
+        "zcta": "76311",
+        "share": 0.8527,
+        "lat": 33.973218,
+        "lng": -98.508394
+      },
+      {
+        "zcta": "76306",
+        "share": 0.8345,
+        "lat": 33.949681,
+        "lng": -98.527158
+      }
+    ],
+    "pilotZctas": [
+      "76301",
+      "76302",
+      "76306",
+      "76308",
+      "76309",
+      "76311"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "hesperia_ca",
+    "kind": "city",
+    "label": "Hesperia city, CA",
+    "state": "CA",
+    "city": "Hesperia",
+    "censusKind": "place",
+    "geoid": "0633434",
+    "allZctas": [
+      {
+        "zcta": "92345",
+        "share": 0.6224,
+        "lat": 34.360972,
+        "lng": -117.313039
+      },
+      {
+        "zcta": "92344",
+        "share": 0.2669,
+        "lat": 34.39177,
+        "lng": -117.406568
+      }
+    ],
+    "pilotZctas": [
+      "92344",
+      "92345"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "daly_city_ca",
+    "kind": "city",
+    "label": "Daly City city, CA",
+    "state": "CA",
+    "city": "Daly City",
+    "censusKind": "place",
+    "geoid": "0617918",
+    "allZctas": [
+      {
+        "zcta": "94015",
+        "share": 0.864,
+        "lat": 37.681316,
+        "lng": -122.480855
+      },
+      {
+        "zcta": "94014",
+        "share": 0.4306,
+        "lat": 37.690689,
+        "lng": -122.447721
+      }
+    ],
+    "pilotZctas": [
+      "94014",
+      "94015"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "georgetown_tx",
+    "kind": "city",
+    "label": "Georgetown city, TX",
+    "state": "TX",
+    "city": "Georgetown",
+    "censusKind": "place",
+    "geoid": "4829336",
+    "allZctas": [
+      {
+        "zcta": "78628",
+        "share": 0.298,
+        "lat": 30.665028,
+        "lng": -97.78062
+      },
+      {
+        "zcta": "78626",
+        "share": 0.2303,
+        "lat": 30.657895,
+        "lng": -97.617843
+      },
+      {
+        "zcta": "78633",
+        "share": 0.224,
+        "lat": 30.738187,
+        "lng": -97.754527
+      }
+    ],
+    "pilotZctas": [
+      "78626",
+      "78628",
+      "78633"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_angelo_tx",
+    "kind": "city",
+    "label": "San Angelo city, TX",
+    "state": "TX",
+    "city": "San Angelo",
+    "censusKind": "place",
+    "geoid": "4864472",
+    "allZctas": [
+      {
+        "zcta": "76908",
+        "share": 1,
+        "lat": 31.432248,
+        "lng": -100.403167
+      },
+      {
+        "zcta": "76909",
+        "share": 1,
+        "lat": 31.441425,
+        "lng": -100.466262
+      },
+      {
+        "zcta": "76903",
+        "share": 0.7914,
+        "lat": 31.481519,
+        "lng": -100.437903
+      }
+    ],
+    "pilotZctas": [
+      "76903",
+      "76908",
+      "76909"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "tracy_ca",
+    "kind": "city",
+    "label": "Tracy city, CA",
+    "state": "CA",
+    "city": "Tracy",
+    "censusKind": "place",
+    "geoid": "0680238",
+    "allZctas": [
+      {
+        "zcta": "95376",
+        "share": 0.941,
+        "lat": 37.736819,
+        "lng": -121.433998
+      }
+    ],
+    "pilotZctas": [
+      "95376"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "toms_river_nj",
+    "kind": "city",
+    "label": "Toms River township, NJ",
+    "state": "NJ",
+    "city": "Toms River",
+    "censusKind": "cousub",
+    "geoid": "3402973125",
+    "allZctas": [
+      {
+        "zcta": "08755",
+        "share": 1,
+        "lat": 40.008534,
+        "lng": -74.221768
+      },
+      {
+        "zcta": "08753",
+        "share": 0.9968,
+        "lat": 39.979668,
+        "lng": -74.150739
+      },
+      {
+        "zcta": "08735",
+        "share": 0.5299,
+        "lat": 39.996988,
+        "lng": -74.077635
+      },
+      {
+        "zcta": "08751",
+        "share": 0.4747,
+        "lat": 39.949634,
+        "lng": -74.079516
+      }
+    ],
+    "pilotZctas": [
+      "08735",
+      "08751",
+      "08753",
+      "08755"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "vista_ca",
+    "kind": "city",
+    "label": "Vista city, CA",
+    "state": "CA",
+    "city": "Vista",
+    "censusKind": "place",
+    "geoid": "0682996",
+    "allZctas": [
+      {
+        "zcta": "92083",
+        "share": 0.8649,
+        "lat": 33.198084,
+        "lng": -117.248364
+      },
+      {
+        "zcta": "92081",
+        "share": 0.8551,
+        "lat": 33.164549,
+        "lng": -117.24055
+      },
+      {
+        "zcta": "92084",
+        "share": 0.2211,
+        "lat": 33.227283,
+        "lng": -117.200085
+      }
+    ],
+    "pilotZctas": [
+      "92081",
+      "92083",
+      "92084"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "norwalk_ca",
+    "kind": "city",
+    "label": "Norwalk city, CA",
+    "state": "CA",
+    "city": "Norwalk",
+    "censusKind": "place",
+    "geoid": "0652526",
+    "allZctas": [
+      {
+        "zcta": "90650",
+        "share": 0.9768,
+        "lat": 33.90779,
+        "lng": -118.082487
+      }
+    ],
+    "pilotZctas": [
+      "90650"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_marcos_ca",
+    "kind": "city",
+    "label": "San Marcos city, CA",
+    "state": "CA",
+    "city": "San Marcos",
+    "censusKind": "place",
+    "geoid": "0668196",
+    "allZctas": [
+      {
+        "zcta": "92096",
+        "share": 1,
+        "lat": 33.128156,
+        "lng": -117.156194
+      },
+      {
+        "zcta": "92078",
+        "share": 0.7866,
+        "lat": 33.117065,
+        "lng": -117.180807
+      },
+      {
+        "zcta": "92069",
+        "share": 0.5591,
+        "lat": 33.175303,
+        "lng": -117.157621
+      }
+    ],
+    "pilotZctas": [
+      "92069",
+      "92078",
+      "92096"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "temple_tx",
+    "kind": "city",
+    "label": "Temple city, TX",
+    "state": "TX",
+    "city": "Temple",
+    "censusKind": "place",
+    "geoid": "4872176",
+    "allZctas": [
+      {
+        "zcta": "76504",
+        "share": 0.6533,
+        "lat": 31.142333,
+        "lng": -97.374637
+      },
+      {
+        "zcta": "76502",
+        "share": 0.5535,
+        "lat": 31.104022,
+        "lng": -97.412045
+      }
+    ],
+    "pilotZctas": [
+      "76502",
+      "76504"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "merced_ca",
+    "kind": "city",
+    "label": "Merced city, CA",
+    "state": "CA",
+    "city": "Merced",
+    "censusKind": "place",
+    "geoid": "0646898",
+    "allZctas": [
+      {
+        "zcta": "95340",
+        "share": 0.1354,
+        "lat": 37.340087,
+        "lng": -120.406406
+      },
+      {
+        "zcta": "95348",
+        "share": 0.1144,
+        "lat": 37.420522,
+        "lng": -120.499608
+      },
+      {
+        "zcta": "95341",
+        "share": 0.0645,
+        "lat": 37.231045,
+        "lng": -120.501072
+      }
+    ],
+    "pilotZctas": [
+      "95340",
+      "95341",
+      "95348"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "manteca_ca",
+    "kind": "city",
+    "label": "Manteca city, CA",
+    "state": "CA",
+    "city": "Manteca",
+    "censusKind": "place",
+    "geoid": "0645484",
+    "allZctas": [
+      {
+        "zcta": "95337",
+        "share": 0.2744,
+        "lat": 37.743039,
+        "lng": -121.23838
+      },
+      {
+        "zcta": "95336",
+        "share": 0.2196,
+        "lat": 37.830267,
+        "lng": -121.20102
+      }
+    ],
+    "pilotZctas": [
+      "95336",
+      "95337"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "indio_ca",
+    "kind": "city",
+    "label": "Indio city, CA",
+    "state": "CA",
+    "city": "Indio",
+    "censusKind": "place",
+    "geoid": "0636448",
+    "allZctas": [
+      {
+        "zcta": "92201",
+        "share": 0.9711,
+        "lat": 33.709453,
+        "lng": -116.236967
+      },
+      {
+        "zcta": "92203",
+        "share": 0.7117,
+        "lat": 33.751601,
+        "lng": -116.241426
+      }
+    ],
+    "pilotZctas": [
+      "92201",
+      "92203"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "chino_ca",
+    "kind": "city",
+    "label": "Chino city, CA",
+    "state": "CA",
+    "city": "Chino",
+    "censusKind": "place",
+    "geoid": "0613210",
+    "allZctas": [
+      {
+        "zcta": "91708",
+        "share": 1,
+        "lat": 33.952084,
+        "lng": -117.639784
+      },
+      {
+        "zcta": "91710",
+        "share": 0.8881,
+        "lat": 34.005097,
+        "lng": -117.682524
+      }
+    ],
+    "pilotZctas": [
+      "91708",
+      "91710"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "hamilton_nj",
+    "kind": "city",
+    "label": "Hamilton township, NJ",
+    "state": "NJ",
+    "city": "Hamilton",
+    "censusKind": "cousub",
+    "geoid": "3402129310",
+    "allZctas": [
+      {
+        "zcta": "08619",
+        "share": 1,
+        "lat": 40.242301,
+        "lng": -74.696408
+      },
+      {
+        "zcta": "08690",
+        "share": 0.9494,
+        "lat": 40.225833,
+        "lng": -74.660096
+      },
+      {
+        "zcta": "08610",
+        "share": 0.9109,
+        "lat": 40.193643,
+        "lng": -74.715963
+      },
+      {
+        "zcta": "08620",
+        "share": 0.8746,
+        "lat": 40.170087,
+        "lng": -74.651309
+      },
+      {
+        "zcta": "08629",
+        "share": 0.5045,
+        "lat": 40.220644,
+        "lng": -74.731246
+      },
+      {
+        "zcta": "08611",
+        "share": 0.3952,
+        "lat": 40.183615,
+        "lng": -74.740319
+      },
+      {
+        "zcta": "08609",
+        "share": 0.3836,
+        "lat": 40.225747,
+        "lng": -74.740906
+      },
+      {
+        "zcta": "08691",
+        "share": 0.2169,
+        "lat": 40.208319,
+        "lng": -74.600928
+      }
+    ],
+    "pilotZctas": [
+      "08609",
+      "08610",
+      "08611",
+      "08619",
+      "08620",
+      "08629",
+      "08690",
+      "08691"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "redding_ca",
+    "kind": "city",
+    "label": "Redding city, CA",
+    "state": "CA",
+    "city": "Redding",
+    "censusKind": "place",
+    "geoid": "0659920",
+    "allZctas": [
+      {
+        "zcta": "96002",
+        "share": 0.5322,
+        "lat": 40.527769,
+        "lng": -122.318645
+      },
+      {
+        "zcta": "96001",
+        "share": 0.2777,
+        "lat": 40.577176,
+        "lng": -122.454715
+      }
+    ],
+    "pilotZctas": [
+      "96001",
+      "96002"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "hemet_ca",
+    "kind": "city",
+    "label": "Hemet city, CA",
+    "state": "CA",
+    "city": "Hemet",
+    "censusKind": "place",
+    "geoid": "0633182",
+    "allZctas": [
+      {
+        "zcta": "92543",
+        "share": 0.563,
+        "lat": 33.698645,
+        "lng": -116.979161
+      },
+      {
+        "zcta": "92545",
+        "share": 0.5239,
+        "lat": 33.731119,
+        "lng": -117.035872
+      }
+    ],
+    "pilotZctas": [
+      "92543",
+      "92545"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "mission_viejo_ca",
+    "kind": "city",
+    "label": "Mission Viejo city, CA",
+    "state": "CA",
+    "city": "Mission Viejo",
+    "censusKind": "place",
+    "geoid": "0648256",
+    "allZctas": [
+      {
+        "zcta": "92692",
+        "share": 1,
+        "lat": 33.612175,
+        "lng": -117.640452
+      },
+      {
+        "zcta": "92691",
+        "share": 0.9933,
+        "lat": 33.611945,
+        "lng": -117.665867
+      }
+    ],
+    "pilotZctas": [
+      "92691",
+      "92692"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "bryan_tx",
+    "kind": "city",
+    "label": "Bryan city, TX",
+    "state": "TX",
+    "city": "Bryan",
+    "censusKind": "place",
+    "geoid": "4810912",
+    "allZctas": [
+      {
+        "zcta": "77801",
+        "share": 1,
+        "lat": 30.639285,
+        "lng": -96.362454
+      },
+      {
+        "zcta": "77802",
+        "share": 0.9994,
+        "lat": 30.660911,
+        "lng": -96.322289
+      },
+      {
+        "zcta": "77803",
+        "share": 0.968,
+        "lat": 30.678262,
+        "lng": -96.387152
+      }
+    ],
+    "pilotZctas": [
+      "77801",
+      "77802",
+      "77803"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "carson_ca",
+    "kind": "city",
+    "label": "Carson city, CA",
+    "state": "CA",
+    "city": "Carson",
+    "censusKind": "place",
+    "geoid": "0611530",
+    "allZctas": [
+      {
+        "zcta": "90745",
+        "share": 1,
+        "lat": 33.820268,
+        "lng": -118.264125
+      },
+      {
+        "zcta": "90747",
+        "share": 1,
+        "lat": 33.863785,
+        "lng": -118.251354
+      },
+      {
+        "zcta": "90746",
+        "share": 0.9995,
+        "lat": 33.859231,
+        "lng": -118.252312
+      },
+      {
+        "zcta": "90810",
+        "share": 0.4897,
+        "lat": 33.818166,
+        "lng": -118.222297
+      },
+      {
+        "zcta": "90248",
+        "share": 0.2865,
+        "lat": 33.87834,
+        "lng": -118.2841
+      }
+    ],
+    "pilotZctas": [
+      "90248",
+      "90745",
+      "90746",
+      "90747",
+      "90810"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "trenton_nj",
+    "kind": "city",
+    "label": "Trenton city, NJ",
+    "state": "NJ",
+    "city": "Trenton",
+    "censusKind": "place",
+    "geoid": "3474000",
+    "allZctas": [
+      {
+        "zcta": "08608",
+        "share": 1,
+        "lat": 40.219081,
+        "lng": -74.766843
+      },
+      {
+        "zcta": "08609",
+        "share": 0.6164,
+        "lat": 40.225747,
+        "lng": -74.740906
+      },
+      {
+        "zcta": "08611",
+        "share": 0.6048,
+        "lat": 40.183615,
+        "lng": -74.740319
+      },
+      {
+        "zcta": "08629",
+        "share": 0.4955,
+        "lat": 40.220644,
+        "lng": -74.731246
+      },
+      {
+        "zcta": "08618",
+        "share": 0.4547,
+        "lat": 40.24934,
+        "lng": -74.789968
+      },
+      {
+        "zcta": "08638",
+        "share": 0.2234,
+        "lat": 40.254018,
+        "lng": -74.763385
+      }
+    ],
+    "pilotZctas": [
+      "08608",
+      "08609",
+      "08611",
+      "08618",
+      "08629",
+      "08638"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "compton_ca",
+    "kind": "city",
+    "label": "Compton city, CA",
+    "state": "CA",
+    "city": "Compton",
+    "censusKind": "place",
+    "geoid": "0615044",
+    "allZctas": [
+      {
+        "zcta": "90220",
+        "share": 0.7235,
+        "lat": 33.87978,
+        "lng": -118.229679
+      },
+      {
+        "zcta": "90222",
+        "share": 0.6187,
+        "lat": 33.91224,
+        "lng": -118.237607
+      },
+      {
+        "zcta": "90221",
+        "share": 0.5945,
+        "lat": 33.885811,
+        "lng": -118.206459
+      }
+    ],
+    "pilotZctas": [
+      "90220",
+      "90221",
+      "90222"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "south_gate_ca",
+    "kind": "city",
+    "label": "South Gate city, CA",
+    "state": "CA",
+    "city": "South Gate",
+    "censusKind": "place",
+    "geoid": "0673080",
+    "allZctas": [
+      {
+        "zcta": "90280",
+        "share": 0.9802,
+        "lat": 33.944159,
+        "lng": -118.192761
+      }
+    ],
+    "pilotZctas": [
+      "90280"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "santa_monica_ca",
+    "kind": "city",
+    "label": "Santa Monica city, CA",
+    "state": "CA",
+    "city": "Santa Monica",
+    "censusKind": "place",
+    "geoid": "0670000",
+    "allZctas": [
+      {
+        "zcta": "90401",
+        "share": 1,
+        "lat": 34.016099,
+        "lng": -118.492454
+      },
+      {
+        "zcta": "90404",
+        "share": 1,
+        "lat": 34.026649,
+        "lng": -118.473835
+      },
+      {
+        "zcta": "90403",
+        "share": 0.9998,
+        "lat": 34.030755,
+        "lng": -118.492101
+      },
+      {
+        "zcta": "90405",
+        "share": 0.999,
+        "lat": 34.011057,
+        "lng": -118.472152
+      },
+      {
+        "zcta": "90402",
+        "share": 0.7316,
+        "lat": 34.034666,
+        "lng": -118.504039
+      }
+    ],
+    "pilotZctas": [
+      "90401",
+      "90402",
+      "90403",
+      "90404",
+      "90405"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "clifton_nj",
+    "kind": "city",
+    "label": "Clifton city, NJ",
+    "state": "NJ",
+    "city": "Clifton",
+    "censusKind": "place",
+    "geoid": "3413690",
+    "allZctas": [
+      {
+        "zcta": "07011",
+        "share": 1,
+        "lat": 40.880427,
+        "lng": -74.143246
+      },
+      {
+        "zcta": "07012",
+        "share": 1,
+        "lat": 40.846899,
+        "lng": -74.160537
+      },
+      {
+        "zcta": "07013",
+        "share": 0.9995,
+        "lat": 40.869405,
+        "lng": -74.173062
+      },
+      {
+        "zcta": "07014",
+        "share": 0.9971,
+        "lat": 40.831339,
+        "lng": -74.135419
+      }
+    ],
+    "pilotZctas": [
+      "07011",
+      "07012",
+      "07013",
+      "07014"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "westminster_ca",
+    "kind": "city",
+    "label": "Westminster city, CA",
+    "state": "CA",
+    "city": "Westminster",
+    "censusKind": "place",
+    "geoid": "0684550",
+    "allZctas": [
+      {
+        "zcta": "92683",
+        "share": 0.9988,
+        "lat": 33.752428,
+        "lng": -117.99387
+      },
+      {
+        "zcta": "92655",
+        "share": 0.325,
+        "lat": 33.746029,
+        "lng": -117.987602
+      }
+    ],
+    "pilotZctas": [
+      "92655",
+      "92683"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "mission_tx",
+    "kind": "city",
+    "label": "Mission city, TX",
+    "state": "TX",
+    "city": "Mission",
+    "censusKind": "place",
+    "geoid": "4848768",
+    "allZctas": [
+      {
+        "zcta": "78572",
+        "share": 0.5285,
+        "lat": 26.201484,
+        "lng": -98.357159
+      }
+    ],
+    "pilotZctas": [
+      "78572"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "folsom_ca",
+    "kind": "city",
+    "label": "Folsom city, CA",
+    "state": "CA",
+    "city": "Folsom",
+    "censusKind": "place",
+    "geoid": "0624638",
+    "allZctas": [
+      {
+        "zcta": "95671",
+        "share": 1,
+        "lat": 38.694464,
+        "lng": -121.153753
+      },
+      {
+        "zcta": "95630",
+        "share": 0.9989,
+        "lat": 38.662781,
+        "lng": -121.140107
+      }
+    ],
+    "pilotZctas": [
+      "95630",
+      "95671"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "leander_tx",
+    "kind": "city",
+    "label": "Leander city, TX",
+    "state": "TX",
+    "city": "Leander",
+    "censusKind": "place",
+    "geoid": "4842016",
+    "allZctas": [
+      {
+        "zcta": "78641",
+        "share": 0.2924,
+        "lat": 30.557354,
+        "lng": -97.908507
+      }
+    ],
+    "pilotZctas": [
+      "78641"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "mountain_view_ca",
+    "kind": "city",
+    "label": "Mountain View city, CA",
+    "state": "CA",
+    "city": "Mountain View",
+    "censusKind": "place",
+    "geoid": "0649670",
+    "allZctas": [
+      {
+        "zcta": "94041",
+        "share": 1,
+        "lat": 37.388239,
+        "lng": -122.075351
+      },
+      {
+        "zcta": "94040",
+        "share": 0.9967,
+        "lat": 37.380272,
+        "lng": -122.085221
+      },
+      {
+        "zcta": "94043",
+        "share": 0.7221,
+        "lat": 37.411913,
+        "lng": -122.068919
+      }
+    ],
+    "pilotZctas": [
+      "94040",
+      "94041",
+      "94043"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "santa_barbara_ca",
+    "kind": "city",
+    "label": "Santa Barbara city, CA",
+    "state": "CA",
+    "city": "Santa Barbara",
+    "censusKind": "place",
+    "geoid": "0669070",
+    "allZctas": [
+      {
+        "zcta": "93101",
+        "share": 1,
+        "lat": 34.419259,
+        "lng": -119.708049
+      },
+      {
+        "zcta": "93109",
+        "share": 0.949,
+        "lat": 34.406408,
+        "lng": -119.726927
+      },
+      {
+        "zcta": "93103",
+        "share": 0.8214,
+        "lat": 34.437367,
+        "lng": -119.679284
+      }
+    ],
+    "pilotZctas": [
+      "93101",
+      "93103",
+      "93109"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "lake_forest_ca",
+    "kind": "city",
+    "label": "Lake Forest city, CA",
+    "state": "CA",
+    "city": "Lake Forest",
+    "censusKind": "place",
+    "geoid": "0639496",
+    "allZctas": [
+      {
+        "zcta": "92610",
+        "share": 1,
+        "lat": 33.683363,
+        "lng": -117.65408
+      },
+      {
+        "zcta": "92630",
+        "share": 0.9916,
+        "lat": 33.644929,
+        "lng": -117.684312
+      }
+    ],
+    "pilotZctas": [
+      "92610",
+      "92630"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "citrus_heights_ca",
+    "kind": "city",
+    "label": "Citrus Heights city, CA",
+    "state": "CA",
+    "city": "Citrus Heights",
+    "censusKind": "place",
+    "geoid": "0613588",
+    "allZctas": [
+      {
+        "zcta": "95610",
+        "share": 1,
+        "lat": 38.694923,
+        "lng": -121.272207
+      },
+      {
+        "zcta": "95621",
+        "share": 0.9403,
+        "lat": 38.695494,
+        "lng": -121.308624
+      }
+    ],
+    "pilotZctas": [
+      "95610",
+      "95621"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_leandro_ca",
+    "kind": "city",
+    "label": "San Leandro city, CA",
+    "state": "CA",
+    "city": "San Leandro",
+    "censusKind": "place",
+    "geoid": "0668084",
+    "allZctas": [
+      {
+        "zcta": "94579",
+        "share": 0.9992,
+        "lat": 37.6865,
+        "lng": -122.157215
+      },
+      {
+        "zcta": "94577",
+        "share": 0.9948,
+        "lat": 37.716659,
+        "lng": -122.169274
+      },
+      {
+        "zcta": "94578",
+        "share": 0.4624,
+        "lat": 37.706765,
+        "lng": -122.125565
+      }
+    ],
+    "pilotZctas": [
+      "94577",
+      "94578",
+      "94579"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "baytown_tx",
+    "kind": "city",
+    "label": "Baytown city, TX",
+    "state": "TX",
+    "city": "Baytown",
+    "censusKind": "place",
+    "geoid": "4806128",
+    "allZctas": [
+      {
+        "zcta": "77520",
+        "share": 0.6645,
+        "lat": 29.736716,
+        "lng": -95.000847
+      },
+      {
+        "zcta": "77521",
+        "share": 0.3513,
+        "lat": 29.811924,
+        "lng": -94.963306
+      }
+    ],
+    "pilotZctas": [
+      "77520",
+      "77521"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_ramon_ca",
+    "kind": "city",
+    "label": "San Ramon city, CA",
+    "state": "CA",
+    "city": "San Ramon",
+    "censusKind": "place",
+    "geoid": "0668378",
+    "allZctas": [
+      {
+        "zcta": "94582",
+        "share": 0.7676,
+        "lat": 37.765347,
+        "lng": -121.915432
+      },
+      {
+        "zcta": "94583",
+        "share": 0.3942,
+        "lat": 37.771693,
+        "lng": -121.989829
+      }
+    ],
+    "pilotZctas": [
+      "94582",
+      "94583"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "whittier_ca",
+    "kind": "city",
+    "label": "Whittier city, CA",
+    "state": "CA",
+    "city": "Whittier",
+    "censusKind": "place",
+    "geoid": "0685292",
+    "allZctas": [
+      {
+        "zcta": "90603",
+        "share": 0.9994,
+        "lat": 33.944866,
+        "lng": -117.992338
+      },
+      {
+        "zcta": "90602",
+        "share": 0.8689,
+        "lat": 33.974242,
+        "lng": -118.02233
+      },
+      {
+        "zcta": "90605",
+        "share": 0.6049,
+        "lat": 33.952444,
+        "lng": -118.0214
+      },
+      {
+        "zcta": "90601",
+        "share": 0.3002,
+        "lat": 34.008008,
+        "lng": -118.030454
+      },
+      {
+        "zcta": "90606",
+        "share": 0.247,
+        "lat": 33.977272,
+        "lng": -118.066363
+      }
+    ],
+    "pilotZctas": [
+      "90601",
+      "90602",
+      "90603",
+      "90605",
+      "90606"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "livermore_ca",
+    "kind": "city",
+    "label": "Livermore city, CA",
+    "state": "CA",
+    "city": "Livermore",
+    "censusKind": "place",
+    "geoid": "0641992",
+    "allZctas": [
+      {
+        "zcta": "94551",
+        "share": 0.1565,
+        "lat": 37.750512,
+        "lng": -121.749249
+      },
+      {
+        "zcta": "94550",
+        "share": 0.0496,
+        "lat": 37.519983,
+        "lng": -121.575595
+      }
+    ],
+    "pilotZctas": [
+      "94550",
+      "94551"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "rancho_cordova_ca",
+    "kind": "city",
+    "label": "Rancho Cordova city, CA",
+    "state": "CA",
+    "city": "Rancho Cordova",
+    "censusKind": "place",
+    "geoid": "0659444",
+    "allZctas": [
+      {
+        "zcta": "95670",
+        "share": 0.7784,
+        "lat": 38.604268,
+        "lng": -121.280327
+      },
+      {
+        "zcta": "95742",
+        "share": 0.4242,
+        "lat": 38.562201,
+        "lng": -121.2047
+      },
+      {
+        "zcta": "95827",
+        "share": 0.2882,
+        "lat": 38.54836,
+        "lng": -121.327497
+      }
+    ],
+    "pilotZctas": [
+      "95670",
+      "95742",
+      "95827"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "longview_tx",
+    "kind": "city",
+    "label": "Longview city, TX",
+    "state": "TX",
+    "city": "Longview",
+    "censusKind": "place",
+    "geoid": "4843888",
+    "allZctas": [
+      {
+        "zcta": "75601",
+        "share": 0.9998,
+        "lat": 32.508595,
+        "lng": -94.724189
+      },
+      {
+        "zcta": "75604",
+        "share": 0.4582,
+        "lat": 32.513584,
+        "lng": -94.828048
+      }
+    ],
+    "pilotZctas": [
+      "75601",
+      "75604"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "hawthorne_ca",
+    "kind": "city",
+    "label": "Hawthorne city, CA",
+    "state": "CA",
+    "city": "Hawthorne",
+    "censusKind": "place",
+    "geoid": "0632548",
+    "allZctas": [
+      {
+        "zcta": "90250",
+        "share": 0.8499,
+        "lat": 33.913651,
+        "lng": -118.350946
+      }
+    ],
+    "pilotZctas": [
+      "90250"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "perris_ca",
+    "kind": "city",
+    "label": "Perris city, CA",
+    "state": "CA",
+    "city": "Perris",
+    "censusKind": "place",
+    "geoid": "0656700",
+    "allZctas": [
+      {
+        "zcta": "92571",
+        "share": 0.3989,
+        "lat": 33.842129,
+        "lng": -117.194982
+      }
+    ],
+    "pilotZctas": [
+      "92571"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "redwood_city_ca",
+    "kind": "city",
+    "label": "Redwood City city, CA",
+    "state": "CA",
+    "city": "Redwood City",
+    "censusKind": "place",
+    "geoid": "0660102",
+    "allZctas": [
+      {
+        "zcta": "94065",
+        "share": 1,
+        "lat": 37.533418,
+        "lng": -122.249558
+      },
+      {
+        "zcta": "94063",
+        "share": 0.8809,
+        "lat": 37.493306,
+        "lng": -122.195606
+      },
+      {
+        "zcta": "94061",
+        "share": 0.8389,
+        "lat": 37.461147,
+        "lng": -122.236948
+      }
+    ],
+    "pilotZctas": [
+      "94061",
+      "94063",
+      "94065"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "newport_beach_ca",
+    "kind": "city",
+    "label": "Newport Beach city, CA",
+    "state": "CA",
+    "city": "Newport Beach",
+    "censusKind": "place",
+    "geoid": "0651182",
+    "allZctas": [
+      {
+        "zcta": "92625",
+        "share": 1,
+        "lat": 33.601966,
+        "lng": -117.864254
+      },
+      {
+        "zcta": "92657",
+        "share": 1,
+        "lat": 33.595058,
+        "lng": -117.829131
+      },
+      {
+        "zcta": "92661",
+        "share": 1,
+        "lat": 33.603607,
+        "lng": -117.912109
+      },
+      {
+        "zcta": "92662",
+        "share": 1,
+        "lat": 33.605086,
+        "lng": -117.892319
+      },
+      {
+        "zcta": "92660",
+        "share": 0.9774,
+        "lat": 33.634626,
+        "lng": -117.874882
+      },
+      {
+        "zcta": "92663",
+        "share": 0.775,
+        "lat": 33.625204,
+        "lng": -117.928767
+      }
+    ],
+    "pilotZctas": [
+      "92625",
+      "92657",
+      "92660",
+      "92661",
+      "92662",
+      "92663"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "buena_park_ca",
+    "kind": "city",
+    "label": "Buena Park city, CA",
+    "state": "CA",
+    "city": "Buena Park",
+    "censusKind": "place",
+    "geoid": "0608786",
+    "allZctas": [
+      {
+        "zcta": "90620",
+        "share": 0.9962,
+        "lat": 33.845223,
+        "lng": -118.015292
+      },
+      {
+        "zcta": "90621",
+        "share": 0.9885,
+        "lat": 33.874224,
+        "lng": -117.993368
+      }
+    ],
+    "pilotZctas": [
+      "90620",
+      "90621"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "pharr_tx",
+    "kind": "city",
+    "label": "Pharr city, TX",
+    "state": "TX",
+    "city": "Pharr",
+    "censusKind": "place",
+    "geoid": "4857200",
+    "allZctas": [
+      {
+        "zcta": "78577",
+        "share": 0.9062,
+        "lat": 26.163436,
+        "lng": -98.19389
+      }
+    ],
+    "pilotZctas": [
+      "78577"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "mansfield_tx",
+    "kind": "city",
+    "label": "Mansfield city, TX",
+    "state": "TX",
+    "city": "Mansfield",
+    "censusKind": "place",
+    "geoid": "4846452",
+    "allZctas": [
+      {
+        "zcta": "76063",
+        "share": 0.6963,
+        "lat": 32.57074,
+        "lng": -97.144837
+      }
+    ],
+    "pilotZctas": [
+      "76063"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "alhambra_ca",
+    "kind": "city",
+    "label": "Alhambra city, CA",
+    "state": "CA",
+    "city": "Alhambra",
+    "censusKind": "place",
+    "geoid": "0600884",
+    "allZctas": [
+      {
+        "zcta": "91801",
+        "share": 0.9996,
+        "lat": 34.090924,
+        "lng": -118.127761
+      },
+      {
+        "zcta": "91803",
+        "share": 0.9963,
+        "lat": 34.074736,
+        "lng": -118.145959
+      }
+    ],
+    "pilotZctas": [
+      "91801",
+      "91803"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "flower_mound_tx",
+    "kind": "city",
+    "label": "Flower Mound town, TX",
+    "state": "TX",
+    "city": "Flower Mound",
+    "censusKind": "place",
+    "geoid": "4826232",
+    "allZctas": [
+      {
+        "zcta": "75028",
+        "share": 0.9957,
+        "lat": 33.032998,
+        "lng": -97.064618
+      },
+      {
+        "zcta": "75022",
+        "share": 0.938,
+        "lat": 33.024484,
+        "lng": -97.119504
+      }
+    ],
+    "pilotZctas": [
+      "75022",
+      "75028"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "milpitas_ca",
+    "kind": "city",
+    "label": "Milpitas city, CA",
+    "state": "CA",
+    "city": "Milpitas",
+    "censusKind": "place",
+    "geoid": "0647766",
+    "allZctas": [
+      {
+        "zcta": "95035",
+        "share": 0.6,
+        "lat": 37.440397,
+        "lng": -121.874693
+      }
+    ],
+    "pilotZctas": [
+      "95035"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "upland_ca",
+    "kind": "city",
+    "label": "Upland city, CA",
+    "state": "CA",
+    "city": "Upland",
+    "censusKind": "place",
+    "geoid": "0681344",
+    "allZctas": [
+      {
+        "zcta": "91786",
+        "share": 0.9988,
+        "lat": 34.10525,
+        "lng": -117.66207
+      },
+      {
+        "zcta": "91784",
+        "share": 0.7278,
+        "lat": 34.141146,
+        "lng": -117.655583
+      }
+    ],
+    "pilotZctas": [
+      "91784",
+      "91786"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "cherry_hill_nj",
+    "kind": "city",
+    "label": "Cherry Hill township, NJ",
+    "state": "NJ",
+    "city": "Cherry Hill",
+    "censusKind": "cousub",
+    "geoid": "3400712280",
+    "allZctas": [
+      {
+        "zcta": "08002",
+        "share": 1,
+        "lat": 39.934605,
+        "lng": -75.025389
+      },
+      {
+        "zcta": "08034",
+        "share": 1,
+        "lat": 39.9061,
+        "lng": -75.000375
+      },
+      {
+        "zcta": "08003",
+        "share": 0.9969,
+        "lat": 39.885852,
+        "lng": -74.971145
+      }
+    ],
+    "pilotZctas": [
+      "08002",
+      "08003",
+      "08034"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "tustin_ca",
+    "kind": "city",
+    "label": "Tustin city, CA",
+    "state": "CA",
+    "city": "Tustin",
+    "censusKind": "place",
+    "geoid": "0680854",
+    "allZctas": [
+      {
+        "zcta": "92782",
+        "share": 0.9864,
+        "lat": 33.728375,
+        "lng": -117.797474
+      },
+      {
+        "zcta": "92780",
+        "share": 0.8704,
+        "lat": 33.736808,
+        "lng": -117.819678
+      }
+    ],
+    "pilotZctas": [
+      "92780",
+      "92782"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "alameda_ca",
+    "kind": "city",
+    "label": "Alameda city, CA",
+    "state": "CA",
+    "city": "Alameda",
+    "censusKind": "place",
+    "geoid": "0600562",
+    "allZctas": [
+      {
+        "zcta": "94502",
+        "share": 1,
+        "lat": 37.739495,
+        "lng": -122.239465
+      },
+      {
+        "zcta": "94501",
+        "share": 0.9941,
+        "lat": 37.774712,
+        "lng": -122.278097
+      }
+    ],
+    "pilotZctas": [
+      "94501",
+      "94502"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "missouri_city_tx",
+    "kind": "city",
+    "label": "Missouri City city, TX",
+    "state": "TX",
+    "city": "Missouri City",
+    "censusKind": "place",
+    "geoid": "4848804",
+    "allZctas": [
+      {
+        "zcta": "77489",
+        "share": 0.5743,
+        "lat": 29.600498,
+        "lng": -95.515537
+      },
+      {
+        "zcta": "77459",
+        "share": 0.5497,
+        "lat": 29.526393,
+        "lng": -95.533799
+      },
+      {
+        "zcta": "77071",
+        "share": 0.2018,
+        "lat": 29.651785,
+        "lng": -95.519929
+      }
+    ],
+    "pilotZctas": [
+      "77071",
+      "77459",
+      "77489"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "lakewood_ca",
+    "kind": "city",
+    "label": "Lakewood city, CA",
+    "state": "CA",
+    "city": "Lakewood",
+    "censusKind": "place",
+    "geoid": "0639892",
+    "allZctas": [
+      {
+        "zcta": "90715",
+        "share": 0.998,
+        "lat": 33.841027,
+        "lng": -118.079141
+      },
+      {
+        "zcta": "90712",
+        "share": 0.9968,
+        "lat": 33.849034,
+        "lng": -118.147902
+      },
+      {
+        "zcta": "90713",
+        "share": 0.9875,
+        "lat": 33.848022,
+        "lng": -118.112746
+      }
+    ],
+    "pilotZctas": [
+      "90712",
+      "90713",
+      "90715"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "cedar_park_tx",
+    "kind": "city",
+    "label": "Cedar Park city, TX",
+    "state": "TX",
+    "city": "Cedar Park",
+    "censusKind": "place",
+    "geoid": "4813552",
+    "allZctas": [
+      {
+        "zcta": "78613",
+        "share": 0.8517,
+        "lat": 30.507079,
+        "lng": -97.819464
+      }
+    ],
+    "pilotZctas": [
+      "78613"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "chino_hills_ca",
+    "kind": "city",
+    "label": "Chino Hills city, CA",
+    "state": "CA",
+    "city": "Chino Hills",
+    "censusKind": "place",
+    "geoid": "0613214",
+    "allZctas": [
+      {
+        "zcta": "91709",
+        "share": 0.9961,
+        "lat": 33.942969,
+        "lng": -117.725648
+      }
+    ],
+    "pilotZctas": [
+      "91709"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "pittsburg_ca",
+    "kind": "city",
+    "label": "Pittsburg city, CA",
+    "state": "CA",
+    "city": "Pittsburg",
+    "censusKind": "place",
+    "geoid": "0657456",
+    "allZctas": [
+      {
+        "zcta": "94565",
+        "share": 0.3827,
+        "lat": 38.008595,
+        "lng": -121.928315
+      }
+    ],
+    "pilotZctas": [
+      "94565"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "napa_ca",
+    "kind": "city",
+    "label": "Napa city, CA",
+    "state": "CA",
+    "city": "Napa",
+    "censusKind": "place",
+    "geoid": "0650258",
+    "allZctas": [
+      {
+        "zcta": "94559",
+        "share": 0.1287,
+        "lat": 38.251125,
+        "lng": -122.296089
+      },
+      {
+        "zcta": "94558",
+        "share": 0.0316,
+        "lat": 38.389135,
+        "lng": -122.188412
+      }
+    ],
+    "pilotZctas": [
+      "94558",
+      "94559"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "brick_nj",
+    "kind": "city",
+    "label": "Brick township, NJ",
+    "state": "NJ",
+    "city": "Brick",
+    "censusKind": "cousub",
+    "geoid": "3402907420",
+    "allZctas": [
+      {
+        "zcta": "08723",
+        "share": 1,
+        "lat": 40.038584,
+        "lng": -74.1116
+      },
+      {
+        "zcta": "08724",
+        "share": 0.935,
+        "lat": 40.091032,
+        "lng": -74.114395
+      },
+      {
+        "zcta": "08738",
+        "share": 0.6037,
+        "lat": 40.024765,
+        "lng": -74.059612
+      }
+    ],
+    "pilotZctas": [
+      "08723",
+      "08724",
+      "08738"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "bellflower_ca",
+    "kind": "city",
+    "label": "Bellflower city, CA",
+    "state": "CA",
+    "city": "Bellflower",
+    "censusKind": "place",
+    "geoid": "0604982",
+    "allZctas": [
+      {
+        "zcta": "90706",
+        "share": 1,
+        "lat": 33.887821,
+        "lng": -118.12725
+      }
+    ],
+    "pilotZctas": [
+      "90706"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "pleasanton_ca",
+    "kind": "city",
+    "label": "Pleasanton city, CA",
+    "state": "CA",
+    "city": "Pleasanton",
+    "censusKind": "place",
+    "geoid": "0657792",
+    "allZctas": [
+      {
+        "zcta": "94566",
+        "share": 0.6691,
+        "lat": 37.648731,
+        "lng": -121.848025
+      },
+      {
+        "zcta": "94588",
+        "share": 0.3174,
+        "lat": 37.792648,
+        "lng": -121.862807
+      }
+    ],
+    "pilotZctas": [
+      "94566",
+      "94588"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "rocklin_ca",
+    "kind": "city",
+    "label": "Rocklin city, CA",
+    "state": "CA",
+    "city": "Rocklin",
+    "censusKind": "place",
+    "geoid": "0662364",
+    "allZctas": [
+      {
+        "zcta": "95677",
+        "share": 0.9618,
+        "lat": 38.79292,
+        "lng": -121.232006
+      },
+      {
+        "zcta": "95765",
+        "share": 0.7903,
+        "lat": 38.819738,
+        "lng": -121.278321
+      }
+    ],
+    "pilotZctas": [
+      "95677",
+      "95765"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "apple_valley_ca",
+    "kind": "city",
+    "label": "Apple Valley town, CA",
+    "state": "CA",
+    "city": "Apple Valley",
+    "censusKind": "place",
+    "geoid": "0602364",
+    "allZctas": [
+      {
+        "zcta": "92307",
+        "share": 0.2914,
+        "lat": 34.571232,
+        "lng": -117.133085
+      },
+      {
+        "zcta": "92308",
+        "share": 0.2165,
+        "lat": 34.420222,
+        "lng": -117.156134
+      }
+    ],
+    "pilotZctas": [
+      "92307",
+      "92308"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "bayonne_nj",
+    "kind": "city",
+    "label": "Bayonne city, NJ",
+    "state": "NJ",
+    "city": "Bayonne",
+    "censusKind": "place",
+    "geoid": "3403580",
+    "allZctas": [
+      {
+        "zcta": "07002",
+        "share": 0.9997,
+        "lat": 40.662495,
+        "lng": -74.110201
+      }
+    ],
+    "pilotZctas": [
+      "07002"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_marcos_tx",
+    "kind": "city",
+    "label": "San Marcos city, TX",
+    "state": "TX",
+    "city": "San Marcos",
+    "censusKind": "place",
+    "geoid": "4865600",
+    "allZctas": [
+      {
+        "zcta": "78666",
+        "share": 0.1678,
+        "lat": 29.881662,
+        "lng": -97.984794
+      }
+    ],
+    "pilotZctas": [
+      "78666"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "redlands_ca",
+    "kind": "city",
+    "label": "Redlands city, CA",
+    "state": "CA",
+    "city": "Redlands",
+    "censusKind": "place",
+    "geoid": "0659962",
+    "allZctas": [
+      {
+        "zcta": "92374",
+        "share": 0.7302,
+        "lat": 34.068515,
+        "lng": -117.175322
+      },
+      {
+        "zcta": "92373",
+        "share": 0.4517,
+        "lat": 34.011947,
+        "lng": -117.159702
+      }
+    ],
+    "pilotZctas": [
+      "92373",
+      "92374"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "lake_elsinore_ca",
+    "kind": "city",
+    "label": "Lake Elsinore city, CA",
+    "state": "CA",
+    "city": "Lake Elsinore",
+    "censusKind": "place",
+    "geoid": "0639486",
+    "allZctas": [
+      {
+        "zcta": "92532",
+        "share": 0.727,
+        "lat": 33.690557,
+        "lng": -117.302435
+      },
+      {
+        "zcta": "92530",
+        "share": 0.2669,
+        "lat": 33.633056,
+        "lng": -117.370461
+      }
+    ],
+    "pilotZctas": [
+      "92530",
+      "92532"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "turlock_ca",
+    "kind": "city",
+    "label": "Turlock city, CA",
+    "state": "CA",
+    "city": "Turlock",
+    "censusKind": "place",
+    "geoid": "0680812",
+    "allZctas": [
+      {
+        "zcta": "95382",
+        "share": 0.5903,
+        "lat": 37.527558,
+        "lng": -120.851106
+      }
+    ],
+    "pilotZctas": [
+      "95382"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "tulare_ca",
+    "kind": "city",
+    "label": "Tulare city, CA",
+    "state": "CA",
+    "city": "Tulare",
+    "censusKind": "place",
+    "geoid": "0680644",
+    "allZctas": [
+      {
+        "zcta": "93274",
+        "share": 0.093,
+        "lat": 36.177934,
+        "lng": -119.379975
+      }
+    ],
+    "pilotZctas": [
+      "93274"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "harlingen_tx",
+    "kind": "city",
+    "label": "Harlingen city, TX",
+    "state": "TX",
+    "city": "Harlingen",
+    "censusKind": "place",
+    "geoid": "4832372",
+    "allZctas": [
+      {
+        "zcta": "78552",
+        "share": 0.2914,
+        "lat": 26.193782,
+        "lng": -97.75069
+      },
+      {
+        "zcta": "78550",
+        "share": 0.2592,
+        "lat": 26.255724,
+        "lng": -97.6635
+      }
+    ],
+    "pilotZctas": [
+      "78550",
+      "78552"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "east_orange_nj",
+    "kind": "city",
+    "label": "East Orange city, NJ",
+    "state": "NJ",
+    "city": "East Orange",
+    "censusKind": "place",
+    "geoid": "3419390",
+    "allZctas": [
+      {
+        "zcta": "07018",
+        "share": 1,
+        "lat": 40.755733,
+        "lng": -74.217917
+      },
+      {
+        "zcta": "07017",
+        "share": 0.9994,
+        "lat": 40.771918,
+        "lng": -74.207082
+      }
+    ],
+    "pilotZctas": [
+      "07017",
+      "07018"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "camden_nj",
+    "kind": "city",
+    "label": "Camden city, NJ",
+    "state": "NJ",
+    "city": "Camden",
+    "censusKind": "place",
+    "geoid": "3410000",
+    "allZctas": [
+      {
+        "zcta": "08102",
+        "share": 1,
+        "lat": 39.952116,
+        "lng": -75.121149
+      },
+      {
+        "zcta": "08103",
+        "share": 1,
+        "lat": 39.935202,
+        "lng": -75.112703
+      },
+      {
+        "zcta": "08105",
+        "share": 1,
+        "lat": 39.95034,
+        "lng": -75.096278
+      },
+      {
+        "zcta": "08104",
+        "share": 0.9937,
+        "lat": 39.916459,
+        "lng": -75.111355
+      }
+    ],
+    "pilotZctas": [
+      "08102",
+      "08103",
+      "08104",
+      "08105"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "north_richland_hills_tx",
+    "kind": "city",
+    "label": "North Richland Hills city, TX",
+    "state": "TX",
+    "city": "North Richland Hills",
+    "censusKind": "place",
+    "geoid": "4852356",
+    "allZctas": [
+      {
+        "zcta": "76182",
+        "share": 1,
+        "lat": 32.886498,
+        "lng": -97.208097
+      },
+      {
+        "zcta": "76180",
+        "share": 0.9503,
+        "lat": 32.840721,
+        "lng": -97.224241
+      }
+    ],
+    "pilotZctas": [
+      "76180",
+      "76182"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "walnut_creek_ca",
+    "kind": "city",
+    "label": "Walnut Creek city, CA",
+    "state": "CA",
+    "city": "Walnut Creek",
+    "censusKind": "place",
+    "geoid": "0683346",
+    "allZctas": [
+      {
+        "zcta": "94596",
+        "share": 0.8131,
+        "lat": 37.889009,
+        "lng": -122.036778
+      },
+      {
+        "zcta": "94597",
+        "share": 0.7258,
+        "lat": 37.917697,
+        "lng": -122.071818
+      },
+      {
+        "zcta": "94595",
+        "share": 0.6802,
+        "lat": 37.872087,
+        "lng": -122.068971
+      },
+      {
+        "zcta": "94598",
+        "share": 0.3832,
+        "lat": 37.916916,
+        "lng": -122.014917
+      }
+    ],
+    "pilotZctas": [
+      "94595",
+      "94596",
+      "94597",
+      "94598"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "eastvale_ca",
+    "kind": "city",
+    "label": "Eastvale city, CA",
+    "state": "CA",
+    "city": "Eastvale",
+    "censusKind": "place",
+    "geoid": "0621230",
+    "allZctas": [
+      {
+        "zcta": "92880",
+        "share": 0.3801,
+        "lat": 33.92539,
+        "lng": -117.607254
+      }
+    ],
+    "pilotZctas": [
+      "92880"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "passaic_nj",
+    "kind": "city",
+    "label": "Passaic city, NJ",
+    "state": "NJ",
+    "city": "Passaic",
+    "censusKind": "place",
+    "geoid": "3456550",
+    "allZctas": [
+      {
+        "zcta": "07055",
+        "share": 1,
+        "lat": 40.857552,
+        "lng": -74.129089
+      }
+    ],
+    "pilotZctas": [
+      "07055"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "dublin_ca",
+    "kind": "city",
+    "label": "Dublin city, CA",
+    "state": "CA",
+    "city": "Dublin",
+    "censusKind": "place",
+    "geoid": "0620018",
+    "allZctas": [
+      {
+        "zcta": "94568",
+        "share": 0.9233,
+        "lat": 37.715966,
+        "lng": -121.901141
+      }
+    ],
+    "pilotZctas": [
+      "94568"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "old_bridge_nj",
+    "kind": "city",
+    "label": "Old Bridge township, NJ",
+    "state": "NJ",
+    "city": "Old Bridge",
+    "censusKind": "cousub",
+    "geoid": "3402354705",
+    "allZctas": [
+      {
+        "zcta": "08857",
+        "share": 0.9919,
+        "lat": 40.392789,
+        "lng": -74.330397
+      },
+      {
+        "zcta": "07747",
+        "share": 0.5472,
+        "lat": 40.41325,
+        "lng": -74.257674
+      },
+      {
+        "zcta": "08879",
+        "share": 0.4554,
+        "lat": 40.466447,
+        "lng": -74.278639
+      }
+    ],
+    "pilotZctas": [
+      "07747",
+      "08857",
+      "08879"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "camarillo_ca",
+    "kind": "city",
+    "label": "Camarillo city, CA",
+    "state": "CA",
+    "city": "Camarillo",
+    "censusKind": "place",
+    "geoid": "0610046",
+    "allZctas": [
+      {
+        "zcta": "93010",
+        "share": 0.469,
+        "lat": 34.227888,
+        "lng": -119.079553
+      }
+    ],
+    "pilotZctas": [
+      "93010"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "franklin_nj",
+    "kind": "city",
+    "label": "Franklin township, NJ",
+    "state": "NJ",
+    "city": "Franklin",
+    "censusKind": "cousub",
+    "geoid": "3403524900",
+    "allZctas": [
+      {
+        "zcta": "08823",
+        "share": 1,
+        "lat": 40.438609,
+        "lng": -74.565211
+      },
+      {
+        "zcta": "08873",
+        "share": 1,
+        "lat": 40.499667,
+        "lng": -74.531844
+      },
+      {
+        "zcta": "08890",
+        "share": 1,
+        "lat": 40.539047,
+        "lng": -74.575409
+      },
+      {
+        "zcta": "08528",
+        "share": 0.9467,
+        "lat": 40.387108,
+        "lng": -74.618915
+      }
+    ],
+    "pilotZctas": [
+      "08528",
+      "08823",
+      "08873",
+      "08890"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "baldwin_park_ca",
+    "kind": "city",
+    "label": "Baldwin Park city, CA",
+    "state": "CA",
+    "city": "Baldwin Park",
+    "censusKind": "place",
+    "geoid": "0603666",
+    "allZctas": [
+      {
+        "zcta": "91706",
+        "share": 0.4878,
+        "lat": 34.09741,
+        "lng": -117.968269
+      }
+    ],
+    "pilotZctas": [
+      "91706"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "yuba_city_ca",
+    "kind": "city",
+    "label": "Yuba City city, CA",
+    "state": "CA",
+    "city": "Yuba City",
+    "censusKind": "place",
+    "geoid": "0686972",
+    "allZctas": [
+      {
+        "zcta": "95991",
+        "share": 0.1747,
+        "lat": 39.015503,
+        "lng": -121.611202
+      },
+      {
+        "zcta": "95993",
+        "share": 0.0925,
+        "lat": 39.082497,
+        "lng": -121.680114
+      }
+    ],
+    "pilotZctas": [
+      "95991",
+      "95993"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "madera_ca",
+    "kind": "city",
+    "label": "Madera city, CA",
+    "state": "CA",
+    "city": "Madera",
+    "censusKind": "place",
+    "geoid": "0645022",
+    "allZctas": [
+      {
+        "zcta": "93638",
+        "share": 0.0509,
+        "lat": 37.043434,
+        "lng": -120.033693
+      },
+      {
+        "zcta": "93637",
+        "share": 0.0413,
+        "lat": 36.918079,
+        "lng": -120.185933
+      }
+    ],
+    "pilotZctas": [
+      "93637",
+      "93638"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "lodi_ca",
+    "kind": "city",
+    "label": "Lodi city, CA",
+    "state": "CA",
+    "city": "Lodi",
+    "censusKind": "place",
+    "geoid": "0642202",
+    "allZctas": [
+      {
+        "zcta": "95240",
+        "share": 0.1084,
+        "lat": 38.123544,
+        "lng": -121.159078
+      },
+      {
+        "zcta": "95242",
+        "share": 0.0687,
+        "lat": 38.137068,
+        "lng": -121.384546
+      }
+    ],
+    "pilotZctas": [
+      "95240",
+      "95242"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "rowlett_tx",
+    "kind": "city",
+    "label": "Rowlett city, TX",
+    "state": "TX",
+    "city": "Rowlett",
+    "censusKind": "place",
+    "geoid": "4863572",
+    "allZctas": [
+      {
+        "zcta": "75088",
+        "share": 0.9712,
+        "lat": 32.891629,
+        "lng": -96.541754
+      },
+      {
+        "zcta": "75089",
+        "share": 0.9037,
+        "lat": 32.937583,
+        "lng": -96.544174
+      }
+    ],
+    "pilotZctas": [
+      "75088",
+      "75089"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "redondo_beach_ca",
+    "kind": "city",
+    "label": "Redondo Beach city, CA",
+    "state": "CA",
+    "city": "Redondo Beach",
+    "censusKind": "place",
+    "geoid": "0660018",
+    "allZctas": [
+      {
+        "zcta": "90278",
+        "share": 0.9541,
+        "lat": 33.873605,
+        "lng": -118.370264
+      },
+      {
+        "zcta": "90277",
+        "share": 0.754,
+        "lat": 33.830006,
+        "lng": -118.387124
+      }
+    ],
+    "pilotZctas": [
+      "90277",
+      "90278"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "palo_alto_ca",
+    "kind": "city",
+    "label": "Palo Alto city, CA",
+    "state": "CA",
+    "city": "Palo Alto",
+    "censusKind": "place",
+    "geoid": "0655282",
+    "allZctas": [
+      {
+        "zcta": "94301",
+        "share": 1,
+        "lat": 37.444218,
+        "lng": -122.149855
+      },
+      {
+        "zcta": "94306",
+        "share": 0.9983,
+        "lat": 37.4162,
+        "lng": -122.130858
+      },
+      {
+        "zcta": "94304",
+        "share": 0.8028,
+        "lat": 37.397253,
+        "lng": -122.166979
+      },
+      {
+        "zcta": "94303",
+        "share": 0.6134,
+        "lat": 37.457883,
+        "lng": -122.115097
+      },
+      {
+        "zcta": "94022",
+        "share": 0.2749,
+        "lat": 37.35536,
+        "lng": -122.144935
+      }
+    ],
+    "pilotZctas": [
+      "94022",
+      "94301",
+      "94303",
+      "94304",
+      "94306"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "davis_ca",
+    "kind": "city",
+    "label": "Davis city, CA",
+    "state": "CA",
+    "city": "Davis",
+    "censusKind": "place",
+    "geoid": "0618100",
+    "allZctas": [
+      {
+        "zcta": "95616",
+        "share": 0.1826,
+        "lat": 38.554147,
+        "lng": -121.798514
+      },
+      {
+        "zcta": "95618",
+        "share": 0.1406,
+        "lat": 38.543019,
+        "lng": -121.690538
+      }
+    ],
+    "pilotZctas": [
+      "95616",
+      "95618"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "middletown_nj",
+    "kind": "city",
+    "label": "Middletown township, NJ",
+    "state": "NJ",
+    "city": "Middletown",
+    "censusKind": "cousub",
+    "geoid": "3402545990",
+    "allZctas": [
+      {
+        "zcta": "07718",
+        "share": 1,
+        "lat": 40.419871,
+        "lng": -74.085174
+      },
+      {
+        "zcta": "07737",
+        "share": 1,
+        "lat": 40.406738,
+        "lng": -74.063828
+      },
+      {
+        "zcta": "07758",
+        "share": 1,
+        "lat": 40.434236,
+        "lng": -74.100665
+      },
+      {
+        "zcta": "07748",
+        "share": 0.9971,
+        "lat": 40.3963,
+        "lng": -74.115274
+      },
+      {
+        "zcta": "07738",
+        "share": 0.9915,
+        "lat": 40.335361,
+        "lng": -74.132723
+      },
+      {
+        "zcta": "07732",
+        "share": 0.8038,
+        "lat": 40.430451,
+        "lng": -73.990424
+      },
+      {
+        "zcta": "07701",
+        "share": 0.7883,
+        "lat": 40.360509,
+        "lng": -74.078952
+      },
+      {
+        "zcta": "07716",
+        "share": 0.7131,
+        "lat": 40.402402,
+        "lng": -74.036306
+      },
+      {
+        "zcta": "07760",
+        "share": 0.3165,
+        "lat": 40.371452,
+        "lng": -74.003922
+      }
+    ],
+    "pilotZctas": [
+      "07701",
+      "07716",
+      "07718",
+      "07732",
+      "07737",
+      "07738",
+      "07748",
+      "07758",
+      "07760"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "union_city_nj",
+    "kind": "city",
+    "label": "Union City city, NJ",
+    "state": "NJ",
+    "city": "Union City",
+    "censusKind": "place",
+    "geoid": "3474630",
+    "allZctas": [
+      {
+        "zcta": "07087",
+        "share": 0.9863,
+        "lat": 40.767224,
+        "lng": -74.032429
+      }
+    ],
+    "pilotZctas": [
+      "07087"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "gloucester_nj",
+    "kind": "city",
+    "label": "Gloucester township, NJ",
+    "state": "NJ",
+    "city": "Gloucester",
+    "censusKind": "cousub",
+    "geoid": "3400726760",
+    "allZctas": [
+      {
+        "zcta": "08029",
+        "share": 0.9869,
+        "lat": 39.840937,
+        "lng": -75.067211
+      },
+      {
+        "zcta": "08012",
+        "share": 0.5992,
+        "lat": 39.783815,
+        "lng": -75.056068
+      },
+      {
+        "zcta": "08083",
+        "share": 0.3557,
+        "lat": 39.841307,
+        "lng": -75.028613
+      },
+      {
+        "zcta": "08081",
+        "share": 0.3477,
+        "lat": 39.732848,
+        "lng": -74.976641
+      },
+      {
+        "zcta": "08021",
+        "share": 0.2304,
+        "lat": 39.806156,
+        "lng": -75.000012
+      },
+      {
+        "zcta": "08049",
+        "share": 0.2024,
+        "lat": 39.854575,
+        "lng": -75.038137
+      }
+    ],
+    "pilotZctas": [
+      "08012",
+      "08021",
+      "08029",
+      "08049",
+      "08081",
+      "08083"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "pflugerville_tx",
+    "kind": "city",
+    "label": "Pflugerville city, TX",
+    "state": "TX",
+    "city": "Pflugerville",
+    "censusKind": "place",
+    "geoid": "4857176",
+    "allZctas": [
+      {
+        "zcta": "78660",
+        "share": 0.5241,
+        "lat": 30.43963,
+        "lng": -97.594687
+      }
+    ],
+    "pilotZctas": [
+      "78660"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "yorba_linda_ca",
+    "kind": "city",
+    "label": "Yorba Linda city, CA",
+    "state": "CA",
+    "city": "Yorba Linda",
+    "censusKind": "place",
+    "geoid": "0686832",
+    "allZctas": [
+      {
+        "zcta": "92887",
+        "share": 0.8239,
+        "lat": 33.887223,
+        "lng": -117.733924
+      },
+      {
+        "zcta": "92886",
+        "share": 0.8059,
+        "lat": 33.895411,
+        "lng": -117.800829
+      }
+    ],
+    "pilotZctas": [
+      "92886",
+      "92887"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "brentwood_ca",
+    "kind": "city",
+    "label": "Brentwood city, CA",
+    "state": "CA",
+    "city": "Brentwood",
+    "censusKind": "place",
+    "geoid": "0608142",
+    "allZctas": [
+      {
+        "zcta": "94513",
+        "share": 0.1885,
+        "lat": 37.924899,
+        "lng": -121.686724
+      }
+    ],
+    "pilotZctas": [
+      "94513"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "union_city_ca",
+    "kind": "city",
+    "label": "Union City city, CA",
+    "state": "CA",
+    "city": "Union City",
+    "censusKind": "place",
+    "geoid": "0681204",
+    "allZctas": [
+      {
+        "zcta": "94587",
+        "share": 0.6265,
+        "lat": 37.590008,
+        "lng": -122.075187
+      }
+    ],
+    "pilotZctas": [
+      "94587"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "victoria_tx",
+    "kind": "city",
+    "label": "Victoria city, TX",
+    "state": "TX",
+    "city": "Victoria",
+    "censusKind": "place",
+    "geoid": "4875428",
+    "allZctas": [
+      {
+        "zcta": "77901",
+        "share": 0.9671,
+        "lat": 28.806247,
+        "lng": -96.985445
+      }
+    ],
+    "pilotZctas": [
+      "77901"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "kyle_tx",
+    "kind": "city",
+    "label": "Kyle city, TX",
+    "state": "TX",
+    "city": "Kyle",
+    "censusKind": "place",
+    "geoid": "4839952",
+    "allZctas": [
+      {
+        "zcta": "78640",
+        "share": 0.2458,
+        "lat": 29.994866,
+        "lng": -97.821239
+      }
+    ],
+    "pilotZctas": [
+      "78640"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "south_san_francisco_ca",
+    "kind": "city",
+    "label": "South San Francisco city, CA",
+    "state": "CA",
+    "city": "South San Francisco",
+    "censusKind": "place",
+    "geoid": "0673262",
+    "allZctas": [
+      {
+        "zcta": "94080",
+        "share": 0.876,
+        "lat": 37.655175,
+        "lng": -122.418384
+      }
+    ],
+    "pilotZctas": [
+      "94080"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "laguna_niguel_ca",
+    "kind": "city",
+    "label": "Laguna Niguel city, CA",
+    "state": "CA",
+    "city": "Laguna Niguel",
+    "censusKind": "place",
+    "geoid": "0639248",
+    "allZctas": [
+      {
+        "zcta": "92677",
+        "share": 0.8867,
+        "lat": 33.528654,
+        "lng": -117.701253
+      }
+    ],
+    "pilotZctas": [
+      "92677"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "lynwood_ca",
+    "kind": "city",
+    "label": "Lynwood city, CA",
+    "state": "CA",
+    "city": "Lynwood",
+    "censusKind": "place",
+    "geoid": "0644574",
+    "allZctas": [
+      {
+        "zcta": "90262",
+        "share": 0.9989,
+        "lat": 33.923831,
+        "lng": -118.201352
+      }
+    ],
+    "pilotZctas": [
+      "90262"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "porterville_ca",
+    "kind": "city",
+    "label": "Porterville city, CA",
+    "state": "CA",
+    "city": "Porterville",
+    "censusKind": "place",
+    "geoid": "0658240",
+    "allZctas": [
+      {
+        "zcta": "93257",
+        "share": 0.0492,
+        "lat": 35.980858,
+        "lng": -118.889315
+      }
+    ],
+    "pilotZctas": [
+      "93257"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "union_nj",
+    "kind": "city",
+    "label": "Union township, NJ",
+    "state": "NJ",
+    "city": "Union",
+    "censusKind": "cousub",
+    "geoid": "3403974480",
+    "allZctas": [
+      {
+        "zcta": "07083",
+        "share": 1,
+        "lat": 40.695266,
+        "lng": -74.269078
+      },
+      {
+        "zcta": "07088",
+        "share": 1,
+        "lat": 40.718342,
+        "lng": -74.283764
+      }
+    ],
+    "pilotZctas": [
+      "07083",
+      "07088"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "woodland_ca",
+    "kind": "city",
+    "label": "Woodland city, CA",
+    "state": "CA",
+    "city": "Woodland",
+    "censusKind": "place",
+    "geoid": "0686328",
+    "allZctas": [
+      {
+        "zcta": "95776",
+        "share": 0.1153,
+        "lat": 38.698692,
+        "lng": -121.699462
+      },
+      {
+        "zcta": "95695",
+        "share": 0.0353,
+        "lat": 38.694038,
+        "lng": -121.852932
+      }
+    ],
+    "pilotZctas": [
+      "95695",
+      "95776"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "wylie_tx",
+    "kind": "city",
+    "label": "Wylie city, TX",
+    "state": "TX",
+    "city": "Wylie",
+    "censusKind": "place",
+    "geoid": "4880356",
+    "allZctas": [
+      {
+        "zcta": "75098",
+        "share": 0.5847,
+        "lat": 33.014492,
+        "lng": -96.534832
+      }
+    ],
+    "pilotZctas": [
+      "75098"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "piscataway_nj",
+    "kind": "city",
+    "label": "Piscataway township, NJ",
+    "state": "NJ",
+    "city": "Piscataway",
+    "censusKind": "cousub",
+    "geoid": "3402359010",
+    "allZctas": [
+      {
+        "zcta": "08854",
+        "share": 0.9887,
+        "lat": 40.539658,
+        "lng": -74.462791
+      }
+    ],
+    "pilotZctas": [
+      "08854"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_clemente_ca",
+    "kind": "city",
+    "label": "San Clemente city, CA",
+    "state": "CA",
+    "city": "San Clemente",
+    "censusKind": "place",
+    "geoid": "0665084",
+    "allZctas": [
+      {
+        "zcta": "92673",
+        "share": 0.9654,
+        "lat": 33.466908,
+        "lng": -117.614016
+      },
+      {
+        "zcta": "92672",
+        "share": 0.2363,
+        "lat": 33.372936,
+        "lng": -117.520963
+      }
+    ],
+    "pilotZctas": [
+      "92672",
+      "92673"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "santa_cruz_ca",
+    "kind": "city",
+    "label": "Santa Cruz city, CA",
+    "state": "CA",
+    "city": "Santa Cruz",
+    "censusKind": "place",
+    "geoid": "0669112",
+    "allZctas": [
+      {
+        "zcta": "95064",
+        "share": 1,
+        "lat": 36.991596,
+        "lng": -122.058868
+      },
+      {
+        "zcta": "95062",
+        "share": 0.3525,
+        "lat": 36.973969,
+        "lng": -121.989846
+      }
+    ],
+    "pilotZctas": [
+      "95062",
+      "95064"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "vineland_nj",
+    "kind": "city",
+    "label": "Vineland city, NJ",
+    "state": "NJ",
+    "city": "Vineland",
+    "censusKind": "place",
+    "geoid": "3476070",
+    "allZctas": [
+      {
+        "zcta": "08361",
+        "share": 1,
+        "lat": 39.449369,
+        "lng": -74.958827
+      },
+      {
+        "zcta": "08360",
+        "share": 0.6459,
+        "lat": 39.492354,
+        "lng": -75.003447
+      }
+    ],
+    "pilotZctas": [
+      "08360",
+      "08361"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "irvington_nj",
+    "kind": "city",
+    "label": "Irvington township, NJ",
+    "state": "NJ",
+    "city": "Irvington",
+    "censusKind": "cousub",
+    "geoid": "3401334450",
+    "allZctas": [
+      {
+        "zcta": "07111",
+        "share": 1,
+        "lat": 40.723859,
+        "lng": -74.232522
+      }
+    ],
+    "pilotZctas": [
+      "07111"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "north_bergen_nj",
+    "kind": "city",
+    "label": "North Bergen township, NJ",
+    "state": "NJ",
+    "city": "North Bergen",
+    "censusKind": "cousub",
+    "geoid": "3401752470",
+    "allZctas": [
+      {
+        "zcta": "07047",
+        "share": 1,
+        "lat": 40.793644,
+        "lng": -74.025027
+      }
+    ],
+    "pilotZctas": [
+      "07047"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "la_habra_ca",
+    "kind": "city",
+    "label": "La Habra city, CA",
+    "state": "CA",
+    "city": "La Habra",
+    "censusKind": "place",
+    "geoid": "0639290",
+    "allZctas": [
+      {
+        "zcta": "90631",
+        "share": 0.5407,
+        "lat": 33.942708,
+        "lng": -117.952483
+      }
+    ],
+    "pilotZctas": [
+      "90631"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "little_elm_tx",
+    "kind": "city",
+    "label": "Little Elm city, TX",
+    "state": "TX",
+    "city": "Little Elm",
+    "censusKind": "place",
+    "geoid": "4843012",
+    "allZctas": [
+      {
+        "zcta": "75068",
+        "share": 0.4726,
+        "lat": 33.177497,
+        "lng": -96.952388
+      }
+    ],
+    "pilotZctas": [
+      "75068"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "encinitas_ca",
+    "kind": "city",
+    "label": "Encinitas city, CA",
+    "state": "CA",
+    "city": "Encinitas",
+    "censusKind": "place",
+    "geoid": "0622678",
+    "allZctas": [
+      {
+        "zcta": "92007",
+        "share": 1,
+        "lat": 33.023046,
+        "lng": -117.275581
+      },
+      {
+        "zcta": "92024",
+        "share": 0.9004,
+        "lat": 33.056868,
+        "lng": -117.257577
+      }
+    ],
+    "pilotZctas": [
+      "92007",
+      "92024"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "la_mesa_ca",
+    "kind": "city",
+    "label": "La Mesa city, CA",
+    "state": "CA",
+    "city": "La Mesa",
+    "censusKind": "place",
+    "geoid": "0640004",
+    "allZctas": [
+      {
+        "zcta": "91942",
+        "share": 0.9992,
+        "lat": 32.777267,
+        "lng": -117.021344
+      },
+      {
+        "zcta": "91941",
+        "share": 0.4043,
+        "lat": 32.759266,
+        "lng": -116.997091
+      }
+    ],
+    "pilotZctas": [
+      "91941",
+      "91942"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "jackson_nj",
+    "kind": "city",
+    "label": "Jackson township, NJ",
+    "state": "NJ",
+    "city": "Jackson",
+    "censusKind": "cousub",
+    "geoid": "3402934680",
+    "allZctas": [
+      {
+        "zcta": "08527",
+        "share": 1,
+        "lat": 40.108665,
+        "lng": -74.358602
+      },
+      {
+        "zcta": "08733",
+        "share": 0.7893,
+        "lat": 40.026868,
+        "lng": -74.363674
+      }
+    ],
+    "pilotZctas": [
+      "08527",
+      "08733"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "montebello_ca",
+    "kind": "city",
+    "label": "Montebello city, CA",
+    "state": "CA",
+    "city": "Montebello",
+    "censusKind": "place",
+    "geoid": "0648816",
+    "allZctas": [
+      {
+        "zcta": "90640",
+        "share": 0.9807,
+        "lat": 34.015444,
+        "lng": -118.111012
+      }
+    ],
+    "pilotZctas": [
+      "90640"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "hanford_ca",
+    "kind": "city",
+    "label": "Hanford city, CA",
+    "state": "CA",
+    "city": "Hanford",
+    "censusKind": "place",
+    "geoid": "0631960",
+    "allZctas": [
+      {
+        "zcta": "93230",
+        "share": 0.0674,
+        "lat": 36.29223,
+        "lng": -119.622676
+      }
+    ],
+    "pilotZctas": [
+      "93230"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "gilroy_ca",
+    "kind": "city",
+    "label": "Gilroy city, CA",
+    "state": "CA",
+    "city": "Gilroy",
+    "censusKind": "place",
+    "geoid": "0629504",
+    "allZctas": [
+      {
+        "zcta": "95020",
+        "share": 0.1089,
+        "lat": 37.01621,
+        "lng": -121.559418
+      }
+    ],
+    "pilotZctas": [
+      "95020"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "euless_tx",
+    "kind": "city",
+    "label": "Euless city, TX",
+    "state": "TX",
+    "city": "Euless",
+    "censusKind": "place",
+    "geoid": "4824768",
+    "allZctas": [
+      {
+        "zcta": "76039",
+        "share": 0.9904,
+        "lat": 32.860285,
+        "lng": -97.086028
+      },
+      {
+        "zcta": "76040",
+        "share": 0.583,
+        "lat": 32.819908,
+        "lng": -97.102794
+      },
+      {
+        "zcta": "75261",
+        "share": 0.3734,
+        "lat": 32.903206,
+        "lng": -97.05313
+      }
+    ],
+    "pilotZctas": [
+      "75261",
+      "76039",
+      "76040"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_rafael_ca",
+    "kind": "city",
+    "label": "San Rafael city, CA",
+    "state": "CA",
+    "city": "San Rafael",
+    "censusKind": "place",
+    "geoid": "0668364",
+    "allZctas": [
+      {
+        "zcta": "94901",
+        "share": 0.7795,
+        "lat": 37.980709,
+        "lng": -122.500606
+      },
+      {
+        "zcta": "94903",
+        "share": 0.3187,
+        "lat": 38.02213,
+        "lng": -122.55881
+      }
+    ],
+    "pilotZctas": [
+      "94901",
+      "94903"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "beaumont_ca",
+    "kind": "city",
+    "label": "Beaumont city, CA",
+    "state": "CA",
+    "city": "Beaumont",
+    "censusKind": "place",
+    "geoid": "0604758",
+    "allZctas": [
+      {
+        "zcta": "92223",
+        "share": 0.5054,
+        "lat": 33.937821,
+        "lng": -116.98137
+      }
+    ],
+    "pilotZctas": [
+      "92223"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "petaluma_ca",
+    "kind": "city",
+    "label": "Petaluma city, CA",
+    "state": "CA",
+    "city": "Petaluma",
+    "censusKind": "place",
+    "geoid": "0656784",
+    "allZctas": [
+      {
+        "zcta": "94954",
+        "share": 0.1357,
+        "lat": 38.23501,
+        "lng": -122.557369
+      },
+      {
+        "zcta": "94952",
+        "share": 0.0301,
+        "lat": 38.234553,
+        "lng": -122.760385
+      }
+    ],
+    "pilotZctas": [
+      "94952",
+      "94954"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "pico_rivera_ca",
+    "kind": "city",
+    "label": "Pico Rivera city, CA",
+    "state": "CA",
+    "city": "Pico Rivera",
+    "censusKind": "place",
+    "geoid": "0656924",
+    "allZctas": [
+      {
+        "zcta": "90660",
+        "share": 0.9895,
+        "lat": 33.989524,
+        "lng": -118.089295
+      }
+    ],
+    "pilotZctas": [
+      "90660"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "hoboken_nj",
+    "kind": "city",
+    "label": "Hoboken city, NJ",
+    "state": "NJ",
+    "city": "Hoboken",
+    "censusKind": "place",
+    "geoid": "3432250",
+    "allZctas": [
+      {
+        "zcta": "07030",
+        "share": 0.9924,
+        "lat": 40.745251,
+        "lng": -74.027926
+      }
+    ],
+    "pilotZctas": [
+      "07030"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "santee_ca",
+    "kind": "city",
+    "label": "Santee city, CA",
+    "state": "CA",
+    "city": "Santee",
+    "censusKind": "place",
+    "geoid": "0670224",
+    "allZctas": [
+      {
+        "zcta": "92071",
+        "share": 0.7747,
+        "lat": 32.850685,
+        "lng": -116.995314
+      }
+    ],
+    "pilotZctas": [
+      "92071"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "gardena_ca",
+    "kind": "city",
+    "label": "Gardena city, CA",
+    "state": "CA",
+    "city": "Gardena",
+    "censusKind": "place",
+    "geoid": "0628168",
+    "allZctas": [
+      {
+        "zcta": "90249",
+        "share": 0.8837,
+        "lat": 33.90139,
+        "lng": -118.315697
+      },
+      {
+        "zcta": "90247",
+        "share": 0.733,
+        "lat": 33.891769,
+        "lng": -118.297006
+      }
+    ],
+    "pilotZctas": [
+      "90247",
+      "90249"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "cupertino_ca",
+    "kind": "city",
+    "label": "Cupertino city, CA",
+    "state": "CA",
+    "city": "Cupertino",
+    "censusKind": "place",
+    "geoid": "0617610",
+    "allZctas": [
+      {
+        "zcta": "95014",
+        "share": 0.4441,
+        "lat": 37.308354,
+        "lng": -122.081882
+      }
+    ],
+    "pilotZctas": [
+      "95014"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "national_city_ca",
+    "kind": "city",
+    "label": "National City city, CA",
+    "state": "CA",
+    "city": "National City",
+    "censusKind": "place",
+    "geoid": "0650398",
+    "allZctas": [
+      {
+        "zcta": "91950",
+        "share": 0.9295,
+        "lat": 32.669067,
+        "lng": -117.093487
+      },
+      {
+        "zcta": "92136",
+        "share": 0.2977,
+        "lat": 32.683013,
+        "lng": -117.122978
+      }
+    ],
+    "pilotZctas": [
+      "91950",
+      "92136"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "monterey_park_ca",
+    "kind": "city",
+    "label": "Monterey Park city, CA",
+    "state": "CA",
+    "city": "Monterey Park",
+    "censusKind": "place",
+    "geoid": "0648914",
+    "allZctas": [
+      {
+        "zcta": "91754",
+        "share": 1,
+        "lat": 34.052922,
+        "lng": -118.143465
+      },
+      {
+        "zcta": "91755",
+        "share": 0.983,
+        "lat": 34.050965,
+        "lng": -118.114394
+      }
+    ],
+    "pilotZctas": [
+      "91754",
+      "91755"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "texas_city_tx",
+    "kind": "city",
+    "label": "Texas City city, TX",
+    "state": "TX",
+    "city": "Texas City",
+    "censusKind": "place",
+    "geoid": "4872392",
+    "allZctas": [
+      {
+        "zcta": "77591",
+        "share": 0.9949,
+        "lat": 29.399363,
+        "lng": -94.999115
+      },
+      {
+        "zcta": "77590",
+        "share": 0.9843,
+        "lat": 29.378627,
+        "lng": -94.916651
+      },
+      {
+        "zcta": "77539",
+        "share": 0.4825,
+        "lat": 29.452997,
+        "lng": -95.02847
+      },
+      {
+        "zcta": "77518",
+        "share": 0.2247,
+        "lat": 29.505183,
+        "lng": -94.986711
+      }
+    ],
+    "pilotZctas": [
+      "77518",
+      "77539",
+      "77590",
+      "77591"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "new_brunswick_nj",
+    "kind": "city",
+    "label": "New Brunswick city, NJ",
+    "state": "NJ",
+    "city": "New Brunswick",
+    "censusKind": "place",
+    "geoid": "3451210",
+    "allZctas": [
+      {
+        "zcta": "08901",
+        "share": 0.835,
+        "lat": 40.483638,
+        "lng": -74.44246
+      }
+    ],
+    "pilotZctas": [
+      "08901"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "perth_amboy_nj",
+    "kind": "city",
+    "label": "Perth Amboy city, NJ",
+    "state": "NJ",
+    "city": "Perth Amboy",
+    "censusKind": "place",
+    "geoid": "3458200",
+    "allZctas": [
+      {
+        "zcta": "08861",
+        "share": 0.9143,
+        "lat": 40.520494,
+        "lng": -74.272943
+      }
+    ],
+    "pilotZctas": [
+      "08861"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "parsippany_troy_hills_nj",
+    "kind": "city",
+    "label": "Parsippany-Troy Hills township, NJ",
+    "state": "NJ",
+    "city": "Parsippany-Troy Hills",
+    "censusKind": "cousub",
+    "geoid": "3402756460",
+    "allZctas": [
+      {
+        "zcta": "07034",
+        "share": 1,
+        "lat": 40.87948,
+        "lng": -74.380104
+      },
+      {
+        "zcta": "07878",
+        "share": 1,
+        "lat": 40.871598,
+        "lng": -74.47824
+      },
+      {
+        "zcta": "07054",
+        "share": 0.9999,
+        "lat": 40.853767,
+        "lng": -74.401574
+      },
+      {
+        "zcta": "07950",
+        "share": 0.588,
+        "lat": 40.846026,
+        "lng": -74.482314
+      }
+    ],
+    "pilotZctas": [
+      "07034",
+      "07054",
+      "07878",
+      "07950"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "desoto_tx",
+    "kind": "city",
+    "label": "DeSoto city, TX",
+    "state": "TX",
+    "city": "DeSoto",
+    "censusKind": "place",
+    "geoid": "4820092",
+    "allZctas": [
+      {
+        "zcta": "75115",
+        "share": 0.995,
+        "lat": 32.599427,
+        "lng": -96.864075
+      }
+    ],
+    "pilotZctas": [
+      "75115"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "plainfield_nj",
+    "kind": "city",
+    "label": "Plainfield city, NJ",
+    "state": "NJ",
+    "city": "Plainfield",
+    "censusKind": "place",
+    "geoid": "3459190",
+    "allZctas": [
+      {
+        "zcta": "07062",
+        "share": 0.8783,
+        "lat": 40.631253,
+        "lng": -74.403884
+      },
+      {
+        "zcta": "07060",
+        "share": 0.6238,
+        "lat": 40.616667,
+        "lng": -74.422042
+      },
+      {
+        "zcta": "07063",
+        "share": 0.61,
+        "lat": 40.605118,
+        "lng": -74.444522
+      }
+    ],
+    "pilotZctas": [
+      "07060",
+      "07062",
+      "07063"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "highland_ca",
+    "kind": "city",
+    "label": "Highland city, CA",
+    "state": "CA",
+    "city": "Highland",
+    "censusKind": "place",
+    "geoid": "0633588",
+    "allZctas": [
+      {
+        "zcta": "92346",
+        "share": 0.5126,
+        "lat": 34.124049,
+        "lng": -117.177573
+      }
+    ],
+    "pilotZctas": [
+      "92346"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "lincoln_ca",
+    "kind": "city",
+    "label": "Lincoln city, CA",
+    "state": "CA",
+    "city": "Lincoln",
+    "censusKind": "place",
+    "geoid": "0641474",
+    "allZctas": [
+      {
+        "zcta": "95648",
+        "share": 0.1669,
+        "lat": 38.922812,
+        "lng": -121.312005
+      }
+    ],
+    "pilotZctas": [
+      "95648"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "burleson_tx",
+    "kind": "city",
+    "label": "Burleson city, TX",
+    "state": "TX",
+    "city": "Burleson",
+    "censusKind": "place",
+    "geoid": "4811428",
+    "allZctas": [
+      {
+        "zcta": "76028",
+        "share": 0.312,
+        "lat": 32.532677,
+        "lng": -97.306547
+      }
+    ],
+    "pilotZctas": [
+      "76028"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "fountain_valley_ca",
+    "kind": "city",
+    "label": "Fountain Valley city, CA",
+    "state": "CA",
+    "city": "Fountain Valley",
+    "censusKind": "place",
+    "geoid": "0625380",
+    "allZctas": [
+      {
+        "zcta": "92708",
+        "share": 0.9966,
+        "lat": 33.710582,
+        "lng": -117.951129
+      }
+    ],
+    "pilotZctas": [
+      "92708"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "west_sacramento_ca",
+    "kind": "city",
+    "label": "West Sacramento city, CA",
+    "state": "CA",
+    "city": "West Sacramento",
+    "censusKind": "place",
+    "geoid": "0684816",
+    "allZctas": [
+      {
+        "zcta": "95605",
+        "share": 1,
+        "lat": 38.593521,
+        "lng": -121.539867
+      },
+      {
+        "zcta": "95691",
+        "share": 0.4373,
+        "lat": 38.627951,
+        "lng": -121.593287
+      }
+    ],
+    "pilotZctas": [
+      "95605",
+      "95691"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "port_arthur_tx",
+    "kind": "city",
+    "label": "Port Arthur city, TX",
+    "state": "TX",
+    "city": "Port Arthur",
+    "censusKind": "place",
+    "geoid": "4858820",
+    "allZctas": [
+      {
+        "zcta": "77642",
+        "share": 0.8614,
+        "lat": 29.958022,
+        "lng": -93.891921
+      },
+      {
+        "zcta": "77640",
+        "share": 0.8116,
+        "lat": 29.880511,
+        "lng": -93.941151
+      },
+      {
+        "zcta": "77655",
+        "share": 0.5135,
+        "lat": 29.709922,
+        "lng": -93.939365
+      }
+    ],
+    "pilotZctas": [
+      "77640",
+      "77642",
+      "77655"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "san_jacinto_ca",
+    "kind": "city",
+    "label": "San Jacinto city, CA",
+    "state": "CA",
+    "city": "San Jacinto",
+    "censusKind": "place",
+    "geoid": "0667112",
+    "allZctas": [
+      {
+        "zcta": "92582",
+        "share": 0.8306,
+        "lat": 33.807607,
+        "lng": -117.015163
+      },
+      {
+        "zcta": "92583",
+        "share": 0.3553,
+        "lat": 33.796911,
+        "lng": -116.931371
+      }
+    ],
+    "pilotZctas": [
+      "92582",
+      "92583"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "bloomfield_nj",
+    "kind": "city",
+    "label": "Bloomfield township, NJ",
+    "state": "NJ",
+    "city": "Bloomfield",
+    "censusKind": "cousub",
+    "geoid": "3401306260",
+    "allZctas": [
+      {
+        "zcta": "07003",
+        "share": 1,
+        "lat": 40.809141,
+        "lng": -74.187142
+      }
+    ],
+    "pilotZctas": [
+      "07003"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "fulshear_tx",
+    "kind": "city",
+    "label": "Fulshear city, TX",
+    "state": "TX",
+    "city": "Fulshear",
+    "censusKind": "place",
+    "geoid": "4827876",
+    "allZctas": [
+      {
+        "zcta": "77441",
+        "share": 0.3619,
+        "lat": 29.697428,
+        "lng": -95.909559
+      }
+    ],
+    "pilotZctas": [
+      "77441"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "arcadia_ca",
+    "kind": "city",
+    "label": "Arcadia city, CA",
+    "state": "CA",
+    "city": "Arcadia",
+    "censusKind": "place",
+    "geoid": "0602462",
+    "allZctas": [
+      {
+        "zcta": "91007",
+        "share": 0.9488,
+        "lat": 34.128284,
+        "lng": -118.047732
+      },
+      {
+        "zcta": "91006",
+        "share": 0.8791,
+        "lat": 34.135159,
+        "lng": -118.026685
+      }
+    ],
+    "pilotZctas": [
+      "91006",
+      "91007"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "yucaipa_ca",
+    "kind": "city",
+    "label": "Yucaipa city, CA",
+    "state": "CA",
+    "city": "Yucaipa",
+    "censusKind": "place",
+    "geoid": "0687042",
+    "allZctas": [
+      {
+        "zcta": "92399",
+        "share": 0.4877,
+        "lat": 34.032312,
+        "lng": -117.010577
+      }
+    ],
+    "pilotZctas": [
+      "92399"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "howell_nj",
+    "kind": "city",
+    "label": "Howell township, NJ",
+    "state": "NJ",
+    "city": "Howell",
+    "censusKind": "cousub",
+    "geoid": "3402533300",
+    "allZctas": [
+      {
+        "zcta": "07731",
+        "share": 0.996,
+        "lat": 40.149537,
+        "lng": -74.203987
+      },
+      {
+        "zcta": "07727",
+        "share": 0.6244,
+        "lat": 40.205491,
+        "lng": -74.157535
+      }
+    ],
+    "pilotZctas": [
+      "07727",
+      "07731"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "wayne_nj",
+    "kind": "city",
+    "label": "Wayne township, NJ",
+    "state": "NJ",
+    "city": "Wayne",
+    "censusKind": "cousub",
+    "geoid": "3403177840",
+    "allZctas": [
+      {
+        "zcta": "07470",
+        "share": 0.9936,
+        "lat": 40.945855,
+        "lng": -74.245077
+      }
+    ],
+    "pilotZctas": [
+      "07470"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "rockwall_tx",
+    "kind": "city",
+    "label": "Rockwall city, TX",
+    "state": "TX",
+    "city": "Rockwall",
+    "censusKind": "place",
+    "geoid": "4862828",
+    "allZctas": [
+      {
+        "zcta": "75087",
+        "share": 0.5363,
+        "lat": 32.948579,
+        "lng": -96.442091
+      },
+      {
+        "zcta": "75032",
+        "share": 0.2537,
+        "lat": 32.857112,
+        "lng": -96.43121
+      }
+    ],
+    "pilotZctas": [
+      "75032",
+      "75087"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "galveston_tx",
+    "kind": "city",
+    "label": "Galveston city, TX",
+    "state": "TX",
+    "city": "Galveston",
+    "censusKind": "place",
+    "geoid": "4828068",
+    "allZctas": [
+      {
+        "zcta": "77550",
+        "share": 1,
+        "lat": 29.307853,
+        "lng": -94.769334
+      },
+      {
+        "zcta": "77551",
+        "share": 1,
+        "lat": 29.279462,
+        "lng": -94.833527
+      },
+      {
+        "zcta": "77555",
+        "share": 1,
+        "lat": 29.310761,
+        "lng": -94.776472
+      },
+      {
+        "zcta": "77554",
+        "share": 0.9469,
+        "lat": 29.23501,
+        "lng": -94.924489
+      }
+    ],
+    "pilotZctas": [
+      "77550",
+      "77551",
+      "77554",
+      "77555"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "colton_ca",
+    "kind": "city",
+    "label": "Colton city, CA",
+    "state": "CA",
+    "city": "Colton",
+    "censusKind": "place",
+    "geoid": "0614890",
+    "allZctas": [
+      {
+        "zcta": "92324",
+        "share": 0.5265,
+        "lat": 34.025688,
+        "lng": -117.288796
+      }
+    ],
+    "pilotZctas": [
+      "92324"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "placentia_ca",
+    "kind": "city",
+    "label": "Placentia city, CA",
+    "state": "CA",
+    "city": "Placentia",
+    "censusKind": "place",
+    "geoid": "0657526",
+    "allZctas": [
+      {
+        "zcta": "92870",
+        "share": 0.9804,
+        "lat": 33.881158,
+        "lng": -117.854783
+      }
+    ],
+    "pilotZctas": [
+      "92870"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "delano_ca",
+    "kind": "city",
+    "label": "Delano city, CA",
+    "state": "CA",
+    "city": "Delano",
+    "censusKind": "place",
+    "geoid": "0618394",
+    "allZctas": [
+      {
+        "zcta": "93215",
+        "share": 0.0981,
+        "lat": 35.779464,
+        "lng": -119.191935
+      }
+    ],
+    "pilotZctas": [
+      "93215"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": [],
+    "zctaRule": "city-land"
+  },
+  {
+    "id": "palm_desert_ca",
+    "kind": "city",
+    "label": "Palm Desert city, CA",
+    "state": "CA",
+    "city": "Palm Desert",
+    "censusKind": "place",
+    "geoid": "0655184",
+    "allZctas": [
+      {
+        "zcta": "92211",
+        "share": 0.7305,
+        "lat": 33.765401,
+        "lng": -116.334205
+      },
+      {
+        "zcta": "92260",
+        "share": 0.5094,
+        "lat": 33.69723,
+        "lng": -116.406257
+      }
+    ],
+    "pilotZctas": [
+      "92211",
+      "92260"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "west_new_york_nj",
+    "kind": "city",
+    "label": "West New York town, NJ",
+    "state": "NJ",
+    "city": "West New York",
+    "censusKind": "place",
+    "geoid": "3479610",
+    "allZctas": [
+      {
+        "zcta": "07093",
+        "share": 0.8374,
+        "lat": 40.786704,
+        "lng": -74.008909
+      }
+    ],
+    "pilotZctas": [
+      "07093"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "cathedral_city_ca",
+    "kind": "city",
+    "label": "Cathedral City city, CA",
+    "state": "CA",
+    "city": "Cathedral City",
+    "censusKind": "place",
+    "geoid": "0612048",
+    "allZctas": [
+      {
+        "zcta": "92234",
+        "share": 0.8945,
+        "lat": 33.814131,
+        "lng": -116.465548
+      },
+      {
+        "zcta": "92276",
+        "share": 0.2482,
+        "lat": 33.832308,
+        "lng": -116.386402
+      }
+    ],
+    "pilotZctas": [
+      "92234",
+      "92276"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "novato_ca",
+    "kind": "city",
+    "label": "Novato city, CA",
+    "state": "CA",
+    "city": "Novato",
+    "censusKind": "place",
+    "geoid": "0652582",
+    "allZctas": [
+      {
+        "zcta": "94949",
+        "share": 0.712,
+        "lat": 38.060094,
+        "lng": -122.50641
+      },
+      {
+        "zcta": "94945",
+        "share": 0.5294,
+        "lat": 38.122687,
+        "lng": -122.553142
+      },
+      {
+        "zcta": "94947",
+        "share": 0.2487,
+        "lat": 38.1062,
+        "lng": -122.624985
+      }
+    ],
+    "pilotZctas": [
+      "94945",
+      "94947",
+      "94949"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "diamond_bar_ca",
+    "kind": "city",
+    "label": "Diamond Bar city, CA",
+    "state": "CA",
+    "city": "Diamond Bar",
+    "censusKind": "place",
+    "geoid": "0619192",
+    "allZctas": [
+      {
+        "zcta": "91765",
+        "share": 0.6996,
+        "lat": 33.985166,
+        "lng": -117.812005
+      }
+    ],
+    "pilotZctas": [
+      "91765"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "huntington_park_ca",
+    "kind": "city",
+    "label": "Huntington Park city, CA",
+    "state": "CA",
+    "city": "Huntington Park",
+    "censusKind": "place",
+    "geoid": "0636056",
+    "allZctas": [
+      {
+        "zcta": "90255",
+        "share": 0.7528,
+        "lat": 33.979248,
+        "lng": -118.217438
+      }
+    ],
+    "pilotZctas": [
+      "90255"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "celina_tx",
+    "kind": "city",
+    "label": "Celina city, TX",
+    "state": "TX",
+    "city": "Celina",
+    "censusKind": "place",
+    "geoid": "4813684",
+    "allZctas": [
+      {
+        "zcta": "75009",
+        "share": 0.2667,
+        "lat": 33.338899,
+        "lng": -96.752977
+      }
+    ],
+    "pilotZctas": [
+      "75009"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "grapevine_tx",
+    "kind": "city",
+    "label": "Grapevine city, TX",
+    "state": "TX",
+    "city": "Grapevine",
+    "censusKind": "place",
+    "geoid": "4830644",
+    "allZctas": [
+      {
+        "zcta": "76051",
+        "share": 0.9935,
+        "lat": 32.942026,
+        "lng": -97.07993
+      },
+      {
+        "zcta": "75261",
+        "share": 0.6034,
+        "lat": 32.903206,
+        "lng": -97.05313
+      }
+    ],
+    "pilotZctas": [
+      "75261",
+      "76051"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "watsonville_ca",
+    "kind": "city",
+    "label": "Watsonville city, CA",
+    "state": "CA",
+    "city": "Watsonville",
+    "censusKind": "place",
+    "geoid": "0683668",
+    "allZctas": [
+      {
+        "zcta": "95019",
+        "share": 0.8335,
+        "lat": 36.935853,
+        "lng": -121.784476
+      }
+    ],
+    "pilotZctas": [
+      "95019"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "paramount_ca",
+    "kind": "city",
+    "label": "Paramount city, CA",
+    "state": "CA",
+    "city": "Paramount",
+    "censusKind": "place",
+    "geoid": "0655618",
+    "allZctas": [
+      {
+        "zcta": "90723",
+        "share": 0.9956,
+        "lat": 33.898883,
+        "lng": -118.166629
+      }
+    ],
+    "pilotZctas": [
+      "90723"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "east_brunswick_nj",
+    "kind": "city",
+    "label": "East Brunswick township, NJ",
+    "state": "NJ",
+    "city": "East Brunswick",
+    "censusKind": "cousub",
+    "geoid": "3402319000",
+    "allZctas": [
+      {
+        "zcta": "08816",
+        "share": 0.9837,
+        "lat": 40.429119,
+        "lng": -74.416287
+      },
+      {
+        "zcta": "08850",
+        "share": 0.2908,
+        "lat": 40.449151,
+        "lng": -74.440313
+      }
+    ],
+    "pilotZctas": [
+      "08816",
+      "08850"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "aliso_viejo_ca",
+    "kind": "city",
+    "label": "Aliso Viejo city, CA",
+    "state": "CA",
+    "city": "Aliso Viejo",
+    "censusKind": "place",
+    "geoid": "0600947",
+    "allZctas": [
+      {
+        "zcta": "92656",
+        "share": 0.8283,
+        "lat": 33.575201,
+        "lng": -117.730352
+      }
+    ],
+    "pilotZctas": [
+      "92656"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "sherman_tx",
+    "kind": "city",
+    "label": "Sherman city, TX",
+    "state": "TX",
+    "city": "Sherman",
+    "censusKind": "place",
+    "geoid": "4867496",
+    "allZctas": [
+      {
+        "zcta": "75092",
+        "share": 0.2523,
+        "lat": 33.652064,
+        "lng": -96.700264
+      },
+      {
+        "zcta": "75090",
+        "share": 0.2059,
+        "lat": 33.604131,
+        "lng": -96.550405
+      }
+    ],
+    "pilotZctas": [
+      "75090",
+      "75092"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "monroe_nj",
+    "kind": "city",
+    "label": "Monroe township, NJ",
+    "state": "NJ",
+    "city": "Monroe",
+    "censusKind": "cousub",
+    "geoid": "3402347280",
+    "allZctas": [
+      {
+        "zcta": "08831",
+        "share": 0.8175,
+        "lat": 40.334341,
+        "lng": -74.432502
+      }
+    ],
+    "pilotZctas": [
+      "08831"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
+  },
+  {
+    "id": "glendora_ca",
+    "kind": "city",
+    "label": "Glendora city, CA",
+    "state": "CA",
+    "city": "Glendora",
+    "censusKind": "place",
+    "geoid": "0630014",
+    "allZctas": [
+      {
+        "zcta": "91740",
+        "share": 0.976,
+        "lat": 34.119367,
+        "lng": -117.855054
+      },
+      {
+        "zcta": "91741",
+        "share": 0.6462,
+        "lat": 34.163363,
+        "lng": -117.834121
+      }
+    ],
+    "pilotZctas": [
+      "91740",
+      "91741"
+    ],
+    "expansionZctas": [],
+    "poBoxZips": []
   }
 ]
