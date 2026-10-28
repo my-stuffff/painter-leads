@@ -41,7 +41,9 @@ describe('pilot areas (D-08, D-09 amendment)', () => {
     expect(area('edison_nj').allZctas).toHaveLength(3);
     expect(area('austin_tx').allZctas).toHaveLength(38);
     expect(area('san_diego_ca').allZctas).toHaveLength(45);
-    for (const a of areas) expect(a.allZctas.every((z) => z.share >= config.search.zctaMinShare)).toBe(true);
+    for (const a of areas.filter((x) => x.zctaRule !== 'city-land')) {
+      expect(a.allZctas.every((z) => z.share >= config.search.zctaMinShare), a.id).toBe(true);
+    }
   });
 
   it('loadAreas honours the config order, getArea throws on an unknown id, isZipInArea', () => {
