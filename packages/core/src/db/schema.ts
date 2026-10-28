@@ -4,6 +4,7 @@ import {
   bigserial,
   boolean,
   check,
+  customType,
   date,
   doublePrecision,
   index,
@@ -436,3 +437,120 @@ export const PILOT_TABLES = [
   'dns_checks',
   'accuracy_samples',
 ] as const;
+
+// ---------------------------------------------------------------------------------------------------------------
+// Platform (Phase 3): signed-in users, jobs the web app queues and the workers run, and each job's built export.
+
+const bytea = customType<{ data: Buffer; driverData: Buffer }>({ dataType: () => 'bytea' });
+
+export const USER_ROLES = ['admin', 'operator', 'viewer'] as const;
+export const JOB_STATUSES = ['queued', 'running', 'done', 'failed', 'cancelled'] as const;
+export const JOB_AREA_STATUSES = ['queued', 'running', 'waiting', 'done', 'reused', 'failed', 'cancelled'] as const;
+export const EXPORT_STATUSES = ['none', 'building', 'ready', 'failed'] as const;
+
+export const users = pgTable(
+  'users',
+  {
+    id: serial('id').primaryKey(),
+    email: text('email').notNull().unique(),
+    name: text('name').notNull(),
+    passwordHash: text('password_hash').notNull(),
+    role: text('role').notNull(),
+    disabled: boolean('disabled').notNull().default(false),
+    createdAt: ts('created_at').notNull().defaultNow(),
+    lastLoginAt: ts('last_login_at'),
+  },
+  () => [check('users_role_check', inList('role', USER_ROLES))],
+);
+
+export const sessions = pgTable(
+  'sessions',
+  {
+    /** sha256 of the cookie token (the token itself is never stored). */
+    id: text('id').primaryKey(),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    createdAt: ts('created_at').notNull().defaultNow(),
+    expiresAt: ts('expires_at').notNull(),
+    lastSeenAt: ts('last_seen_at').notNull().defaultNow(),
+  },
+  (t) => [index('sessions_user_idx').on(t.userId)],
+);
+
+export const jobs = pgTable(
+  'jobs',
+  {
+    id: serial('id').primaryKey(),
+    name: text('name').notNull(),
+    createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
+    status: text('status').notNull().default('queued'),
+    states: text('states').array().notNull(),
+    /** JobSettings (apps/web/src/shared/api.ts): thresholds, search terms, reuse window. */
+    settings: jsonb('settings').notNull(),
+    error: text('error'),
+    exportStatus: text('export_status').notNull().default('none'),
+    exportError: text('export_error'),
+    createdAt: ts('created_at').notNull().defaultNow(),
+    startedAt: ts('started_at'),
+    finishedAt: ts('finished_at'),
+  },
+  () => [
+    check('jobs_status_check', inList('status', JOB_STATUSES)),
+    check('jobs_export_status_check', inList('export_status', EXPORT_STATUSES)),
+  ],
+);
+
+/** One city of a job. A city is run (or a fresh earlier run reused) by one worker at a time; one running city per state. */
+export const jobAreas = pgTable(
+  'job_areas',
+  {
+    id: serial('id').primaryKey(),
+    jobId: integer('job_id')
+      .notNull()
+      .references(() => jobs.id, { onDelete: 'cascade' }),
+    areaId: text('area_id').notNull(),
+    state: text('state').notNull(),
+    label: text('label').notNull(),
+    position: integer('position').notNull(),
+    status: text('status').notNull().default('queued'),
+    runId: integer('run_id').references(() => runs.id),
+    attempts: integer('attempts').notNull().default(0),
+    workerId: text('worker_id'),
+    heartbeatAt: ts('heartbeat_at'),
+    /** A waiting city is not picked up again before this time (Google back-off, daily cap). */
+    notBefore: ts('not_before'),
+    /** Plain-words line for the screen: what is happening or why it stopped. */
+    message: text('message'),
+    startedAt: ts('started_at'),
+    finishedAt: ts('finished_at'),
+  },
+  (t) => [
+    unique('job_areas_job_area_key').on(t.jobId, t.areaId),
+    index('job_areas_status_idx').on(t.status),
+    check('job_areas_status_check', inList('status', JOB_AREA_STATUSES)),
+  ],
+);
+
+export const jobExports = pgTable('job_exports', {
+  jobId: integer('job_id')
+    .primaryKey()
+    .references(() => jobs.id, { onDelete: 'cascade' }),
+  builtAt: ts('built_at').notNull().defaultNow(),
+  xlsx: bytea('xlsx').notNull(),
+  csv: bytea('csv').notNull(),
+  /** LeadRow[] (apps/web/src/shared/api.ts) for the results table. */
+  rows: jsonb('rows').notNull(),
+  /** ExportSummary (apps/web/src/shared/api.ts). */
+  summary: jsonb('summary').notNull(),
+});
+
+export const workers = pgTable('workers', {
+  id: text('id').primaryKey(),
+  startedAt: ts('started_at').notNull().defaultNow(),
+  lastSeenAt: ts('last_seen_at').notNull().defaultNow(),
+  jobAreaId: integer('job_area_id'),
+  note: text('note'),
+});
+
+export const PLATFORM_TABLES = ['users', 'sessions', 'jobs', 'job_areas', 'job_exports', 'workers'] as const;
