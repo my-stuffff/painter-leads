@@ -109,7 +109,7 @@ export function AreaList({ areas }: { areas: JobArea[] }) {
               const active = a.status === 'running';
               return (
                 <tr key={a.id} className={clsx('border-b border-line align-top last:border-0', active && 'bg-tint/40')}>
-                  <td className="max-w-[320px] px-5 py-3">
+                  <td className="min-w-[220px] px-5 py-3">
                     <p className="font-medium text-ink">{a.label}</p>
                     <Msg a={a} />
                   </td>

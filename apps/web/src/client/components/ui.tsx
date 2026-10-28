@@ -62,21 +62,23 @@ export function IconButton({
   );
 }
 
-export const inputClass =
-  'h-10 w-full rounded-lg border border-line-strong bg-surface px-3 text-[15px] text-ink placeholder:text-ink-3 transition-[border-color,box-shadow] duration-150 hover:border-ink-3/70 focus:border-accent focus:outline-none focus:ring-3 focus:ring-accent/20 disabled:opacity-60 sm:text-sm';
+const fieldBase =
+  'h-10 rounded-lg border border-line-strong bg-surface px-3 text-[15px] text-ink placeholder:text-ink-3 transition-[border-color,box-shadow] duration-150 hover:border-ink-3/70 focus:border-accent focus:outline-none focus:ring-3 focus:ring-accent/20 disabled:opacity-60 sm:text-sm';
+export const inputClass = `${fieldBase} w-full`;
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(function Input(
   { className, ...rest },
   ref,
 ) {
-  return <input ref={ref} className={clsx(inputClass, className)} {...rest} />;
+  // A width in className replaces the default full width (two width classes would fight).
+  return <input ref={ref} className={clsx(/(^|\s)w-/.test(className ?? '') ? fieldBase : inputClass, className)} {...rest} />;
 });
 
 export function Select({ className, children, ...rest }: SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
       className={clsx(
-        inputClass,
+        fieldBase,
         'cursor-pointer appearance-none bg-[length:16px] bg-[right_10px_center] bg-no-repeat pr-9',
         "bg-[url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2374859a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E\")]",
         className,
@@ -150,6 +152,7 @@ export function Segmented<T extends string | number>({
   label,
   size = 'md',
   className,
+  stretch,
 }: {
   value: T;
   onChange: (v: T) => void;
@@ -157,9 +160,15 @@ export function Segmented<T extends string | number>({
   label: string;
   size?: 'sm' | 'md';
   className?: string;
+  /** Fill the width on phones (equal buttons). */
+  stretch?: boolean;
 }) {
   return (
-    <div role="radiogroup" aria-label={label} className={clsx('inline-flex max-w-full rounded-lg bg-raised p-0.5 ring-1 ring-line', className)}>
+    <div
+      role="radiogroup"
+      aria-label={label}
+      className={clsx('inline-flex max-w-full rounded-lg bg-raised p-0.5 ring-1 ring-line', stretch && 'flex w-full sm:inline-flex sm:w-auto', className)}
+    >
       {options.map((o) => {
         const on = o.value === value;
         return (
@@ -170,8 +179,9 @@ export function Segmented<T extends string | number>({
             aria-checked={on}
             onClick={() => onChange(o.value)}
             className={clsx(
-              'inline-flex items-center gap-1.5 whitespace-nowrap rounded-md font-medium transition-[background-color,color,box-shadow] duration-150',
+              'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-medium transition-[background-color,color,box-shadow] duration-150',
               size === 'sm' ? 'h-7 px-2.5 text-[13px]' : 'h-8 px-3 text-sm',
+              stretch && 'flex-1 px-1.5 sm:flex-none sm:px-3',
               on ? 'bg-surface text-ink shadow-[0_1px_2px_rgb(14_34_51/0.12)] ring-1 ring-line' : 'text-ink-2 hover:text-ink',
             )}
           >

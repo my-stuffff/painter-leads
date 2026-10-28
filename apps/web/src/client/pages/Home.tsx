@@ -36,7 +36,10 @@ function LeadsStrip({ leads }: { leads: LeadCounts }) {
           <div key={l} className="px-4 py-3.5 sm:px-6">
             <dt className="flex items-center gap-1.5 text-[13px] text-ink-2">
               <Swatch list={l} />
-              <span className="truncate">{LEAD_LIST_LABEL[l]}</span>
+              <span className="truncate">
+                <span className="sm:hidden">{l === 'painting' ? 'Painting' : LEAD_LIST_LABEL[l]}</span>
+                <span className="hidden sm:inline">{LEAD_LIST_LABEL[l]}</span>
+              </span>
             </dt>
             <dd className="mt-1 font-display text-xl font-medium text-ink tabular-nums sm:text-2xl">{num(leads[l])}</dd>
           </div>

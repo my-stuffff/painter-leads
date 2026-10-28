@@ -89,7 +89,7 @@ function AddUserDialog({ open, onClose }: { open: boolean; onClose: () => void }
         </Field>
         <Field label="Role" hint={role === 'viewer' ? 'Viewers can look and download, not start searches.' : role === 'admin' ? 'Admins also manage users.' : undefined}>
           {(id) => (
-            <Select id={id} value={role} onChange={(e) => setRole(e.target.value as Role)}>
+            <Select id={id} value={role} onChange={(e) => setRole(e.target.value as Role)} className="w-full">
               {ROLES.map((r) => (
                 <option key={r} value={r}>
                   {ROLE_LABEL[r]}
@@ -215,7 +215,7 @@ function UserRowView({ u, self, onReset }: { u: UserRow; self: boolean; onReset:
   return (
     <>
       <tr className={clsx('hidden border-b border-line last:border-0 md:table-row', u.disabled && 'opacity-70')}>
-        <td className="max-w-0 px-5 py-3">
+        <td className="px-5 py-3">
           <p className="truncate font-medium text-ink">
             {u.name}
             {self && <span className="ml-2 text-[12px] font-normal text-ink-3">You</span>}
@@ -295,7 +295,14 @@ export default function UsersPage() {
         </Panel>
       ) : (
         <Panel className="overflow-hidden">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm md:table-fixed">
+            <colgroup className="hidden md:table-column-group">
+              <col style={{ width: '31%' }} />
+              <col style={{ width: '17%' }} />
+              <col style={{ width: '12%' }} />
+              <col style={{ width: '13%' }} />
+              <col style={{ width: '27%' }} />
+            </colgroup>
             <thead className="hidden md:table-header-group">
               <tr className="border-b border-line bg-raised text-left text-[13px] text-ink-2">
                 <th className="px-5 py-2.5 font-medium">Name</th>

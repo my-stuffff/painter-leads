@@ -13,15 +13,15 @@ import { useHotkey } from '../../lib/nav';
 
 const PAGE = 50;
 type SortKey = 'company' | 'owner' | 'phone' | 'email' | 'website' | 'rating' | 'reviews' | 'city';
-const COLS: { key: SortKey; label: string; num?: boolean; className?: string }[] = [
-  { key: 'company', label: 'Company', className: 'min-w-[220px]' },
-  { key: 'owner', label: 'Owner', className: 'min-w-[150px]' },
-  { key: 'phone', label: 'Phone' },
-  { key: 'email', label: 'Email', className: 'min-w-[180px]' },
-  { key: 'website', label: 'Website', className: 'min-w-[150px]' },
-  { key: 'rating', label: 'Rating', num: true },
-  { key: 'reviews', label: 'Reviews', num: true },
-  { key: 'city', label: 'City', className: 'min-w-[130px]' },
+const COLS: { key: SortKey; label: string; num?: boolean; width: string }[] = [
+  { key: 'company', label: 'Company', width: '19%' },
+  { key: 'owner', label: 'Owner', width: '12.5%' },
+  { key: 'phone', label: 'Phone', width: '12.5%' },
+  { key: 'email', label: 'Email', width: '17%' },
+  { key: 'website', label: 'Website', width: '13%' },
+  { key: 'rating', label: 'Rating', num: true, width: '7%' },
+  { key: 'reviews', label: 'Reviews', num: true, width: '7.5%' },
+  { key: 'city', label: 'City', width: '11.5%' },
 ];
 
 function sortValue(r: LeadRow, k: SortKey): string | number | null {
@@ -258,7 +258,12 @@ export function LeadsBrowser({ rows, onOpen }: { rows: LeadRow[]; onOpen: (compa
           {/* desktop: table */}
           <Panel className="hidden overflow-hidden md:block">
             <div className="scroll-thin max-h-[min(72vh,820px)] overflow-auto">
-              <table className="w-full text-sm">
+              <table className="w-full min-w-[1040px] table-fixed text-sm">
+                <colgroup>
+                  {COLS.map((c) => (
+                    <col key={c.key} style={{ width: c.width }} />
+                  ))}
+                </colgroup>
                 <thead className="sticky top-0 z-10">
                   <tr className="bg-raised text-left text-[13px] text-ink-2 shadow-[0_1px_0_var(--line)]">
                     {COLS.map((c) => {
@@ -268,7 +273,7 @@ export function LeadsBrowser({ rows, onOpen }: { rows: LeadRow[]; onOpen: (compa
                           key={c.key}
                           scope="col"
                           aria-sort={on ? (dir === 'asc' ? 'ascending' : 'descending') : 'none'}
-                          className={clsx('px-3 py-0 font-medium first:pl-5 last:pr-5', c.className, c.num && 'text-right')}
+                          className={clsx('px-3 py-0 font-medium first:pl-5 last:pr-5', c.num && 'text-right')}
                         >
                           <button
                             type="button"
@@ -306,12 +311,12 @@ export function LeadsBrowser({ rows, onOpen }: { rows: LeadRow[]; onOpen: (compa
                       }}
                       className="cursor-pointer border-b border-line transition-colors last:border-0 hover:bg-raised focus-visible:bg-tint focus-visible:outline-none"
                     >
-                      <td className="max-w-[300px] py-2.5 pr-3 pl-5">
+                      <td className="py-2.5 pr-3 pl-5">
                         <p className="truncate font-medium text-ink">{r.company}</p>
                         {r.whyNot && <p className="truncate text-[12px] text-warn-ink">{r.whyNot}</p>}
                       </td>
-                      <Td className="max-w-[200px]">{r.owner ? <span className="block truncate">{r.owner}</span> : <Blank />}</Td>
-                      <Td className="whitespace-nowrap">
+                      <Td>{r.owner ? <span className="block truncate">{r.owner}</span> : <Blank />}</Td>
+                      <Td className="truncate whitespace-nowrap">
                         {r.phone ? (
                           <a href={`tel:${r.phone.replace(/[^\d+]/g, '')}`} onClick={(e) => e.stopPropagation()} className="hover:text-accent-ink hover:underline">
                             {r.phone}
@@ -320,7 +325,7 @@ export function LeadsBrowser({ rows, onOpen }: { rows: LeadRow[]; onOpen: (compa
                           <Blank />
                         )}
                       </Td>
-                      <Td className="max-w-[240px]">
+                      <Td>
                         {r.email ? (
                           <a href={`mailto:${r.email}`} onClick={(e) => e.stopPropagation()} className="block truncate hover:text-accent-ink hover:underline">
                             {r.email}
@@ -329,7 +334,7 @@ export function LeadsBrowser({ rows, onOpen }: { rows: LeadRow[]; onOpen: (compa
                           <Blank />
                         )}
                       </Td>
-                      <Td className="max-w-[200px]">
+                      <Td>
                         {r.website ? (
                           <a
                             href={r.website}
@@ -348,8 +353,10 @@ export function LeadsBrowser({ rows, onOpen }: { rows: LeadRow[]; onOpen: (compa
                         <Stars rating={r.rating} className="justify-end" />
                       </Td>
                       <Td className="text-right tabular-nums">{r.reviews ?? <Blank />}</Td>
-                      <td className="max-w-[180px] py-2.5 pr-5 pl-3 text-ink-2">
-                        <span className="block truncate">{r.searchCity}</span>
+                      <td className="py-2.5 pr-5 pl-3 text-ink-2">
+                        <span className="block truncate" title={r.searchCity}>
+                          {r.searchCity.replace(/, [A-Z]{2}$/, '')}
+                        </span>
                       </td>
                     </tr>
                   ))}

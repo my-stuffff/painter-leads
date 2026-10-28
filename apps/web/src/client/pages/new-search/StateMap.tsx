@@ -60,19 +60,44 @@ export function StateMap({
 
   const dots = useMemo(() => {
     if (!geo) return [];
-    const sorted = [...cities].sort((a, b) => a.population - b.population); // big dots drawn last (on top)
-    const labelled = new Set(
-      [...cities]
-        .sort((a, b) => b.population - a.population)
-        .slice(0, code === 'NJ' ? 1 : 2)
-        .map((c) => c.areaId),
-    );
-    return sorted.flatMap((c) => {
+    const placed = cities.flatMap((c) => {
       const p = geo.proj([c.lng, c.lat]);
       if (!p) return [];
-      const r = 2.6 + 7 * Math.sqrt(c.population / maxPop);
-      return [{ c, x: p[0], y: p[1], r, label: labelled.has(c.areaId) }];
+      return [{ c, x: p[0], y: p[1], r: 2.6 + 7 * Math.sqrt(c.population / maxPop) }];
     });
+    // Name the biggest cities, each label on the first side where it overlaps nothing (dots or other labels).
+    const boxes = placed.map((d) => ({ x0: d.x - d.r, y0: d.y - d.r, x1: d.x + d.r, y1: d.y + d.r }));
+    const labels = new Map<string, { x: number; y: number; anchor: 'start' | 'end' | 'middle' }>();
+    const biggest = [...placed].sort((p1, p2) => p2.c.population - p1.c.population).slice(0, code === 'NJ' ? 1 : 3);
+    for (const d of biggest) {
+      const w = d.c.name.length * 5.9;
+      const h = 11;
+      const options = [
+        { x: d.x + d.r + 4, y: d.y + 3.5, anchor: 'start' as const, box: { x0: d.x + d.r + 3, x1: d.x + d.r + 5 + w, y0: d.y - h / 2, y1: d.y + h / 2 } },
+        { x: d.x - d.r - 4, y: d.y + 3.5, anchor: 'end' as const, box: { x0: d.x - d.r - 5 - w, x1: d.x - d.r - 3, y0: d.y - h / 2, y1: d.y + h / 2 } },
+        { x: d.x, y: d.y + d.r + 11, anchor: 'middle' as const, box: { x0: d.x - w / 2, x1: d.x + w / 2, y0: d.y + d.r + 1, y1: d.y + d.r + 13 } },
+        { x: d.x, y: d.y - d.r - 4, anchor: 'middle' as const, box: { x0: d.x - w / 2, x1: d.x + w / 2, y0: d.y - d.r - 15, y1: d.y - d.r - 2 } },
+      ];
+      const own = { x0: d.x - d.r, y0: d.y - d.r, x1: d.x + d.r, y1: d.y + d.r };
+      const ok = options.find(
+        (o) =>
+          o.box.x0 >= 2 &&
+          o.box.x1 <= W - 2 &&
+          o.box.y0 >= 0 &&
+          o.box.y1 <= H &&
+          !boxes.some(
+            (bx) =>
+              !(bx.x0 === own.x0 && bx.y0 === own.y0) &&
+              !(bx.x1 <= o.box.x0 || bx.x0 >= o.box.x1 || bx.y1 <= o.box.y0 || bx.y0 >= o.box.y1),
+          ),
+      );
+      if (!ok) continue;
+      boxes.push(ok.box);
+      labels.set(d.c.areaId, { x: ok.x, y: ok.y, anchor: ok.anchor });
+    }
+    return placed
+      .sort((p1, p2) => p1.c.population - p2.c.population) // big dots drawn last (on top)
+      .map((d) => ({ ...d, label: labels.get(d.c.areaId) ?? null }));
   }, [geo, cities, maxPop, code]);
 
   if (!geo) return <div className="aspect-[7/5] w-full" />;
@@ -114,17 +139,16 @@ export function StateMap({
           );
         })}
       </g>
-      <g className="pointer-events-none" aria-hidden>
+      <g className="pointer-events-none max-[479px]:hidden" aria-hidden>
         {dots
-          .filter((d) => d.label)
-          .map(({ c, x, y, r }) => {
-            const left = x > W * 0.66;
+          .flatMap(({ c, label }) => (label ? [{ c, label }] : []))
+          .map(({ c, label }) => {
             return (
               <text
                 key={c.areaId}
-                x={left ? x - r - 4 : x + r + 4}
-                y={y + 3.5}
-                textAnchor={left ? 'end' : 'start'}
+                x={label.x}
+                y={label.y}
+                textAnchor={label.anchor}
                 className={clsx('text-[10.5px] font-medium', active ? 'fill-ink-2' : 'fill-ink-3')}
                 style={{ paintOrder: 'stroke', stroke: 'var(--surface)', strokeWidth: 3, strokeLinejoin: 'round' }}
               >

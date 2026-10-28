@@ -111,7 +111,14 @@ export function SearchesPage() {
           </div>
           {/* desktop: table */}
           <Panel className="hidden overflow-hidden md:block">
-            <table className="w-full text-sm">
+            <table className="w-full table-fixed text-sm">
+              <colgroup>
+                <col style={{ width: '30%' }} />
+                <col style={{ width: '13%' }} />
+                <col style={{ width: '19%' }} />
+                <col style={{ width: '27%' }} />
+                <col style={{ width: '11%' }} />
+              </colgroup>
               <thead>
                 <tr className="border-b border-line bg-raised text-left text-[13px] text-ink-2">
                   <th className="px-5 py-2.5 font-medium">Search</th>
@@ -130,7 +137,7 @@ export function SearchesPage() {
                       onClick={() => navigate(`/searches/${j.id}`)}
                       className="cursor-pointer border-b border-line transition-colors last:border-0 hover:bg-raised"
                     >
-                      <td className="max-w-0 px-5 py-3">
+                      <td className="px-5 py-3">
                         <Link
                           to={`/searches/${j.id}`}
                           onClick={(e) => e.stopPropagation()}

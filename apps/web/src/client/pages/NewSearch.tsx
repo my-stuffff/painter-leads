@@ -200,13 +200,13 @@ function NewSearchForm() {
                         }
                       }}
                       className={clsx(
-                        'group relative cursor-pointer overflow-hidden rounded-xl border bg-surface transition-[border-color,box-shadow] duration-150',
+                        'group relative grid cursor-pointer grid-cols-[136px_minmax(0,1fr)] overflow-hidden rounded-xl border bg-surface transition-[border-color,box-shadow] duration-150 min-[480px]:grid-cols-1',
                         on
                           ? 'border-accent shadow-[0_0_0_1px_var(--accent),0_6px_20px_-10px_rgb(40_107_158/0.5)]'
                           : 'border-line hover:border-line-strong',
                       )}
                     >
-                      <div className="flex items-center justify-between px-4 pt-3.5">
+                      <div className="col-start-2 row-start-1 flex items-center justify-between self-end px-4 pt-3.5 min-[480px]:col-start-1 min-[480px]:self-auto">
                         <h3 className="font-display text-base font-medium text-ink">{STATE_NAME[s]}</h3>
                         <span
                           className={clsx(
@@ -218,10 +218,10 @@ function NewSearchForm() {
                           <Check className="size-3.5" strokeWidth={3} />
                         </span>
                       </div>
-                      <div className="px-2 min-[480px]:px-1">
+                      <div className="col-start-1 row-span-2 row-start-1 border-r border-line bg-raised/40 p-1 min-[480px]:row-span-1 min-[480px]:row-start-2 min-[480px]:border-0 min-[480px]:bg-transparent min-[480px]:px-1 min-[480px]:py-0">
                         <StateMap code={s} cities={list} picked={picked} active={on} maxPop={maxPop} onToggleCity={toggleCity} />
                       </div>
-                      <div className="flex items-center justify-between gap-2 border-t border-line px-4 py-2.5 text-[13px]">
+                      <div className="col-start-2 row-start-2 flex flex-wrap items-center justify-between gap-x-2 self-start px-4 pt-1 pb-3 text-[13px] min-[480px]:col-start-1 min-[480px]:row-start-3 min-[480px]:self-auto min-[480px]:border-t min-[480px]:border-line min-[480px]:py-2.5">
                         <span className="text-ink-2">{plural(list.length, 'city', 'cities')}</span>
                         <span className={clsx('font-medium tabular-nums', nPicked ? 'text-accent-ink' : 'text-ink-3')}>
                           {nPicked ? `${nPicked} picked` : 'None picked'}
@@ -355,7 +355,7 @@ function NewSearchForm() {
 
           {/* Requirements */}
           <Section title="Requirements" id="req-h">
-            <Panel className="grid gap-x-8 gap-y-7 px-5 py-5 sm:px-6 md:grid-cols-2">
+            <Panel className="grid grid-cols-1 gap-x-8 gap-y-7 px-5 py-5 sm:px-6 md:grid-cols-2">
               <RatingField value={rating10} onChange={setRating10} />
 
               <div className="flex flex-col gap-1.5">
@@ -392,9 +392,7 @@ function NewSearchForm() {
 
               <div className="flex flex-col gap-1.5 md:col-span-2">
                 <span className="text-[13px] font-medium text-ink-2">Reuse a city’s earlier results when newer than</span>
-                <div className="overflow-x-auto">
-                  <Segmented label="Reuse earlier results" value={reuseDays} onChange={setReuseDays} options={REUSE_OPTIONS} />
-                </div>
+                <Segmented label="Reuse earlier results" value={reuseDays} onChange={setReuseDays} options={REUSE_OPTIONS} stretch />
                 {reuseDays > 0 && <p className="text-[13px] text-ink-3">Reused cities are instant.</p>}
               </div>
 
@@ -583,9 +581,9 @@ function Summary({
         <p className="mt-1 font-display text-[34px] leading-none font-medium tabular-nums">
           {num(cities)} <span className="text-lg font-normal text-[#cfe0ee]">{cities === 1 ? 'city' : 'cities'}</span>
         </p>
-        <p className="mt-3 text-sm text-[#cfe0ee]">
-          {cities === 0 ? 'Rough time appears here' : minutes > 0 ? `Takes ${roughDuration(minutes)}` : 'Instant: every city is reused'}
-        </p>
+        {cities > 0 && (
+          <p className="mt-3 text-sm text-[#cfe0ee]">{minutes > 0 ? `Takes ${roughDuration(minutes)}` : 'Instant: every city is reused'}</p>
+        )}
       </div>
       <dl className="divide-y divide-line px-5">
         {rows.map(([k, v]) => (

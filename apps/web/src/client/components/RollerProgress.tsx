@@ -20,7 +20,7 @@ export function RollerProgress({
   const showRoller = active && p < 100;
   return (
     <div
-      className={clsx('relative pb-3 pt-1', className)}
+      className={clsx('relative pt-1', active && value < 1 ? 'pb-8' : 'pb-1', className)}
       role="progressbar"
       aria-label={label}
       aria-valuemin={0}
@@ -39,7 +39,8 @@ export function RollerProgress({
           style={{ width: `${p}%` }}
         >
           {/* roller nap texture */}
-          <div className="absolute inset-0 opacity-25 [background-image:repeating-linear-gradient(90deg,transparent_0_5px,rgb(255_255_255/0.35)_5px_6px)]" />
+          <div className="absolute inset-0 [background-image:repeating-linear-gradient(180deg,rgb(255_255_255/0.09)_0_1px,transparent_1px_4px)]" />
+          <div className="absolute inset-y-0 right-0 w-3 bg-[linear-gradient(90deg,transparent,rgb(255_255_255/0.18))]" />
           {active && (
             <div className="absolute inset-y-0 left-0 w-1/3 animate-sheen bg-[linear-gradient(90deg,transparent,rgb(255_255_255/0.35),transparent)]" />
           )}
@@ -47,8 +48,8 @@ export function RollerProgress({
       </div>
       {showRoller && (
         <div
-          className="pointer-events-none absolute top-0 transition-[left] duration-700 ease-out"
-          style={{ left: `calc(${p}% - 2px)` }}
+          className="pointer-events-none absolute -top-[2px] transition-[left] duration-700 ease-out"
+          style={{ left: `${p}%` }}
           aria-hidden
         >
           <RollerHead />
@@ -59,27 +60,32 @@ export function RollerProgress({
 }
 
 function RollerHead() {
+  // Side view of a roller moving right: the paint-soaked cover sits on the leading edge, the frame and grip hang below.
   return (
-    <svg width="22" height="36" viewBox="0 0 22 36" className="-translate-x-1/2 drop-shadow-[0_2px_2px_rgb(1_57_94/0.35)]">
+    <svg width="30" height="50" viewBox="0 0 30 50" className="-translate-x-[8px] drop-shadow-[0_2px_3px_rgb(1_57_94/0.35)]">
       <defs>
         <clipPath id="pp-roller-clip">
-          <rect x="3" y="0.5" width="12" height="22" rx="4" />
+          <rect x="1" y="1" width="14" height="26" rx="5" />
         </clipPath>
+        <linearGradient id="pp-roller-cover" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#3f8cc4" />
+          <stop offset="0.55" stopColor="#286b9e" />
+          <stop offset="1" stopColor="#1d5683" />
+        </linearGradient>
       </defs>
-      {/* frame + handle */}
-      <path d="M9 22.5v3.2c0 1.6 1.2 2.6 2.8 2.6h1.4c1.4 0 2.3.9 2.3 2.2" fill="none" stroke="#0b2a43" strokeWidth="1.6" strokeLinecap="round" className="dark:stroke-[#a5b5c5]" />
-      <rect x="13.2" y="29.2" width="4.6" height="6.4" rx="2" fill="#01395e" className="dark:fill-[#5ea3d8]" />
-      {/* cover */}
-      <rect x="3" y="0.5" width="12" height="22" rx="4" fill="#ffffff" stroke="#01395e" strokeWidth="1.2" />
+      <path d="M8 27v4.5c0 2.5 1.6 4 4 4h2.5c2.2 0 3.5 1.3 3.5 3.5v1.5" fill="none" stroke="#8a9bad" strokeWidth="2.2" strokeLinecap="round" />
+      <rect x="14.6" y="39.5" width="7" height="10" rx="3" fill="#0b2a43" className="dark:fill-[#5ea3d8]" />
+      <rect x="1" y="1" width="14" height="26" rx="5" fill="url(#pp-roller-cover)" />
       <g clipPath="url(#pp-roller-clip)">
-        <g className="animate-[roll_0.9s_linear_infinite]">
-          {Array.from({ length: 10 }, (_, i) => (
-            <rect key={i} x="3" y={i * 5 - 25} width="12" height="2" fill="#286b9e" opacity="0.28" />
+        <g className="animate-[pp-roll_0.8s_linear_infinite]">
+          {Array.from({ length: 12 }, (_, i) => (
+            <rect key={i} x="1" y={i * 4 - 20} width="14" height="1.2" fill="#ffffff" opacity="0.16" />
           ))}
         </g>
-        <rect x="3" y="0.5" width="4" height="22" fill="#ffffff" opacity="0.5" />
+        <rect x="3.2" y="3" width="2.6" height="22" rx="1.3" fill="#ffffff" opacity="0.38" />
       </g>
-      <style>{'@keyframes roll{from{transform:translateY(0)}to{transform:translateY(5px)}}'}</style>
+      <rect x="1" y="1" width="14" height="26" rx="5" fill="none" stroke="#01395e" strokeWidth="1.1" />
+      <style>{'@keyframes pp-roll{from{transform:translateY(0)}to{transform:translateY(4px)}}'}</style>
     </svg>
   );
 }
