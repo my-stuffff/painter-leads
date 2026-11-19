@@ -1,0 +1,173 @@
+name: security scan (reusable, copy of Naseeha-Tech/security-checks scan.yml - this repo is public so it cannot call the private one)
+
+# Called by every app repo's .github/workflows/security-checks.yml.
+#   Pull request → fails only on problems the PR ADDS (new leaked key, new Semgrep ERROR, unsafe workflow edit).
+#   Weekly / manual → scans everything (full git history) and keeps ONE issue per repo up to date:
+#                     "Security checks: weekly findings" — opened when something is found, closed when clean.
+# Package holes are NOT scanned here: Dependabot alerts (on in every repo) cover them.
+# Every tool is pinned by digest / hash / exact version (the Trivy tag hijack of March 2026 is why).
+
+on:
+  workflow_call:
+    inputs:
+      semgrep-exclude:
+        description: Extra space-separated paths/globs Semgrep should skip (generated files etc.)
+        type: string
+        default: ''
+
+permissions: {}
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      issues: write
+    env:
+      GITLEAKS_IMAGE: zricethezav/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f # v8.30.1
+      SEMGREP_IMAGE: semgrep/semgrep@sha256:6e1b04340e60e910fbb4ddbf3c857ab0918f064417ad5ac530014ccb3cf8c8f1 # 1.186.0
+      ZIZMOR_VERSION: '1.32.0'
+      IS_PR: ${{ github.event_name == 'pull_request' }}
+      BASE: ${{ github.event.pull_request.base.sha }}
+      HEAD: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prepare
+        run: mkdir -p "$RUNNER_TEMP/sc" && chmod 777 "$RUNNER_TEMP/sc"
+
+      - name: Leaked keys (gitleaks)
+        id: gitleaks
+        continue-on-error: true
+        run: |
+          if [ "$IS_PR" = "true" ]; then range="--log-opts=--no-merges $BASE..$HEAD"; else range=""; fi
+          docker run --rm -u "$(id -u):$(id -g)" -v "$PWD:/repo" -v "$RUNNER_TEMP/sc:/out" "$GITLEAKS_IMAGE" \
+            git /repo --redact --no-banner --exit-code 1 ${range:+"$range"} \
+            --report-format json --report-path /out/gitleaks.json
+
+      - name: Unsafe code patterns (Semgrep, ERROR severity)
+        id: semgrep
+        continue-on-error: true
+        env:
+          EXTRA_EXCLUDE: ${{ inputs.semgrep-exclude }}
+        run: |
+          ex=""; for p in $EXTRA_EXCLUDE; do ex="$ex --exclude=$p"; done
+          base=""; [ "$IS_PR" = "true" ] && base="--baseline-commit=$BASE"
+          docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD:/src" -v "$RUNNER_TEMP/sc:/out" -w /src "$SEMGREP_IMAGE" \
+            sh -c "git config --global --add safe.directory /src && semgrep scan \
+              --config=p/owasp-top-ten --config=p/javascript --config=p/typescript --config=p/react \
+              --config=p/nextjs --config=p/python \
+              --severity=ERROR --metrics=off --error --quiet $base $ex \
+              --json --output=/out/semgrep.json"
+
+      - name: Unsafe GitHub workflows (zizmor)
+        id: zizmor
+        continue-on-error: true
+        # --offline: the online audits try to read Naseeha-Tech/security-checks, which a caller repo's token cannot
+        # see (private) -> "no audit was performed". Known-vulnerable actions are covered by Dependabot instead.
+        run: |
+          cat > "$RUNNER_TEMP/zizmor.yml" <<'EOF'
+          rules:
+            unpinned-uses:
+              config:
+                policies:
+                  "Naseeha-Tech/*": ref-pin
+                  "my-stuffff/*": ref-pin
+                  "actions/*": hash-pin
+                  "*": hash-pin
+          EOF
+          if [ "$IS_PR" = "true" ]; then
+            files=$(git diff --name-only --diff-filter=AM "$BASE" "$HEAD" -- .github/workflows | tr '\n' ' ')
+          else
+            files=$(ls .github/workflows/*.y*ml 2>/dev/null | tr '\n' ' ')
+          fi
+          if [ -z "$files" ]; then echo "no workflow files to check"; echo '[]' > "$RUNNER_TEMP/sc/zizmor.json"; exit 0; fi
+          pipx run "zizmor==$ZIZMOR_VERSION" --offline --config "$RUNNER_TEMP/zizmor.yml" --min-severity medium \
+            --no-progress --format json $files > "$RUNNER_TEMP/sc/zizmor.json"
+
+      - name: Report
+        id: report
+        if: always()
+        run: |
+          python3 - "$RUNNER_TEMP/sc" <<'PY'
+          import json, os, sys
+          d = sys.argv[1]
+          def load(n):
+              try:
+                  with open(os.path.join(d, n)) as f: return json.load(f)
+              except Exception: return None
+          g = load("gitleaks.json") or []
+          s = (load("semgrep.json") or {}).get("results", [])
+          z = load("zizmor.json") or []
+          lines = []
+          if g:
+              lines += ["### Leaked keys (gitleaks)", "", "| Rule | File | Line | Commit | Date |", "|---|---|---|---|---|"]
+              lines += [f"| {x['RuleID']} | `{x['File']}` | {x['StartLine']} | {x['Commit'][:9]} | {x['Date'][:10]} |" for x in g[:100]]
+              lines.append("")
+          if s:
+              lines += ["### Unsafe code (Semgrep)", "", "| Rule | File | Line |", "|---|---|---|"]
+              lines += [f"| {x['check_id'].split('.')[-1]} | `{x['path']}` | {x['start']['line']} |" for x in s[:100]]
+              lines.append("")
+          if z:
+              lines += ["### Unsafe workflows (zizmor)", "", "| Audit | Severity | Where |", "|---|---|---|"]
+              def find(o, k):
+                  if isinstance(o, dict):
+                      if k in o: return o[k]
+                      o = list(o.values())
+                  if isinstance(o, list):
+                      for v in o:
+                          r = find(v, k)
+                          if r is not None: return r
+                  return None
+              for x in z[:100]:
+                  where = find(x.get("locations"), "verbatim_path") or find(x.get("locations"), "given_path") or "?"
+                  line = find(x.get("locations"), "row")
+                  sev = find(x.get("determinations"), "severity") or "?"
+                  lines.append(f"| {x.get('ident')} | {sev} | `{where}`{':' + str(line + 1) if isinstance(line, int) else ''} |")
+              lines.append("")
+          total = len(g) + len(s) + len(z)
+          head = f"**{len(g)} leaked-key hits · {len(s)} unsafe-code hits · {len(z)} workflow hits**"
+          body = head + "\n\n" + ("\n".join(lines) if total else "Nothing found.")
+          open(os.path.join(d, "report.md"), "w").write(body)
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f: f.write(body + "\n")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f: f.write(f"total={total}\n")
+          PY
+
+      - name: Keep the weekly issue up to date
+        if: always() && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TOTAL: ${{ steps.report.outputs.total }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Security checks: weekly findings"
+          num=$(gh issue list -R "$GITHUB_REPOSITORY" --state all --search "in:title \"$title\"" --json number,title \
+                --jq "map(select(.title==\"$title\"))[0].number // empty" 2>/dev/null || true)
+          { cat "$RUNNER_TEMP/sc/report.md"; printf '\n\n_Updated by [this run](%s). Package holes: see the Security → Dependabot tab._\n' "$RUN_URL"; } > "$RUNNER_TEMP/body.md"
+          if [ "${TOTAL:-0}" -gt 0 ]; then
+            if [ -n "$num" ]; then gh issue edit "$num" -R "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/body.md" && gh issue reopen "$num" -R "$GITHUB_REPOSITORY" 2>/dev/null || true
+            else gh issue create -R "$GITHUB_REPOSITORY" --title "$title" --body-file "$RUNNER_TEMP/body.md" || echo "::warning::could not open the findings issue (issues disabled?)"; fi
+          elif [ -n "$num" ]; then
+            gh issue close "$num" -R "$GITHUB_REPOSITORY" --comment "Clean on $(date -u +%F) — $RUN_URL" 2>/dev/null || true
+          fi
+
+      - name: Verdict
+        if: always()
+        env:
+          GITLEAKS: ${{ steps.gitleaks.outcome }}
+          SEMGREP: ${{ steps.semgrep.outcome }}
+          ZIZMOR: ${{ steps.zizmor.outcome }}
+          TOTAL: ${{ steps.report.outputs.total }}
+        run: |
+          echo "gitleaks=$GITLEAKS semgrep=$SEMGREP zizmor=$ZIZMOR total=${TOTAL:-?}"
+          # A scanner that crashed (no report) must not pass silently.
+          for f in gitleaks.json semgrep.json zizmor.json; do
+            [ -s "$RUNNER_TEMP/sc/$f" ] || { echo "::error::$f missing — a scanner did not run"; exit 1; }
+          done
+          if [ "$IS_PR" = "true" ] && [ "${TOTAL:-0}" -gt 0 ]; then
+            echo "::error::This pull request adds security problems — see the job summary."; exit 1
+          fi
