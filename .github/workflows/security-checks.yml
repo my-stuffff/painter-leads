@@ -1,6 +1,6 @@
 name: Security checks
 
-# Shared checks from my-stuffff/security-checks (see its README).
+# Shared checks: local copy of my-stuffff/security-checks scan.yml (public repo cannot call a private workflow).
 # Pull request: fails only on problems the PR adds (leaked key, unsafe code pattern, unsafe workflow).
 # Monday 03:30 PKT: full scan incl. git history -> issue "Security checks: weekly findings".
 # Package holes: Security -> Dependabot.
@@ -23,4 +23,4 @@ jobs:
     permissions:
       contents: read
       issues: write
-    uses: my-stuffff/security-checks/.github/workflows/scan.yml@main
+    uses: ./.github/workflows/security-scan.yml
